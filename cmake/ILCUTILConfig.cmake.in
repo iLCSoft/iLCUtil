@@ -1,0 +1,73 @@
+##############################################################################
+# cmake configuration file for ILCUTIL
+#
+# returns following variables:
+#
+#   ILCUTIL_FOUND           : set to TRUE if ILCUTIL found
+#   ILCUTIL_ROOT            : path to this ILCUTIL installation
+#
+#
+# if FIND_PACKAGE is called with COMPONENTS arguments then the corresponding
+# configuration files from the individual components are loaded, i.e.:
+#
+#       FIND_PACKAGE( ILCUTIL COMPONENTS streamlog )
+#
+# sets usual variables for using streamlog:
+#
+#           streamlog_FOUND
+#           streamlog_INCLUDE_DIRS
+#           streamlog_LIBRARY_DIRS
+#           streamlog_LIBRARIES
+#           ...
+#
+#
+# REQUIRED option may be used to force ILCUTIL to fail in case individual
+# components are not available, e.g.:
+#
+#   FIND_PACKAGE( ILCUTIL REQUIRED COMPONENTS ILCSOFT_CMAKE_MODULES )
+#
+#
+# @author Jan Engels, Desy
+##############################################################################
+
+SET( ILCUTIL_ROOT "@CMAKE_INSTALL_PREFIX@" )
+
+LIST( APPEND CMAKE_FIND_ROOT_PATH "${ILCUTIL_ROOT}" )
+
+SET( ILCUTIL_REQUIRED_COMPONENT_VARIABLES )
+
+FOREACH( _component ${ILCUTIL_FIND_COMPONENTS} )
+
+    SET( _component_cfg_file "${ILCUTIL_ROOT}/${_component}Config.cmake" )
+
+    IF( _component STREQUAL "ILCSOFT_CMAKE_MODULES" )
+
+        LIST( APPEND CMAKE_MODULE_PATH "@ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX@" )
+        #SET( _component_cfg_file "@ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX@/FindILCSOFT_CMAKE_MODULES.cmake" )
+        SET( _component_cfg_file "FindILCSOFT_CMAKE_MODULES.cmake" )
+
+    ENDIF()
+
+
+    IF( EXISTS "${_component_cfg_file}" )
+        INCLUDE( "${_component_cfg_file}" )
+    ELSE()
+        IF( NOT ILCUTIL_FIND_QUIETLY )
+            MESSAGE( "failed to include ${_component_cfg_file}" )
+        ENDIF()
+    ENDIF()
+
+    IF( ${_component}_FIND_REQUIRED )
+        STRING( TOUPPER ${_component} _ucomponent )
+        LIST( APPEND ILCUTIL_COMPONENT_VARIABLES ${_ucomponent}_FOUND )
+    ENDIF()
+
+ENDFOREACH()
+
+
+
+# ---------- final checking ---------------------------------------------------
+INCLUDE( FindPackageHandleStandardArgs )
+# set ILCUTIL_FOUND to TRUE if all listed variables are TRUE and not empty
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( ILCUTIL DEFAULT_MSG ILCUTIL_ROOT ${ILCUTIL_REQUIRED_COMPONENT_VARIABLES} )
+

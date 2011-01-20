@@ -1,0 +1,16 @@
+##############################################################################
+# this file is parsed when FIND_PACKAGE is called with version argument
+#
+# @author Jan Engels, Desy IT
+##############################################################################
+
+
+SET( ${PACKAGE_FIND_NAME}_VERSION_MAJOR @ILCUTIL_VERSION_MAJOR@ )
+SET( ${PACKAGE_FIND_NAME}_VERSION_MINOR @ILCUTIL_VERSION_MINOR@ )
+SET( ${PACKAGE_FIND_NAME}_VERSION_PATCH @ILCUTIL_VERSION_PATCH@ )
+
+
+LIST( APPEND CMAKE_MODULE_PATH "@ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX@" )
+INCLUDE( MacroCheckPackageVersion )
+CHECK_PACKAGE_VERSION( ${PACKAGE_FIND_NAME} )
+
