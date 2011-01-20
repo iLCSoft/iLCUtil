@@ -1,0 +1,192 @@
+#####################################################
+# CMakeModules for the ILC Software - Release Notes
+#####################################################
+
+-----------------------------------------------------
+ v01-11
+-----------------------------------------------------
+
+ - new modules added:
+    - FindFastJet.cmake
+    - FindILCSOFT_CMAKE_MODULES.cmake
+        - allow to check CMakeModules version in other packages, i.e.
+            FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 0.11 REQUIRED )
+
+
+ - modules removed:
+    - FindLCIO.cmake (LCIOConfig.cmake should be used for cmake builds)
+
+
+ - added MACROS:
+    - ADD_SHARED_LIBRARY
+    - GENERATE_PACKAGE_CONFIGURATION_FILES
+    - EXPORT_PACKAGE_DEPENDENCIES
+
+
+ - Changes to FindROOT.cmake
+    - DEPRECATED adding Minuit2 to list of ROOT libraries
+    - renamed ROOT_CINT to ROOT_CINT_EXECUTABLE
+    - renamed ROOT_CONFIG to ROOT_CONFIG_EXECUTABLE
+    - added version checking, e.g. FIND_PACKAGE( ROOT 5.27 )
+
+
+ - ilcsoft_build_32bit_compatible.cmake added for backwards
+    compatibility. This macro should be enabled in
+    ilcsoft_default_settings.cmake for building 32bit
+    binaries and libraries on 64bit platforms. Preferred use
+    is to set standard GNU variables also evaluated by cmake:
+    CXXFLAGS, CFLAGS, FFLAGS, LDFLAGS
+    
+    ---- example: ---------
+    export CXXFLAGS=-m32
+    export LDFLAGS=-m32
+    mkdir build ; cd build
+    cmake ..
+    make install
+    -----------------------
+
+
+ - DEPRECATED MacroCheckDeps.cmake
+    i.e. BUILD_WITH, LINK_WITH, PKG_DEPENDS variables in
+    CMakeLists.txt or using cmake -D definitions should
+    not be used anymore.
+
+
+
+
+
+-----------------------------------------------------
+ v01-10-01
+-----------------------------------------------------
+
+ - added FindMokka.cmake
+ - changes in FindROOT.cmake
+    - bug fix: ROOT_${COMPONENT}_FOUND not set properly
+    - renamed ROOT_LIB_COMPONENT to ROOT_COMPONENT_LIB
+    - reenabled dl lib (required for SL5 32bit)
+ - replaced PKG_HOME variables with PKG_DIR (still
+    backwards compatible)
+
+
+-----------------------------------------------------
+ v01-09
+-----------------------------------------------------
+ 
+ - added support for components in FindROOT.cmake, ex:
+    - FIND_PACKAGE( ROOT REQUIRED COMPONENTS Minuit2 MathMore )
+    - returns ROOT_${COMPONENT}_FOUND
+
+ - bug fixes in FindMySQL:
+    - missing NO_DEFAULT_PATH
+    - incorrect order for finding library names
+
+ - bug fixes for 64bit in FindROOT, FindCERNLIB
+
+ - bug fix for MacOSX in FindJAVA
+
+-----------------------------------------------------
+ v01-08-01
+-----------------------------------------------------
+ - improved mac osx compatibility (K. Fujii)
+ - use readlink for dereferencing symbolic links in
+    FindJAVA.cmake
+
+-----------------------------------------------------
+ v01-08
+-----------------------------------------------------
+ - made cmake 2.6 compatible
+
+-----------------------------------------------------
+ v01-07
+-----------------------------------------------------
+ - bug fixes and some compatibility issues for
+    RAIDA/JAIDA in LCFIVertex were added
+
+
+-----------------------------------------------------
+ v01-06
+-----------------------------------------------------
+ - added FindAIDA.cmake
+ - added FindMySQL.cmake
+ - removed FindMarlin.cmake
+ - removed FindMarlinUtil.cmake
+ - removed FindMarlinReco.cmake
+ - removed FindCEDViewer.cmake
+ - removed Findstreamlog.cmake
+ - removed FindRAIDA.cmake
+ - removed FindGEAR.cmake
+ - removed FindLCCD.cmake
+ - bug fix if FindROOT.cmake
+    ROOT_FOUND was not being set to TRUE
+
+-----------------------------------------------------
+ v01-05-01
+-----------------------------------------------------
+ - added documentation
+ - added MarlinReco_INCLUDE_DIRS
+ - CMAKE_MODULE_PATH can now be set to more than one
+    path (paths must be separated with semi-colons)
+
+-----------------------------------------------------
+ v01-05
+-----------------------------------------------------
+ - removed HepPDT dependency from FindCLHEP.cmake
+
+-----------------------------------------------------
+ v01-04
+-----------------------------------------------------
+ -  removed variables for storing all libraries and
+    definitions that were used for building a package
+
+    These variables can not be used in the 
+    <PKG>Config.cmake files.
+
+-----------------------------------------------------
+ v01-03
+-----------------------------------------------------
+
+ - added variables for storing all libraries and
+    definitions that were used for building a package
+    These variables are then used for configuring the
+    <PKG>Config.cmake files.
+
+ - improved FindAIDAJNI.cmake
+
+ - made <PKG>_INCLUDE_DIRS the default variable for
+    all packages
+
+ - removed obsolete LoadPackageMacro.cmake
+
+-----------------------------------------------------
+ v01-02
+-----------------------------------------------------
+
+ - bug fixed in FindJAVA.cmake which would cause
+    cmake to crash when trying to auto-detect Java in
+    some OS's
+
+ - improved FindROOT.cmake to make use of root-config
+    for finding out needed libraries
+
+ - added FindAIDAJNI.cmake
+    (requires JAIDA_HOME defined)
+
+ - added compatibility for CLHEP versions greater
+    than 2.0.3.0/1.9.3.0
+    (requires HepPDT_HOME defined)
+
+-----------------------------------------------------
+ v01-01
+-----------------------------------------------------
+ 
+ - Initial version of CMakeModules
+ 
+ - replaced LoadPackageMacro.cmake with
+    MacroLoadPackage.cmake
+ 
+-----------------------------------------------------
+ v00-01
+-----------------------------------------------------
+ 
+ - Experimental version of CMakeModules
+
