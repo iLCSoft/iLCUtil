@@ -40,10 +40,6 @@ FOREACH( _component ${ILCUTIL_FIND_COMPONENTS} )
 
     SET( _component_cfg_file "${ILCUTIL_ROOT}/${_component}Config.cmake" )
 
-    #IF( _component STREQUAL "ILCSOFT_CMAKE_MODULES" )
-    #    SET( _component_cfg_file "@ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX@/FindILCSOFT_CMAKE_MODULES.cmake" )
-    #ENDIF()
-
     IF( EXISTS "${_component_cfg_file}" )
         INCLUDE( "${_component_cfg_file}" )
     ELSE()
