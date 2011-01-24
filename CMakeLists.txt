@@ -1,7 +1,7 @@
 ########################################################
 # cmake file for building ILCUTIL Package
 # @author Jan Engels, Desy IT
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2 FATAL_ERROR)
 ########################################################
 
 
