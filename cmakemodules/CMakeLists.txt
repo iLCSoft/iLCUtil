@@ -4,8 +4,30 @@
 CMAKE_MINIMUM_REQUIRED( VERSION 2.6 )
 ########################################################
 
-INSTALL( DIRECTORY . DESTINATION cmakemodules
+
+PROJECT( ILCSOFT_CMAKE_MODULES )
+
+
+# --------- CMakeModules version ----------------
+SET( ILCSOFT_CMAKE_MODULES_VERSION_MAJOR 1 )
+SET( ILCSOFT_CMAKE_MODULES_VERSION_MINOR 11 )
+SET( ILCSOFT_CMAKE_MODULES_VERSION_PATCH 0 )
+SET( ILCSOFT_CMAKE_MODULES_VERSION_TWEAK 0 )
+# -----------------------------------------------
+
+
+INCLUDE( ilcsoft_default_install_prefix.cmake )
+INCLUDE( MacroGeneratePackageConfigFiles.cmake )
+
+SET( ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/cmakemodules )
+
+
+INSTALL( DIRECTORY . DESTINATION ${ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX}
     PATTERN ".svn" EXCLUDE
     PATTERN "CMakeLists.txt" EXCLUDE # this file
+    PATTERN "cmake" EXCLUDE # directory containing configuration files
 )
+
+# generate and install following configuration files
+GENERATE_PACKAGE_CONFIGURATION_FILES( ILCSOFT_CMAKE_MODULESConfig.cmake ILCSOFT_CMAKE_MODULESConfigVersion.cmake )
 

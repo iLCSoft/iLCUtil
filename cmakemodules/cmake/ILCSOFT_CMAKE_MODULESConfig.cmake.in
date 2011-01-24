@@ -1,0 +1,21 @@
+##############################################################################
+# cmake configuration file for ILCSOFT_CMAKE_MODULES
+#
+# returns following variables:
+#
+#   ILCSOFT_CMAKE_MODULES_FOUND    : set to TRUE if ILCSOFT_CMAKE_MODULES found
+#   ILCSOFT_CMAKE_MODULES_ROOT     : path to this ILCSOFT_CMAKE_MODULES installation
+#
+#
+# @author Jan Engels, Desy
+##############################################################################
+
+SET( ILCSOFT_CMAKE_MODULES_ROOT "@ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX@" )
+
+LIST( APPEND CMAKE_MODULE_PATH ${ILCSOFT_CMAKE_MODULES_ROOT} )
+
+# ---------- final checking ---------------------------------------------------
+INCLUDE( FindPackageHandleStandardArgs )
+# set ILCSOFT_CMAKE_MODULES_FOUND to TRUE if all listed variables are TRUE and not empty
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( ILCSOFT_CMAKE_MODULES DEFAULT_MSG ILCSOFT_CMAKE_MODULES_ROOT )
+
