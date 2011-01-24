@@ -3,6 +3,7 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE ) # default in cmake 2.6
 
 # DEPRECATED
 #OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
+#SET( BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL "Set to OFF to build static libraries" FORCE )
 
 # include helper macros
 INCLUDE( MacroAddSharedLibrary )
