@@ -6,35 +6,32 @@
  v01-11
 -----------------------------------------------------
 
- - new modules added:
+ - modules added:
     - FindFastJet.cmake
-    - FindILCSOFT_CMAKE_MODULES.cmake
-        - allow to check CMakeModules version in other packages, i.e.
-            FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 0.11 REQUIRED )
-
-
+    - FindEUDAQ.cmake
+ 
  - modules removed:
     - FindLCIO.cmake (LCIOConfig.cmake should be used for cmake builds)
 
 
- - added MACROS:
-    - ADD_SHARED_LIBRARY
-    - GENERATE_PACKAGE_CONFIGURATION_FILES
-    - EXPORT_PACKAGE_DEPENDENCIES
-
+ - added configuration files ILCSOFT_CMAKE_MODULESConfig.cmake
+    and ILCSOFT_CMAKE_MODULESConfigVersion.cmake to allow other packages
+    to check for a minimum version of cmake modules to use.
 
  - Changes to FindROOT.cmake
-    - DEPRECATED adding Minuit2 to list of ROOT libraries
+    - DEPRECATED adding of Minuit2 to the list of ROOT libraries
     - renamed ROOT_CINT to ROOT_CINT_EXECUTABLE
     - renamed ROOT_CONFIG to ROOT_CONFIG_EXECUTABLE
     - added version checking, e.g. FIND_PACKAGE( ROOT 5.27 )
-
+    - fixed bug in MacroRootDict.cmake (use APPEND instead SET for LD_LIBRARY_PATH)
 
  - ilcsoft_build_32bit_compatible.cmake added for backwards
-    compatibility. This macro should be enabled in
-    ilcsoft_default_settings.cmake for building 32bit
-    binaries and libraries on 64bit platforms. Preferred use
-    is to set standard GNU variables also evaluated by cmake:
+    compatibility. This option is commented out per default inside
+    ilcsoft_default_settings.cmake. TO use it uncomment it from there
+    or include it in your own CMakeLists.txt.
+    CMake also evaluates the standard enviroment variables listed below,
+    usually used to pass this settings to the compiler/linker, e.g.:
+
     CXXFLAGS, CFLAGS, FFLAGS, LDFLAGS
     
     ---- example: ---------
@@ -50,8 +47,6 @@
     i.e. BUILD_WITH, LINK_WITH, PKG_DEPENDS variables in
     CMakeLists.txt or using cmake -D definitions should
     not be used anymore.
-
-
 
 
 
