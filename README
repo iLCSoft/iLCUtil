@@ -55,6 +55,8 @@ Description:
             3. By setting CMAKE_MODULE_PATH directly to where the cmake
                 modules and macros live.
 
+                This method should be used with care or for debugging purposes.
+
 
 
 
