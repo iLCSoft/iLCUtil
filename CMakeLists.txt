@@ -50,6 +50,8 @@ ExternalProject_Add( hello_world
     TEST_COMMAND ${CMAKE_BUILD_TOOL} test
 )
 
+INSTALL( FILES ./doc/index.html DESTINATION doc )
+
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
 
