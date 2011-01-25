@@ -20,6 +20,17 @@ LIST( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 INCLUDE( ilcsoft_default_settings )
 
 
+### DOCUMENTATION ###########################################################
+
+OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
+
+IF( INSTALL_DOC )
+    ADD_SUBDIRECTORY( ./doc )
+ELSE()
+    MESSAGE( STATUS "INSTALL_DOC set to OFF" )
+ENDIF()
+
+
 ### LIBRARY #################################################################
 
 # definitions to pass to the compiler
