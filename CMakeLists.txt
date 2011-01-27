@@ -42,9 +42,9 @@ ExternalProject_Add( ilctest
     INSTALL_COMMAND ${CMAKE_BUILD_TOOL} install
 )
 
-ExternalProject_Add( hello_world
+ExternalProject_Add( example
     DEPENDS ilctest streamlog
-    SOURCE_DIR "${PROJECT_SOURCE_DIR}/hello_world"
+    SOURCE_DIR "${PROJECT_SOURCE_DIR}/example"
     CMAKE_ARGS -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "no install step needed"
     TEST_COMMAND ${CMAKE_BUILD_TOOL} test

@@ -69,7 +69,7 @@ Description:
 
 
 
-        - new_package_template
+        - example
             This example shows how to create a new package in ILCUTIL which
             depends on other sub-packages from ILCUTIL
 
