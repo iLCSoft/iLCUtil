@@ -50,7 +50,7 @@ ExternalProject_Add( example
     TEST_COMMAND ${CMAKE_BUILD_TOOL} test
 )
 
-INSTALL( FILES ./doc/index.html DESTINATION doc )
+INSTALL( DIRECTORY ./doc/ilcutil DESTINATION doc PATTERN ".svn" EXCLUDE )
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
