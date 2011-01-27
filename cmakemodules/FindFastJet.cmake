@@ -16,21 +16,14 @@ IF( NOT DEFINED FastJet_DIR AND DEFINED FastJet_HOME )
     SET( FastJet_DIR "${FastJet_HOME}" )
 ENDIF( NOT DEFINED FastJet_DIR AND DEFINED FastJet_HOME )
 
-IF( NOT FastJet_FIND_QUIETLY )
-    MESSAGE( STATUS "Check for FastJet: ${FastJet_DIR}" )
-ENDIF(NOT FastJet_FIND_QUIETLY )
-
 
 
 # ---------- includes ---------------------------------------------------------
 SET( FastJet_INCLUDE_DIRS FastJet_INCLUDE_DIRS-NOTFOUND )
 MARK_AS_ADVANCED( FastJet_INCLUDE_DIRS )
 
-FIND_PATH( FastJet_INCLUDE_DIRS
-    NAMES FjPseudoJet.hh
-    PATHS ${FastJet_DIR}/include
-    NO_DEFAULT_PATH
-)
+FIND_PATH( FastJet_INCLUDE_DIRS NAMES FjPseudoJet.hh PATHS ${FastJet_DIR}/include NO_DEFAULT_PATH )
+FIND_PATH( FastJet_INCLUDE_DIRS NAMES FjPseudoJet.hh )
 
 
 
@@ -50,3 +43,4 @@ INCLUDE( FindPackageHandleStandardArgs )
 FIND_PACKAGE_HANDLE_STANDARD_ARGS( FastJet DEFAULT_MSG FastJet_DIR FastJet_INCLUDE_DIRS FastJet_LIBRARIES )
 
 SET( FastJet_FOUND ${FASTJET_FOUND} )
+
