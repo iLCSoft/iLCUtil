@@ -15,21 +15,13 @@ IF( NOT DEFINED CondDBMySQL_DIR AND DEFINED CondDBMySQL_HOME )
     SET( CondDBMySQL_DIR "${CondDBMySQL_HOME}" )
 ENDIF( NOT DEFINED CondDBMySQL_DIR AND DEFINED CondDBMySQL_HOME )
 
-IF( NOT CondDBMySQL_FIND_QUIETLY )
-    MESSAGE( STATUS "Check for CondDBMySQL: ${CondDBMySQL_DIR}" )
-ENDIF( NOT CondDBMySQL_FIND_QUIETLY )
-
 
 # ---------- includes ---------------------------------------------------------
 SET( CondDBMySQL_INCLUDE_DIRS CondDBMySQL_INCLUDE_DIRS-NOTFOUND )
 MARK_AS_ADVANCED( CondDBMySQL_INCLUDE_DIRS )
 
-FIND_PATH( CondDBMySQL_INCLUDE_DIRS
-    NAMES CondDBInterface.h
-    PATHS ${CondDBMySQL_DIR}
-    PATH_SUFFIXES include
-    NO_DEFAULT_PATH
-)
+FIND_PATH( CondDBMySQL_INCLUDE_DIRS NAMES CondDBInterface.h PATHS ${CondDBMySQL_DIR}/include NO_DEFAULT_PATH )
+FIND_PATH( CondDBMySQL_INCLUDE_DIRS NAMES CondDBInterface.h )
 
 
 # ---------- libraries --------------------------------------------------------
@@ -46,10 +38,5 @@ INCLUDE( FindPackageHandleStandardArgs )
 # set CondDBMySQL_FOUND to TRUE if all listed variables are TRUE and not empty
 FIND_PACKAGE_HANDLE_STANDARD_ARGS( CondDBMySQL DEFAULT_MSG CondDBMySQL_INCLUDE_DIRS CondDBMySQL_LIBRARIES )
 
-
-# FIXME DEPRECATED
 SET( CondDBMySQL_FOUND ${CONDDBMYSQL_FOUND} )
-IF( CondDBMySQL_FOUND )
-    SET( CondDBMySQL_DEFINITIONS "-DUSE_CONDDB" )
-    MARK_AS_ADVANCED( CondDBMySQL_DEFINITIONS )
-ENDIF( CondDBMySQL_FOUND )
+
