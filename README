@@ -24,16 +24,13 @@ Description:
             There are 3 possible ways of using the ILCSOFT_CMAKE_MODULES:
 
 
-            1. Using the ILCUTIL package, i.e.:
+            1. (Preferred ) Using the ILCUTIL package, i.e.:
 
                 FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES )
 
-                ILCUTIL_DIR or CMAKE_FIND_ROOT_PATH needs to be set to find
+                ILCUTIL_DIR or CMAKE_PREFIX_PATH needs to be set to find
                 the configuration file ILCUTILConfig.cmake.
 
-
-                This method makes sense if any other components of ILCUTIL
-                should be used, e.g.:
 
                 FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES streamlog )
 
@@ -43,12 +40,11 @@ Description:
 
                 FIND_PACKAGE( ILCSOFT_CMAKE_MODULES )
 
-                ILCSOFT_CMAKE_MODULES_DIR or CMAKE_FIND_ROOT_PATH need to be
+                ILCSOFT_CMAKE_MODULES_DIR or CMAKE_PREFIX_PATH need to be
                 set in order to find ILCSOFT_CMAKE_MODULESConfig.cmake.
 
-                One should use this method if no other packages from ILCUTIL
-                will be used or if the package in question lives itself inside
-                ILCUTIL.
+                This method should be used in packages living inside ILCUTIL,
+                e.g. ILCTEST
 
 
 
@@ -71,6 +67,11 @@ Description:
         - streamlog
             This package provides a set of logging classes for C++ applications.
 
+
+
+        - example
+            This example shows how to create a new package in ILCUTIL which
+            depends on other sub-packages from ILCUTIL
 
 
 Build instructions:
