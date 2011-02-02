@@ -35,14 +35,16 @@ MARK_AS_ADVANCED ( Mokka_INCLUDE_DIRS Mokka_LIBRARIES )
 IF( EXISTS "${Mokka_DIR}" )
     
     EXECUTE_PROCESS(
-        COMMAND find ${Mokka_DIR}/source -name include -type d -printf "%p;"
+        COMMAND find ${Mokka_DIR}/source -name include -type d # -printf "%p;" # not recognized on mac osx
         OUTPUT_VARIABLE Mokka_INCLUDE_DIRS
         RESULT_VARIABLE _exit_code
     )
         
     IF( NOT _exit_code EQUAL 0 )
-        MESSAGE( STATUS "Check for Mokka includes -- failed (cmd: find Mokka_DIR/source -name include -type d -printf \"%p;\"" )
+        MESSAGE( STATUS "Check for Mokka includes -- failed (cmd: find Mokka_DIR/source -name include -type d" )
         SET( Mokka_INCLUDE_DIRS Mokka_INCLUDE_DIRS-NOTFOUND )
+    ELSE()
+        SEPARATE_ARGUMENTS( Mokka_INCLUDE_DIRS UNIX_COMMAND "${Mokka_INCLUDE_DIRS}" )
     ENDIF()
 
     IF( NOT DEFINED ENV{G4SYSTEM} )
