@@ -29,14 +29,16 @@ FIND_PATH( MySQL_INCLUDE_DIRS NAMES mysql.h PATHS ${MySQL_DIR}/include ${MySQL_D
 
 # if not found in MySQL_DIR / CMAKE_PREFIX_PATH / CMAKE_INCLUDE_PATH or CMAKE_FIND_ROOT_PATH ...
 # look into the following locations
-FIND_PATH( MySQL_INCLUDE_DIRS NAMES mysql.h PATHS
-    /usr
-    /usr/local
-    /opt/local
-    /opt/products/mysql/5.0.45
-    /opt/products/mysql/5.0.26
-    PATH_SUFFIXES include include/mysql include/mysql5/mysql
-)
+IF( NOT MySQL_DIR )
+    FIND_PATH( MySQL_INCLUDE_DIRS NAMES mysql.h PATHS
+        /usr
+        /usr/local
+        /opt/local
+        /opt/products/mysql/5.0.45
+        /opt/products/mysql/5.0.26
+        PATH_SUFFIXES include include/mysql include/mysql5/mysql
+    )
+ENDIF()
 
 
 
@@ -63,14 +65,16 @@ FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS
 
 # if not found in MySQL_DIR / CMAKE_PREFIX_PATH / CMAKE_LIBRARY_PATH or CMAKE_FIND_ROOT_PATH ...
 # look into the following locations:
-FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS
-    /usr
-    /usr/local
-    /opt/local
-    /opt/products/mysql/5.0.45
-    /opt/products/mysql/5.0.26
-    PATH_SUFFIXES lib64 lib64/mysql lib64/mysql5/mysql lib lib/mysql lib/mysql5/mysql
-)
+IF( NOT MySQL_DIR )
+    FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS
+        /usr
+        /usr/local
+        /opt/local
+        /opt/products/mysql/5.0.45
+        /opt/products/mysql/5.0.26
+        PATH_SUFFIXES lib64 lib64/mysql lib64/mysql5/mysql lib lib/mysql lib/mysql5/mysql
+    )
+ENDIF()
 IF( MySQL_LIBRARIES )
     GET_FILENAME_COMPONENT( MySQL_LIBRARY_DIRS ${MySQL_LIBRARIES} PATH )
     MARK_AS_ADVANCED( MySQL_LIBRARY_DIRS )

@@ -21,7 +21,9 @@ SET( CondDBMySQL_INCLUDE_DIRS CondDBMySQL_INCLUDE_DIRS-NOTFOUND )
 MARK_AS_ADVANCED( CondDBMySQL_INCLUDE_DIRS )
 
 FIND_PATH( CondDBMySQL_INCLUDE_DIRS NAMES CondDBInterface.h PATHS ${CondDBMySQL_DIR}/include NO_DEFAULT_PATH )
-FIND_PATH( CondDBMySQL_INCLUDE_DIRS NAMES CondDBInterface.h )
+IF( NOT CondDBMySQL_DIR )
+    FIND_PATH( CondDBMySQL_INCLUDE_DIRS NAMES CondDBInterface.h )
+ENDIF()
 
 
 # ---------- libraries --------------------------------------------------------

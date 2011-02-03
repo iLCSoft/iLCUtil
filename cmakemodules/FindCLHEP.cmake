@@ -21,7 +21,9 @@ SET( CLHEP_INCLUDE_DIRS CLHEP_INCLUDE_DIRS-NOTFOUND )
 MARK_AS_ADVANCED( CLHEP_INCLUDE_DIRS )
 
 FIND_PATH( CLHEP_INCLUDE_DIRS NAMES CLHEP/Vector/ThreeVector.h PATHS ${CLHEP_DIR}/include NO_DEFAULT_PATH )
-FIND_PATH( CLHEP_INCLUDE_DIRS NAMES CLHEP/Vector/ThreeVector.h )
+IF( NOT CLHEP_DIR )
+    FIND_PATH( CLHEP_INCLUDE_DIRS NAMES CLHEP/Vector/ThreeVector.h )
+ENDIF()
 
 
 # ---------- libraries --------------------------------------------------------

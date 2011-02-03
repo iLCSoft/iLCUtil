@@ -4,6 +4,7 @@
 # returns following variables:
 #
 #   ILCTEST_FOUND         : set to TRUE if ILCTEST found
+#   ILCTEST_VERSION       : package version
 #   ILCTEST_ROOT          : path to this ILCTEST installation
 #   ILCTEST_INCLUDE_DIRS  : list of paths to be used with INCLUDE_DIRECTORIES
 #   ILCTEST_DEPENDS_ILCSOFT_CMAKE_MODULES : path to ILCSOFT_CMAKE_MODULES
@@ -16,6 +17,7 @@
 ##############################################################################
 
 SET( ILCTEST_ROOT "@CMAKE_INSTALL_PREFIX@" )
+SET( ILCTEST_VERSION "@ILCTEST_VERSION@" )
 
 
 # ---------- cmake modules ----------------------------------------------------
