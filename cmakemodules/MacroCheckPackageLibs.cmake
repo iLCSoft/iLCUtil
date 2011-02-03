@@ -95,7 +95,9 @@ MACRO( CHECK_PACKAGE_LIBS _pkgname )
             NO_DEFAULT_PATH
         )
 
-        FIND_LIBRARY( ${_pkgname}_${_ulibname}_LIBRARY NAMES ${_libname} )
+        IF( NOT ${_pkgname}_DIR )
+            FIND_LIBRARY( ${_pkgname}_${_ulibname}_LIBRARY NAMES ${_libname} )
+        ENDIF()
         
         IF( ${_pkgname}_FIND_REQUIRED )
             LIST( APPEND ${_pkgname}_COMPONENT_VARIABLES ${_pkgname}_${_ulibname}_LIBRARY )

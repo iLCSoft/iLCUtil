@@ -4,6 +4,7 @@
 # returns following variables:
 #
 #   streamlog_FOUND      : set to TRUE if streamlog found
+#   streamlog_VERSION    : package version
 #   streamlog_ROOT       : path to this streamlog installation
 #   streamlog_LIBRARIES  : list of streamlog libraries
 #   streamlog_INCLUDE_DIRS  : list of paths to be used with INCLUDE_DIRECTORIES
@@ -13,6 +14,7 @@
 ##############################################################################
 
 SET( streamlog_ROOT "@CMAKE_INSTALL_PREFIX@" )
+SET( streamlog_VERSION "@streamlog_VERSION@" )
 
 
 # ---------- include dirs -----------------------------------------------------

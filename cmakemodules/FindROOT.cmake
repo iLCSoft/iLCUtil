@@ -71,13 +71,17 @@ ENDIF( DEFINED ROOT_DIR )
 SET( ROOT_CONFIG_EXECUTABLE ROOT_CONFIG_EXECUTABLE-NOTFOUND )
 MARK_AS_ADVANCED( ROOT_CONFIG_EXECUTABLE )
 FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config PATHS ${ROOT_DIR}/bin NO_DEFAULT_PATH )
-FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config )
+IF( NOT ROOT_DIR )
+    FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config )
+ENDIF()
 
 # find rootcint
 SET( ROOT_CINT_EXECUTABLE ROOT_CINT_EXECUTABLE-NOTFOUND )
 MARK_AS_ADVANCED( ROOT_CINT_EXECUTABLE )
 FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint PATHS ${ROOT_DIR}/bin NO_DEFAULT_PATH )
-FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint )
+IF( NOT ROOT_DIR )
+    FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint )
+ENDIF()
 
 IF( NOT ROOT_FIND_QUIETLY )
     MESSAGE( STATUS "Check for ROOT_CONFIG_EXECUTABLE: ${ROOT_CONFIG_EXECUTABLE}" )
@@ -91,39 +95,25 @@ IF( ROOT_CONFIG_EXECUTABLE )
     # ==============================================
     # ===          ROOT_VERSION                  ===
     # ==============================================
+
+    INCLUDE( MacroCheckPackageVersion )
     
-    # ---- cmake bug ?! ----
-    # FIND_PACKAGE does not behave the same for PKGConfig.cmake configuration files as for
-    # FindPKG.cmake modules, i.e. if PACKAGE_VERSION_UNSUITABLE is set to TRUE inside a
-    # PKGConfig.cmake file, then cmake throws an error. Unfortunately this is not true for
-    # FindPKG.cmake modules as well.
-    SET( ROOT_VERSION_SUITABLE TRUE )
+    EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --version
+        OUTPUT_VARIABLE _version
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( _exit_code EQUAL 0 )
 
-    IF( DEFINED ROOT_FIND_VERSION ) # FIND_PACKAGE called with version argument
+        # set required variables for MacroCheckPackageVersion
+        STRING(REGEX REPLACE "^([0-9]+).*" "\\1" ROOT_VERSION_MAJOR "${_version}")
+        STRING(REGEX REPLACE "^[0-9]+.([0-9]+).*" "\\1" ROOT_VERSION_MINOR "${_version}")
+        STRING(REGEX REPLACE "^[0-9]+.[0-9]+.([0-9]+).*" "\\1" ROOT_VERSION_PATCH "${_version}")
 
-        EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --version
-            OUTPUT_VARIABLE _version
-            RESULT_VARIABLE _exit_code
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        IF( _exit_code EQUAL 0 )
-
-            # set required variables for MacroCheckPackageVersion
-            STRING(REGEX REPLACE "^([0-9]+).*" "\\1" ROOT_VERSION_MAJOR "${_version}")
-            STRING(REGEX REPLACE "^[0-9]+.([0-9]+).*" "\\1" ROOT_VERSION_MINOR "${_version}")
-            STRING(REGEX REPLACE "^[0-9]+.[0-9]+.([0-9]+).*" "\\1" ROOT_VERSION_PATCH "${_version}")
-
-            # do the version checking
-            INCLUDE( MacroCheckPackageVersion )
-            CHECK_PACKAGE_VERSION( ROOT )
-
-            IF( PACKAGE_VERSION_UNSUITABLE )
-                SET( ROOT_VERSION_SUITABLE FALSE )
-            ENDIF()
-
-        ENDIF()
-
+        SET( ROOT_VERSION "${ROOT_VERSION_MAJOR}.${ROOT_VERSION_MINOR}.${ROOT_VERSION_PATCH}" )
     ENDIF()
+
+    CHECK_PACKAGE_VERSION( ROOT ${ROOT_VERSION} )
 
 
 
@@ -253,7 +243,7 @@ ENDIF( ROOT_CONFIG_EXECUTABLE )
 INCLUDE( FindPackageHandleStandardArgs )
 # set ROOT_FOUND to TRUE if all listed variables are TRUE and not empty
 # ROOT_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( ROOT DEFAULT_MSG ROOT_INCLUDE_DIRS ROOT_LIBRARIES ${ROOT_COMPONENT_VARIABLES} ROOT_VERSION_SUITABLE DL_LIB )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( ROOT DEFAULT_MSG ROOT_INCLUDE_DIRS ROOT_LIBRARIES ${ROOT_COMPONENT_VARIABLES} PACKAGE_VERSION_COMPATIBLE DL_LIB )
 
 IF( ROOT_FOUND )
     LIST( APPEND ROOT_LIBRARIES ${DL_LIB} )

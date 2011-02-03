@@ -4,6 +4,7 @@
 # returns following variables:
 #
 #   ILCUTIL_FOUND           : set to TRUE if ILCUTIL found
+#   ILCUTIL_VERSION         : package version
 #   ILCUTIL_ROOT            : path to this ILCUTIL installation
 #
 #
@@ -31,6 +32,7 @@
 ##############################################################################
 
 SET( ILCUTIL_ROOT "@CMAKE_INSTALL_PREFIX@" )
+SET( ILCUTIL_VERSION "@ILCUTIL_VERSION@" )
 
 LIST( APPEND CMAKE_PREFIX_PATH "${ILCUTIL_ROOT}" )
 
