@@ -49,9 +49,15 @@ SET( PACKAGE_VERSION_UNSUITABLE FALSE )
 # modules, therefore it is passed as an argument to the macro
 # _iversion is the installed version of the package
 # _sversion is the version searched by the user with FIND_PACKAGE
-MACRO( CHECK_PACKAGE_VERSION _pkgname _iversion )
+#MACRO( CHECK_PACKAGE_VERSION _pkgname _iversion )
+MACRO( CHECK_PACKAGE_VERSION _pkgname ) # left with one argument only for backwards compatibility
 
-    #SET( _iversion ${${_pkgname}_VERSION_MAJOR}.${${_pkgname}_VERSION_MINOR}.${${_pkgname}_VERSION_PATCH}.${${_pkgname}_VERSION_TWEAK} )
+    IF( NOT "${ARGV1}" STREQUAL "" )
+        SET( _iversion ${ARGV1} )
+    ELSE()
+        SET( _iversion ${${_pkgname}_VERSION_MAJOR}.${${_pkgname}_VERSION_MINOR}.${${_pkgname}_VERSION_PATCH}.${${_pkgname}_VERSION_TWEAK} )
+    ENDIF()
+
     #SET( _sversion_major ${${_pkgname}_FIND_VERSION_MAJOR} )
     #SET( _sversion_minor ${${_pkgname}_FIND_VERSION_MINOR} )
 
