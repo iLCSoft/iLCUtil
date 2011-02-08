@@ -11,12 +11,6 @@
 # @author Jan Engels, DESY
 #########################################################
 
-# -- fix for backwards compatibility
-IF( NOT DEFINED FastJet_DIR AND DEFINED FastJet_HOME )
-    SET( FastJet_DIR "${FastJet_HOME}" )
-ENDIF( NOT DEFINED FastJet_DIR AND DEFINED FastJet_HOME )
-
-
 
 # ---------- includes ---------------------------------------------------------
 SET( FastJet_INCLUDE_DIRS FastJet_INCLUDE_DIRS-NOTFOUND )

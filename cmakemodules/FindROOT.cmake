@@ -51,8 +51,6 @@
 ###############################################################################
 
 
-SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
-
 # find root-config
 SET( ROOT_CONFIG_EXECUTABLE ROOT_CONFIG_EXECUTABLE-NOTFOUND )
 MARK_AS_ADVANCED( ROOT_CONFIG_EXECUTABLE )

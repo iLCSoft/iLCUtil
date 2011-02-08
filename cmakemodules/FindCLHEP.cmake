@@ -10,11 +10,6 @@
 # @author Jan Engels, DESY
 #############################################################
 
-# -- fix for backwards compatibility
-IF( NOT DEFINED CLHEP_DIR AND DEFINED CLHEP_HOME )
-    SET( CLHEP_DIR "${CLHEP_HOME}" )
-ENDIF( NOT DEFINED CLHEP_DIR AND DEFINED CLHEP_HOME )
-
 
 # ---------- includes ---------------------------------------------------------
 SET( CLHEP_INCLUDE_DIRS CLHEP_INCLUDE_DIRS-NOTFOUND )

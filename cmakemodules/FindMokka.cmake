@@ -17,11 +17,6 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 SET( Mokka_CGA_FOUND FALSE )
 MARK_AS_ADVANCED( Mokka_CGA_FOUND )
 
-# -- fix for backwards compatibility
-IF( NOT DEFINED Mokka_DIR AND DEFINED Mokka_HOME )
-    SET( Mokka_DIR "${Mokka_HOME}" )
-ENDIF()
-
 IF( NOT Mokka_FIND_QUIETLY )
     MESSAGE( STATUS "Check for Mokka: ${Mokka_DIR}" )
 ENDIF()

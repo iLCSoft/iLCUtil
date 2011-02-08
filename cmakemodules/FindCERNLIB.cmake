@@ -10,12 +10,6 @@
 # @author Jan Engels, DESY
 #############################################################
 
-# -- fix for backwards compatibility
-IF( NOT DEFINED CERNLIB_DIR AND DEFINED CERNLIB_HOME )
-    SET( CERNLIB_DIR "${CERNLIB_HOME}" )
-ENDIF( NOT DEFINED CERNLIB_DIR AND DEFINED CERNLIB_HOME )
-
-
 
 # ---------- includes ---------------------------------------------------------
 SET( CERNLIB_INCLUDE_DIRS CERNLIB_INCLUDE_DIRS-NOTFOUND )

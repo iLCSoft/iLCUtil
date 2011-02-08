@@ -2,8 +2,9 @@
 # cmake module for finding AIDAJNI
 #
 # requires: (if auto-detection fails)
-#   JAVA_HOME
-#   JAIDA_HOME
+#   AIDAJNI_DIR
+#   JAIDA_DIR
+#   JAVA_DIR
 #
 # returns:
 #   AIDAJNI_FOUND        : set to TRUE or FALSE
@@ -17,14 +18,40 @@
 SET( AIDAJNI_FOUND FALSE )
 MARK_AS_ADVANCED( AIDAJNI_FOUND )
 
+
 # -- fix for backwards compatibility
-IF( NOT DEFINED AIDAJNI_DIR AND DEFINED AIDAJNI_HOME )
-    SET( AIDAJNI_DIR "${AIDAJNI_HOME}" )
+IF( NOT JAVA_DIR AND JAVA_HOME )
+    SET( JAVA_DIR "${JAVA_HOME}" )
 ENDIF()
+
+IF( NOT JAVA_DIR AND JDK_HOME )
+    SET( JAVA_DIR "${JDK_HOME}" )
+ENDIF()
+
+IF( NOT JAVA_DIR AND DEFINED ENV{JAVA_HOME} )
+    SET( JAVA_DIR "$ENV{JAVA_HOME}" )
+ENDIF()
+
+IF( NOT JAVA_DIR AND DEFINED ENV{JDK_HOME} )
+    SET( JAVA_DIR "$ENV{JDK_HOME}" )
+ENDIF()
+
+
+# -- fix for backwards compatibility
+IF( NOT JAIDA_DIR AND JAIDA_HOME )
+    SET( JAIDA_DIR "${JAIDA_HOME}" )
+ENDIF()
+
+IF( NOT JAIDA_DIR AND DEFINED ENV{JAIDA_HOME} )
+    SET( JAIDA_DIR "$ENV{JAIDA_HOME}" )
+ENDIF()
+
 
 IF( NOT AIDAJNI_FIND_QUIETLY )
     MESSAGE( STATUS "Check for AIDAJNI: ${AIDAJNI_DIR}" )
+    MESSAGE( STATUS "Check for JAIDA: ${JAIDA_DIR}" )
 ENDIF()
+
 
 # Java is required for AIDAJNI
 INCLUDE( FindJAVA )
@@ -33,17 +60,16 @@ IF( NOT JAVA_FOUND )
         MESSAGE( STATUS "Check for AIDAJNI -- failed to find Java" )
     ENDIF()
 ELSE()
-    # write JAVA_HOME to cache
-    SET( JAVA_HOME "${JAVA_HOME}" CACHE PATH "Path to JAVA" FORCE )
 
     # find libjvm.so
     SET( JAVA_LIB_JVM JAVA_LIB_JVM-NOTFOUND )
     MARK_AS_ADVANCED( JAVA_LIB_JVM )
     FIND_LIBRARY( JAVA_LIB_JVM
         NAMES jvm
-        PATHS ${JAVA_HOME}
+        PATHS ${JAVA_DIR}
         PATH_SUFFIXES jre/lib/i386/client jre/lib/amd64/client
-        NO_DEFAULT_PATH )
+        NO_DEFAULT_PATH
+    )
 
     IF( NOT JAVA_LIB_JVM AND NOT AIDAJNI_FIND_QUIETLY )
         MESSAGE( STATUS "Check for AIDAJNI jvm library -- failed" )
@@ -54,9 +80,10 @@ ELSE()
     MARK_AS_ADVANCED( JAVA_LIB_VERIFY )
     FIND_LIBRARY( JAVA_LIB_VERIFY
         NAMES verify
-        PATHS ${JAVA_HOME}
+        PATHS ${JAVA_DIR}
         PATH_SUFFIXES jre/lib/i386 jre/lib/amd64
-        NO_DEFAULT_PATH )
+        NO_DEFAULT_PATH
+    )
 
     IF( NOT JAVA_LIB_VERIFY AND NOT AIDAJNI_FIND_QUIETLY )
         MESSAGE( STATUS "Check for AIDAJNI verify library -- failed" )
@@ -64,21 +91,12 @@ ELSE()
 ENDIF()
 
 # JAIDA is required for AIDAJNI
-IF( NOT AIDAJNI_FIND_QUIETLY )
-    MESSAGE( STATUS "Check for JAIDA: ${JAIDA_HOME}" )
-ENDIF()
-IF( NOT DEFINED JAIDA_HOME AND NOT DEFINED ENV{JAIDA_HOME} )
+IF( NOT JAIDA_DIR )
     IF( NOT AIDAJNI_FIND_QUIETLY )
-        MESSAGE( STATUS "Check for JAIDA_HOME -- not set -- use: cmake -DJAIDA_HOME=/path/to/JAIDA" )
+        MESSAGE( STATUS "Check for JAIDA_DIR -- not set -- use: cmake -DJAIDA_DIR=/path/to/JAIDA" )
     ENDIF()
 ELSE()
-    # if only env var is defined
-    IF( NOT DEFINED JAIDA_HOME )
-        SET( JAIDA_HOME "$ENV{JAIDA_HOME}" )
-    ENDIF()
-    # write JAIDA_HOME to cache
-    SET( JAIDA_HOME "${JAIDA_HOME}" CACHE PATH "Path to JAIDA" FORCE )
-    FILE( GLOB JAIDA_JARS "${JAIDA_HOME}/lib/*.jar" )
+    FILE( GLOB JAIDA_JARS "${JAIDA_DIR}/lib/*.jar" )
     IF( NOT AIDAJNI_FIND_QUIETLY )
         IF( NOT JAIDA_JARS )
             MESSAGE( STATUS "Check for JAIDA -- jars not found!!" )
@@ -94,9 +112,10 @@ MARK_AS_ADVANCED( AIDAJNI_INCLUDE_DIRS )
 
 FIND_PATH( AIDAJNI_INCLUDE_DIRS
     NAMES AIDA/AIDA.h
-    PATHS ${AIDAJNI_HOME}
+    PATHS ${AIDAJNI_DIR}
     PATH_SUFFIXES include
-    NO_DEFAULT_PATH )
+    NO_DEFAULT_PATH
+)
 
 IF( NOT AIDAJNI_INCLUDE_DIRS AND NOT AIDAJNI_FIND_QUIETLY )
     MESSAGE( STATUS "Check for AIDAJNI includes -- failed" )
@@ -134,9 +153,10 @@ MARK_AS_ADVANCED( AIDAJNI_LIB AIDAJNI_LIB_VERSIONS AIDAJNI_LIB_PATH_SUFFIXES )
 
 FIND_LIBRARY( AIDAJNI_LIB
     NAMES ${AIDAJNI_LIB_VERSIONS}
-    PATHS ${AIDAJNI_HOME}/lib
+    PATHS ${AIDAJNI_DIR}/lib
     PATH_SUFFIXES ${AIDAJNI_LIB_PATH_SUFFIXES}
-    NO_DEFAULT_PATH )
+    NO_DEFAULT_PATH
+)
 # END OF FIXME
 
 # old libraries (before version 3.2.6)
@@ -154,9 +174,10 @@ IF( NOT AIDAJNI_LIB )
         
         FIND_LIBRARY( AIDAJNI_LIB_${libname}
             NAMES ${libname}
-            PATHS ${AIDAJNI_HOME}/lib
+            PATHS ${AIDAJNI_DIR}/lib
             PATH_SUFFIXES ${AIDAJNI_LIB_PATH_SUFFIXES}
-            NO_DEFAULT_PATH )
+            NO_DEFAULT_PATH
+        )
         
         IF( NOT AIDAJNI_LIB_${libname} )
             SET( AIDAJNI_FINDLIB_FAILED TRUE )
@@ -177,11 +198,12 @@ ENDIF()
 SET( AIDAJNI_JAR AIDAJNI_JAR-NOTFOUND )
 MARK_AS_ADVANCED( AIDAJNI_JAR )
 FIND_FILE( AIDAJNI_JAR NAMES
-        freehep-aidajni.jar
-        freehep-aidajni-3.2.6.jar
-    PATHS ${AIDAJNI_HOME}
+    freehep-aidajni.jar
+    freehep-aidajni-3.2.6.jar
+    PATHS ${AIDAJNI_DIR}
     PATH_SUFFIXES lib
-    NO_DEFAULT_PATH )
+    NO_DEFAULT_PATH
+)
 
 IF( NOT AIDAJNI_JAR AND NOT AIDAJNI_FIND_QUIETLY )
     MESSAGE( STATUS "Check for AIDAJNI freehep-aidajni.jar -- failed" )
@@ -251,9 +273,9 @@ IF( AIDAJNI_INCLUDE_DIRS AND NOT AIDAJNI_FINDLIB_FAILED AND AIDAJNI_JAR AND
     ENDIF()
 ELSE()
     IF( AIDAJNI_FIND_REQUIRED )
-        MESSAGE( FATAL_ERROR "Check for AIDAJNI -- failed" )
+        MESSAGE( FATAL_ERROR "Failed to find AIDAJNI" )
     ENDIF()
     IF( NOT AIDAJNI_FIND_QUIETLY )
-        MESSAGE( STATUS "Check for AIDAJNI -- failed -- skip AIDAJNI package..." )
+        MESSAGE( STATUS "Check for AIDAJNI -- failed" )
     ENDIF()
 ENDIF()

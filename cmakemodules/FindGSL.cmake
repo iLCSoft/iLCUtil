@@ -11,11 +11,6 @@
 # @author Jan Engels, DESY
 #########################################################
 
-# -- fix for backwards compatibility
-IF( NOT DEFINED GSL_DIR AND DEFINED GSL_HOME )
-    SET( GSL_DIR "${GSL_HOME}" )
-ENDIF( NOT DEFINED GSL_DIR AND DEFINED GSL_HOME )
-
 
 # find gsl-config
 SET( GSL_CONFIG_EXECUTABLE GSL_CONFIG_EXECUTABLE-NOTFOUND )
