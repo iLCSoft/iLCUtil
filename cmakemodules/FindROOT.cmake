@@ -51,22 +51,6 @@
 ###############################################################################
 
 
-SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
-
-# -- fix for backwards compatibility
-IF( NOT DEFINED ROOT_DIR AND DEFINED ROOT_HOME )
-    SET( ROOT_DIR "${ROOT_HOME}" )
-ENDIF( NOT DEFINED ROOT_DIR AND DEFINED ROOT_HOME )
-
-IF( NOT ROOT_FIND_QUIETLY )
-    MESSAGE( STATUS "Check for ROOT: ${ROOT_DIR}" )
-ENDIF( NOT ROOT_FIND_QUIETLY )
-
-# set ROOTSYS for running root-config
-IF( DEFINED ROOT_DIR )
-    SET( ENV{ROOTSYS} "${ROOT_DIR}" )
-ENDIF( DEFINED ROOT_DIR )
-
 # find root-config
 SET( ROOT_CONFIG_EXECUTABLE ROOT_CONFIG_EXECUTABLE-NOTFOUND )
 MARK_AS_ADVANCED( ROOT_CONFIG_EXECUTABLE )

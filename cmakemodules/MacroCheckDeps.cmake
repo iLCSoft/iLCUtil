@@ -22,11 +22,6 @@ MESSAGE( "MacroCheckDeps.cmake IS DEPRECATED !!! Please use the standard cmake F
 MACRO( CHECK_DEPS )
 
     # load macro
-    MESSAGE( STATUS "-------------------------------------------------------------------------------" )
-    MESSAGE( STATUS "Change a module with: cmake -D<ModuleName>_HOME=<Path_to_Module>" )
-    MESSAGE( STATUS )
-
-    # load macro
     IF( NOT DEFINED CMAKE_MODULE_PATH )
         MESSAGE( STATUS "Warning: CMAKE_MODULE_PATH not set! You can set it with: "
             "-DCMAKE_MODULE_PATH=\"/path_to_ilcsoft/CMakeModules;/foo/bar\"" )

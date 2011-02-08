@@ -13,66 +13,25 @@
  
 Description:
 ------------
-These cmake modules are needed to build the ilcsoft tools with cmake.
-Most of them are Find<PackageName>.cmake files that set the appropriate
-variables for include files and libraries in order to build with the given 
-Package.
+This package contains cmake modules, utility macros and default settings needed
+to build ilcsoft tools with cmake. Cmake modules consist of Find<PkgName>.cmake
+files used to find external tools (e.g. GSL, CLHEP) and to set appropriate
+variables to use in other packages in order to build with the given package, e.g.:
 
-They need to be installed, i.e. available on your system.
+FIND_PACKAGE( GSL )
+IF( GSL_FOUND )
+    INCLUDE_DIRECTORIES( ${GSL_INCLUDE_DIRS} )
+    LINK_LIBRARIES( ${GSL_LIBRARIES} )
+ENDIF( GSL_FOUND )
 
+Utility macros are used among the ilcsoft tools to keep the CMakeLists files
+more readable and maintainable.
 
+Default settings are loaded in (almost) all ilcsoft tools to ensure consistency
+among all tools, e.g. to build all tools in 32bit uncomment the following line in
+ilcsoft_default_settings.cmake:
+#INCLUDE( ilcsoft_build_32bit_compatible )
 
-There are also 2 macros available in the following files:
-
-MacroLoadPackage.cmake:
------------------------
-
-    LOAD_PACKAGE( Package_Name [QUIET] [REQUIRED] [LINK_ONLY] [NOACTION] )
-
-
-    Description:
-    ------------
-    this macro loads an ILC Software Package, i.e.:
-    when the macro LOAD_PACKAGE( PkgName ) is called, CMake first checks if
-    the variable <PkgName>_HOME is defined. If so, it tries to find a file
-    named <PkgName>Config.cmake in the path defined by this variable, if it
-    doesn't find it, it tries instead to find a cmake "Find" module named
-    after the package (Find<PkgName>.cmake) in the path defined by the variable
-    CMAKE_MODULE_PATH. If one of these files is found, CMake will check if the
-    is correctly installed by executing the file. After a successful check
-    a couple of variables (<PkgName>_INCLUDE_DIRS, <PkgName>_LIBRARIES,
-    <PkgName>_DEFINITIONS) will be set in order to use the package... The
-    macro LOAD_PACKAGE is aware of these variables and automatically uses them
-    for "loading" the package. For a more controled behaviour you can
-    additionally pass some parameters to the macro which in turn are
-    passed to the <PkgName>Config.cmake or Find<PkgName>.cmake modules.
-    For more information on the parameters check the MacroLoadPackage.cmake
-    file itself.
-    
-
-MacroCheckDeps.cmake:
------------------------
-
-    CHECK_DEPS()
-    
-    
-    Description:
-    ------------
-    this macro reads the following cmake variables of one project:
-        + BUILD_WITH
-        + LINK_WITH
-        + ${PROJECT_NAME}_DEPENDS
-    and calls LOAD_PACKAGE for each package defined in these variables.
-    
-    see below the table of arguments passed to LOAD_PACKAGE for each
-    variable:
-
-                            | QUIET | REQUIRED | LINK_ONLY | NOACTION
-    ------------------------|-------|----------|-----------|----------
-    BUILD_WITH              |       |     x    |           |
-    ------------------------|-------|----------|-----------|----------
-    LINK_WITH               |       |     x    |     x     |
-    ------------------------|-------|----------|-----------|----------
-    ${PROJECT_NAME}_DEPENDS |       |     x    |           |
-    ------------------------|-------|----------|-----------|----------
+This should set the appropriate compiler and linker flags (-m32) to build binaries
+and libraries in 32bit.
 

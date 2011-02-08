@@ -10,12 +10,6 @@
 # @author Jan Engels, DESY
 #############################################################
 
-# -- fix for backwards compatibility
-IF( NOT DEFINED MySQL_DIR AND DEFINED MySQL_HOME )
-    SET( MySQL_DIR "${MySQL_HOME}" )
-ENDIF( NOT DEFINED MySQL_DIR AND DEFINED MySQL_HOME )
-
-
 
 # ------------- include dirs ---------------------------------
 SET( MySQL_INCLUDE_DIRS MySQL_INCLUDE_DIRS-NOTFOUND )
