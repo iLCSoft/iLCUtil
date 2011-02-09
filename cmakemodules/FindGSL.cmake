@@ -4,6 +4,7 @@
 #
 # returns:
 #   GSL_FOUND        : set to TRUE or FALSE
+#   GSL_VERSION      : package version
 #   GSL_INCLUDE_DIRS : paths to gsl includes
 #   GSL_LIBRARY_DIRS : paths to gsl libraries
 #   GSL_LIBRARIES    : list of gsl libraries

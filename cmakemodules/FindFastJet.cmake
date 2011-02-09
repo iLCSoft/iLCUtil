@@ -4,12 +4,41 @@
 #
 # returns:
 #   FastJet_FOUND        : set to TRUE or FALSE
+#   FastJet_VERSION      : package version
 #   FastJet_INCLUDE_DIRS : paths to gsl includes
 #   FastJet_LIBRARY_DIRS : paths to gsl libraries
 #   FastJet_LIBRARIES    : list of gsl libraries
 #
 # @author Jan Engels, DESY
 #########################################################
+
+# find fastjet-config
+SET( FastJet_CONFIG_EXECUTABLE FastJet_CONFIG_EXECUTABLE-NOTFOUND )
+MARK_AS_ADVANCED( FastJet_CONFIG_EXECUTABLE )
+FIND_PROGRAM( FastJet_CONFIG_EXECUTABLE fastjet-config PATHS ${FastJet_DIR}/bin NO_DEFAULT_PATH )
+IF( NOT FastJet_DIR )
+    FIND_PROGRAM( FastJet_CONFIG_EXECUTABLE fastjet-config )
+ENDIF()
+
+IF( FastJet_CONFIG_EXECUTABLE )
+
+    # ==============================================
+    # ===          FastJet_VERSION               ===
+    # ==============================================
+    INCLUDE( MacroCheckPackageVersion )
+
+    EXECUTE_PROCESS( COMMAND "${FastJet_CONFIG_EXECUTABLE}" --version
+        OUTPUT_VARIABLE FastJet_VERSION
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( _exit_code EQUAL 0 )
+        CHECK_PACKAGE_VERSION( FastJet ${FastJet_VERSION} )
+    ELSE()
+        SET( FastJet_VERSION )
+    ENDIF()
+
+ENDIF( FastJet_CONFIG_EXECUTABLE )
 
 
 # ---------- includes ---------------------------------------------------------
@@ -36,7 +65,7 @@ CHECK_PACKAGE_LIBS( FastJet fastjet )
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set FASTJET_FOUND to TRUE if all listed variables are TRUE and not empty
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( FastJet DEFAULT_MSG FastJet_DIR FastJet_INCLUDE_DIRS FastJet_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( FastJet DEFAULT_MSG FastJet_DIR FastJet_INCLUDE_DIRS FastJet_LIBRARIES PACKAGE_VERSION_COMPATIBLE )
 
 SET( FastJet_FOUND ${FASTJET_FOUND} )
 
