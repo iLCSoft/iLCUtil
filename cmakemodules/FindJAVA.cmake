@@ -16,11 +16,10 @@
 # JAVA_ARCHIVE  - path to ${JAVA_BIN_PATH}/jar
 # JAVA_DOC      - path to ${JAVA_BIN_PATH}/javadoc
 #
-# JAVA_MAJOR_VERSION
-# JAVA_MINOR_VERSION
-# JAVA_PATCH_LEVEL
-#
-# JAVA_VERSION - ${JAVA_MAJOR_VERSION}.${JAVA_MINOR_VERSION}.${JAVA_PATCH_LEVEL}
+# JAVA_VERSION_MAJOR
+# JAVA_VERSION_MINOR
+# JAVA_VERSION_PATCH
+# JAVA_VERSION (MAJOR.MINOR.PATCH)
 #
 # @author Jan Engels, DESY
 ##################################################################################
