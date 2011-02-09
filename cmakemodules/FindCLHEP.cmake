@@ -3,12 +3,45 @@
 #
 # returns:
 #   CLHEP_FOUND        : set to TRUE or FALSE
+#   CLHEP_VERSION      : package version
 #   CLHEP_INCLUDE_DIRS : paths to clhep includes
 #   CLHEP_LIBRARY_DIRS : paths to clhep libraries
 #   CLHEP_LIBRARIES    : list of clhep libraries
 #
 # @author Jan Engels, DESY
 #############################################################
+
+
+# find clhep-config
+SET( CLHEP_CONFIG_EXECUTABLE CLHEP_CONFIG_EXECUTABLE-NOTFOUND )
+MARK_AS_ADVANCED( CLHEP_CONFIG_EXECUTABLE )
+FIND_PROGRAM( CLHEP_CONFIG_EXECUTABLE clhep-config PATHS ${CLHEP_DIR}/bin NO_DEFAULT_PATH )
+IF( NOT CLHEP_DIR )
+    FIND_PROGRAM( CLHEP_CONFIG_EXECUTABLE clhep-config )
+ENDIF()
+
+IF( CLHEP_CONFIG_EXECUTABLE )
+
+    # ==============================================
+    # ===          CLHEP_VERSION                   ===
+    # ==============================================
+    INCLUDE( MacroCheckPackageVersion )
+
+    EXECUTE_PROCESS( COMMAND "${CLHEP_CONFIG_EXECUTABLE}" --version
+        OUTPUT_VARIABLE _output
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( _exit_code EQUAL 0 )
+        SEPARATE_ARGUMENTS( CLHEP_VERSION UNIX_COMMAND "${_output}" )
+        LIST( REMOVE_AT CLHEP_VERSION 0 ) # remove CLHEP string from output of 'clhep-config --version'
+        MESSAGE( STATUS "CLHEP version (${CLHEP_VERSION}) detected" )
+        CHECK_PACKAGE_VERSION( CLHEP ${CLHEP_VERSION} )
+    ELSE()
+        SET( CLHEP_VERSION )
+    ENDIF()
+
+ENDIF( CLHEP_CONFIG_EXECUTABLE )
 
 
 # ---------- includes ---------------------------------------------------------
