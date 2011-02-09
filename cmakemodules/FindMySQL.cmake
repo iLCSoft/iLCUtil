@@ -3,12 +3,42 @@
 #
 # returns:
 #   MySQL_FOUND        : set to TRUE or FALSE
+#   MySQL_VERSION      : package version
 #   MySQL_INCLUDE_DIRS : paths to mysql includes
 #   MySQL_LIBRARY_DIRS : paths to mysql libraries
 #   MySQL_LIBRARIES    : list of mysql libraries
 #
 # @author Jan Engels, DESY
 #############################################################
+
+
+# ------------- mysql_config  --------------------------------
+SET( MySQL_CONFIG_EXECUTABLE MySQL_CONFIG_EXECUTABLE-NOTFOUND )
+MARK_AS_ADVANCED( MySQL_CONFIG_EXECUTABLE )
+FIND_PROGRAM( MySQL_CONFIG_EXECUTABLE mysql_config PATHS ${MySQL_DIR}/bin NO_DEFAULT_PATH )
+IF( NOT MySQL_DIR )
+    FIND_PROGRAM( MySQL_CONFIG_EXECUTABLE mysql_config )
+ENDIF()
+
+IF( MySQL_CONFIG_EXECUTABLE )
+
+    # ==============================================
+    # ===          MySQL_VERSION                   ===
+    # ==============================================
+    INCLUDE( MacroCheckPackageVersion )
+
+    EXECUTE_PROCESS( COMMAND "${MySQL_CONFIG_EXECUTABLE}" --version
+        OUTPUT_VARIABLE MySQL_VERSION
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( _exit_code EQUAL 0 )
+        CHECK_PACKAGE_VERSION( MySQL ${MySQL_VERSION} )
+    ELSE()
+        SET( MySQL_VERSION )
+    ENDIF()
+
+ENDIF( MySQL_CONFIG_EXECUTABLE )
 
 
 # ------------- include dirs ---------------------------------
@@ -79,7 +109,7 @@ ENDIF( MySQL_LIBRARIES )
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set MySQL_FOUND to TRUE if all listed variables are TRUE and not empty
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( MySQL DEFAULT_MSG MySQL_INCLUDE_DIRS MySQL_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( MySQL DEFAULT_MSG MySQL_INCLUDE_DIRS MySQL_LIBRARIES PACKAGE_VERSION_COMPATIBLE )
 
 SET( MySQL_FOUND ${MYSQL_FOUND} )
 
