@@ -35,7 +35,6 @@ IF( CLHEP_CONFIG_EXECUTABLE )
     IF( _exit_code EQUAL 0 )
         SEPARATE_ARGUMENTS( CLHEP_VERSION UNIX_COMMAND "${_output}" )
         LIST( REMOVE_AT CLHEP_VERSION 0 ) # remove CLHEP string from output of 'clhep-config --version'
-        MESSAGE( STATUS "CLHEP version (${CLHEP_VERSION}) detected" )
         CHECK_PACKAGE_VERSION( CLHEP ${CLHEP_VERSION} )
     ELSE()
         SET( CLHEP_VERSION )
@@ -67,5 +66,5 @@ CHECK_PACKAGE_LIBS( CLHEP CLHEP )
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set CLHEP_FOUND to TRUE if all listed variables are TRUE and not empty
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( CLHEP DEFAULT_MSG CLHEP_INCLUDE_DIRS CLHEP_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( CLHEP DEFAULT_MSG CLHEP_INCLUDE_DIRS CLHEP_LIBRARIES PACKAGE_VERSION_COMPATIBLE )
 
