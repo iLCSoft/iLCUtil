@@ -26,21 +26,25 @@ IF( CMAKE_COMPILER_IS_GNUCC )
     EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -dumpmachine OUTPUT_VARIABLE GCC_MACHINE OUTPUT_STRIP_TRAILING_WHITESPACE )
 ENDIF()
 
-LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH
-    /usr/lib/gcc/${GCC_MACHINE}/${GCC_VERSION}
-)
-
+# ------- needed for 32bit compatibility mode  ------------------
 IF( CMAKE_SIZEOF_VOID_P EQUAL 8 ) # 64bit platform
     IF( BUILD_32BIT_COMPATIBLE ) # 32bit compatibility mode
-        LIST( INSERT FORTRAN_LIBRARY_SEARCH_PATH 0
+        LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH
             /usr/lib/gcc/${GCC_MACHINE}/${GCC_VERSION}/32
         )
-    ELSE() # 64bit native
-        LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH /usr/lib64 )
     ENDIF()
-ELSE() # 32bit platform
-    LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH /usr/lib )
+ELSE() # 32bit platform or 64bit with CXXFLAGS="-m32"
+    LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH
+        /usr/lib/gcc/${GCC_MACHINE}/${GCC_VERSION}/32
+    )
 ENDIF()
+# ---------------------------------------------------------------
+
+LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH
+    /usr/lib/gcc/${GCC_MACHINE}/${GCC_VERSION}
+    #/usr/lib64
+    #/usr/lib
+)
 
 IF( APPLE )
     LIST( INSERT FORTRAN_LIBRARY_SEARCH_PATH 0 /usr/osxws/lib )
