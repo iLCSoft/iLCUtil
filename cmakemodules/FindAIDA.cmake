@@ -1,13 +1,13 @@
 ################################################################
 # cmake module for finding AIDA
 #
-# requires AIDA_DIR set to a RAIDA or JAIDA implementation
+# requires AIDA_DIR set to a RAIDA implementation
 #
 # returns:
 #   AIDA_FOUND        : set to TRUE or FALSE
-#   AIDA_INCLUDE_DIRS : paths to RAIDA/AIDAJNI includes
-#   AIDA_LIBRARY_DIRS : paths to RAIDA/AIDAJNI libraries
-#   AIDA_LIBRARIES    : list of RAIDA/AIDAJNI libraries
+#   AIDA_INCLUDE_DIRS : paths to AIDA includes
+#   AIDA_LIBRARY_DIRS : paths to AIDA libraries
+#   AIDA_LIBRARIES    : list of AIDA libraries
 #
 # @author Jan Engels, DESY
 ################################################################
@@ -17,7 +17,6 @@ MARK_AS_ADVANCED( AIDA_FOUND )
 
 IF( AIDA_DIR )
 
-    # first try finding RAIDA
     SET( RAIDA_DIR "${AIDA_DIR}" )
     FIND_PACKAGE( RAIDA QUIET )
 
@@ -34,24 +33,25 @@ IF( AIDA_DIR )
     ENDIF()
 
 
-    # if RAIDA not found try finding JAIDA
-    IF( NOT AIDA_FOUND )
-        
-        SET( AIDAJNI_DIR "${AIDA_DIR}" )
-        FIND_PACKAGE( AIDAJNI QUIET )
+    # if RAIDA not found try finding JAIDA (DEPRECATED)
+    #IF( NOT AIDA_FOUND )
+    #    
+    #    SET( JAIDA_DIR "${AIDA_DIR}" )
+    #    FIND_PACKAGE( JAIDA QUIET )
 
-        IF( AIDAJNI_FOUND )
-            SET( AIDAJNI_DIR ${AIDA_DIR} CACHE PATH "Path to AIDAJNI" FORCE )
-            IF( NOT AIDA_FIND_QUIETLY )
-                FIND_PACKAGE( AIDAJNI )
-            ENDIF()
-            SET( AIDA_FOUND TRUE )
-            SET( AIDA_INCLUDE_DIRS ${AIDAJNI_INCLUDE_DIRS} )
-            SET( AIDA_LIBRARY_DIRS ${AIDAJNI_LIBRARY_DIRS} )
-            SET( AIDA_LIBRARIES ${AIDAJNI_LIBRARIES} )
-            SET( AIDA_DEFINITIONS ${AIDAJNI_DEFINITIONS} )
-        ENDIF()
-    ENDIF()
+    #    IF( JAIDA_FOUND )
+    #        SET( JAIDA_DIR ${AIDA_DIR} CACHE PATH "Path to JAIDA" FORCE )
+    #        IF( NOT AIDA_FIND_QUIETLY )
+    #            FIND_PACKAGE( JAIDA )
+    #        ENDIF()
+    #        SET( AIDA_FOUND TRUE )
+    #        SET( AIDA_INCLUDE_DIRS ${JAIDA_INCLUDE_DIRS} )
+    #        SET( AIDA_LIBRARY_DIRS ${JAIDA_LIBRARY_DIRS} )
+    #        SET( AIDA_LIBRARIES ${JAIDA_LIBRARIES} )
+    #        SET( AIDA_DEFINITIONS ${JAIDA_DEFINITIONS} )
+    #    ENDIF()
+    #ENDIF()
+
     MARK_AS_ADVANCED( AIDA_INCLUDE_DIRS AIDA_LIBRARY_DIRS AIDA_LIBRARIES AIDA_DEFINITIONS )
 
 ENDIF( AIDA_DIR )
@@ -68,3 +68,4 @@ ELSE()
         MESSAGE( STATUS "Check for AIDA -- not found" )
     ENDIF()
 ENDIF()
+
