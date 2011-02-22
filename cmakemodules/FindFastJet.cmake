@@ -65,7 +65,7 @@ CHECK_PACKAGE_LIBS( FastJet fastjet )
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set FASTJET_FOUND to TRUE if all listed variables are TRUE and not empty
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( FastJet DEFAULT_MSG FastJet_DIR FastJet_INCLUDE_DIRS FastJet_LIBRARIES PACKAGE_VERSION_COMPATIBLE )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( FastJet DEFAULT_MSG FastJet_INCLUDE_DIRS FastJet_LIBRARIES PACKAGE_VERSION_COMPATIBLE )
 
 SET( FastJet_FOUND ${FASTJET_FOUND} )
 

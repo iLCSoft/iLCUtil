@@ -85,7 +85,7 @@ ENDIF()
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set Mokka_FOUND to TRUE if all listed variables are TRUE and not empty
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( Mokka DEFAULT_MSG Mokka_DIR Mokka_INCLUDE_DIRS Mokka_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( Mokka DEFAULT_MSG Mokka_INCLUDE_DIRS Mokka_LIBRARIES )
 
 
 SET( Mokka_FOUND ${MOKKA_FOUND} )
