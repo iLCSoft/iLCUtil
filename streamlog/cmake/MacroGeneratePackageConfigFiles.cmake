@@ -1,3 +1,4 @@
+#GET_FILENAME_COMPONENT( _current_dir ${CMAKE_CURRENT_LIST_FILE} PATH )
 
 # helper macro for generating project configuration file
 MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
@@ -9,6 +10,12 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
                                 "${PROJECT_BINARY_DIR}/${arg}" @ONLY
                 )
                 INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION . )
+                #IF( EXISTS "${_current_dir}/MacroCheckPackageLibs.cmake" )
+                #    INSTALL( FILES "${_current_dir}/MacroCheckPackageLibs.cmake" DESTINATION cmake )
+                #ENDIF()
+                #IF( EXISTS "${_current_dir}/MacroExportPackageDeps.cmake" )
+                #    INSTALL( FILES "${_current_dir}/MacroExportPackageDeps.cmake" DESTINATION cmake )
+                #ENDIF()
             ENDIF()
         ENDIF()
 
@@ -20,6 +27,9 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
                                 "${PROJECT_BINARY_DIR}/${arg}" @ONLY
                 )
                 INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION . )
+                #IF( EXISTS "${_current_dir}/MacroCheckPackageVersion.cmake" )
+                #    INSTALL( FILES "${_current_dir}/MacroCheckPackageVersion.cmake" DESTINATION cmake )
+                #ENDIF()
             ENDIF( EXISTS "${PROJECT_SOURCE_DIR}/cmake/${arg}.in" )
         ENDIF()
 
