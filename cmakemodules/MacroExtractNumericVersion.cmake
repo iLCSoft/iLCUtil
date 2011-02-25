@@ -1,7 +1,7 @@
 
 ##############################################################################
 # macro for extracting a numeric version from a string, e.g.
-# NUMERIC_VERSION_EXTRACTOR( "v01-00-03" )
+# EXTRACT_NUMERIC_VERSION( "v01-00-03" )
 # message( "NUMERIC VERSION: ${NUMERIC_VERSION}" ) --> NUMERIC VERSION: 01.00.03
 #
 # if a version is found, the following varibles are returned:
@@ -15,7 +15,7 @@
 # Jan Engels, Desy - IT
 ##############################################################################
 
-macro( NUMERIC_VERSION_EXTRACTOR _version )
+macro( EXTRACT_NUMERIC_VERSION _version )
 
     if( "${_version}" MATCHES "[0-9]+.[0-9]+" ) # version found
 
