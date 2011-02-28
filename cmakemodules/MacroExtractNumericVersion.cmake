@@ -17,6 +17,12 @@
 
 macro( EXTRACT_NUMERIC_VERSION _version )
 
+    unset( NUMERIC_VERSION )
+    unset( VERSION_MAJOR )
+    unset( VERSION_MINOR )
+    unset( VERSION_PATCH )
+    unset( VERSION_TWEAK )
+
     if( "${_version}" MATCHES "[0-9]+.[0-9]+" ) # version found
 
         string( REGEX REPLACE "[^0-9]*([0-9]+).*" "\\1" VERSION_MAJOR "${_version}" )
