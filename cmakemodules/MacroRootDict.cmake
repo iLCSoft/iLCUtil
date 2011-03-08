@@ -26,17 +26,17 @@ ENDIF()
 #   sorts LinkDef.h to be the last header (required by rootcint)
 #
 # arguments:
-#   INPUT_DIR - directory to search for headers matching *.h
+#   input_dir - directory to search for headers matching *.h
 #
 # returns:
-#   ROOT_DICT_INPUT_HEADERS - all header files found in INPUT_DIR with
+#   ROOT_DICT_INPUT_HEADERS - all header files found in input_dir with
 #       LinkDef.h as the last header (if found)
 #
 # ----------------------------------------------------------------------------
-MACRO( PREPARE_ROOT_DICT_HEADERS INPUT_DIR )
+MACRO( PREPARE_ROOT_DICT_HEADERS _input_dir )
 
-    FILE( GLOB ROOT_DICT_INPUT_HEADERS "${INPUT_DIR}/*.h" )
-    FILE( GLOB _linkdef_hdr "${INPUT_DIR}/LinkDef.h" )
+    FILE( GLOB ROOT_DICT_INPUT_HEADERS "${_input_dir}/*.h" )
+    FILE( GLOB _linkdef_hdr "${_input_dir}/LinkDef.h" )
 
     #LIST( FIND ROOT_DICT_INPUT_HEADERS ${_linkdef_hdr} _aux )
     #IF( ${_aux} EQUAL 0 OR ${_aux} GREATER 0 )
@@ -55,6 +55,31 @@ ENDMACRO( PREPARE_ROOT_DICT_HEADERS )
 
 
 
+# ============================================================================
+# helper macro to generate Linkdef.h files for rootcint
+#
+# arguments:
+#   namespace - prefix used for creating header <namespace>_Linkdef.h
+#   ARGN      - list of sources to be used for generating Linkdef.h
+#
+# returns:
+#   ROOT_DICT_INPUT_HEADERS - all header files + <namespace>_LinkDef.h in the
+#       correct order to be used by macro GEN_ROOT_DICT_SOURCES
+#
+# ----------------------------------------------------------------------------
+MACRO( GEN_ROOT_DICT_LINKDEF_HEADER _namespace )
+
+    SET( _linkdef_header "${ROOT_DICT_OUTPUT_DIR}/${_namespace}_Linkdef.h" )
+
+    IF( NOT EXISTS "${_linkdef_header}" )
+        FOREACH( _header ${ARGN} )
+            FILE( APPEND "${_linkdef_header}" "#pragma link C++ defined_in \"${_header}\";\n" )
+        ENDFOREACH()
+    ENDIF()
+
+    SET( ROOT_DICT_INPUT_HEADERS ${ARGN} ${_linkdef_header} )
+
+ENDMACRO()
 
 
 # ============================================================================
