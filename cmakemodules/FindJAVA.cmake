@@ -9,6 +9,7 @@
 # JAVA_FOUND    - set to TRUE or FALSE (javadoc is ignored for the test)
 #
 # JAVA_DIR      - base dir where subdirs bin, lib, jre and include are located
+# JAVA_HOME     - same as JAVA_DIR
 # JAVA_BIN_PATH - path to subdirectory "${JAVA_DIR}/bin"
 #
 # JAVA_RUNTIME  - path to ${JAVA_BIN_PATH}/java
@@ -186,7 +187,13 @@ ELSE() # try to autodetect java
         ENDIF()
     ENDIF()
 
+ENDIF()
 
+IF( JAVA_DIR )
+    SET( JAVA_HOME "${JAVA_DIR}" )
+    IF( NOT JAVA_FIND_QUIETLY )
+        MESSAGE( STATUS "JAVA_HOME set to ${JAVA_DIR}" )
+    ENDIF()
 ENDIF()
 
 IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
