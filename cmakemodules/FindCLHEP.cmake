@@ -23,7 +23,21 @@ ENDIF()
 IF( CLHEP_CONFIG_EXECUTABLE )
 
     # ==============================================
-    # ===          CLHEP_VERSION                   ===
+    # ===          CLHEP_PREFIX                  ===
+    # ==============================================
+
+    EXECUTE_PROCESS( COMMAND "${CLHEP_CONFIG_EXECUTABLE}" --prefix
+        OUTPUT_VARIABLE CLHEP_ROOT
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( NOT _exit_code EQUAL 0 )
+        SET( CLHEP_ROOT )
+    ENDIF()
+
+
+    # ==============================================
+    # ===          CLHEP_VERSION                 ===
     # ==============================================
     INCLUDE( MacroCheckPackageVersion )
 

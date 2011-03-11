@@ -20,6 +20,9 @@ IF( NOT CERNLIB_DIR )
     FIND_PATH( CERNLIB_INCLUDE_DIRS NAMES cfortran/paw.h )
 ENDIF()
 
+IF( CERNLIB_INCLUDE_DIRS )
+    GET_FILENAME_COMPONENT( CERNLIB_ROOT ${CERNLIB_INCLUDE_DIRS} PATH )
+ENDIF()
 
 
 # ---------- libraries --------------------------------------------------------

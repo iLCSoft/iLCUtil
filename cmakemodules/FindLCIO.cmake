@@ -31,7 +31,9 @@ IF( NOT LCIO_DIR )
     FIND_PATH( LCIO_INCLUDE_DIRS NAMES lcio.h )
 ENDIF()
 
-    
+IF( LCIO_INCLUDE_DIRS )
+    GET_FILENAME_COMPONENT( LCIO_ROOT ${LCIO_INCLUDE_DIRS} PATH )
+ENDIF()
 
 
 # ---------- libraries --------------------------------------------------------
