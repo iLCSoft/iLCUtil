@@ -24,6 +24,21 @@ ENDIF()
 IF( GSL_CONFIG_EXECUTABLE )
 
     # ==============================================
+    # ===          GSL_PREFIX                    ===
+    # ==============================================
+
+    EXECUTE_PROCESS( COMMAND "${GSL_CONFIG_EXECUTABLE}" --prefix
+        OUTPUT_VARIABLE GSL_ROOT
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( NOT _exit_code EQUAL 0 )
+        SET( GSL_ROOT )
+    ENDIF()
+
+
+
+    # ==============================================
     # ===          GSL_VERSION                   ===
     # ==============================================
     INCLUDE( MacroCheckPackageVersion )

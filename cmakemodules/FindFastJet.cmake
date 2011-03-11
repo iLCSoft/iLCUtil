@@ -23,6 +23,19 @@ ENDIF()
 IF( FastJet_CONFIG_EXECUTABLE )
 
     # ==============================================
+    # ===          FastJet_PREFIX                ===
+    # ==============================================
+
+    EXECUTE_PROCESS( COMMAND "${FastJet_CONFIG_EXECUTABLE}" --prefix
+        OUTPUT_VARIABLE FastJet_ROOT
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( NOT _exit_code EQUAL 0 )
+        SET( FastJet_ROOT )
+    ENDIF()
+
+    # ==============================================
     # ===          FastJet_VERSION               ===
     # ==============================================
     INCLUDE( MacroCheckPackageVersion )
