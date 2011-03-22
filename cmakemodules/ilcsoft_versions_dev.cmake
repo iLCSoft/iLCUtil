@@ -1,6 +1,6 @@
 
 # ============ ilcsoft core packages ================
-set( lcio_version               "HEAD"  )
+set( lcio_version               "trunk"  )
 set( ilcutil_version            "trunk" )
 set( ced_version                "trunk" )
 set( gear_version               "trunk" )
