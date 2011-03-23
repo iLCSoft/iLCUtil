@@ -459,6 +459,16 @@ if( "${install_qt4}" STREQUAL "YES" )
     endif()
     if( "${qt4_version}" VERSION_LESS "4.5" )
         list( APPEND qt4_cfg_options -no-tablet )
+
+        # installing qt 4.2.2 under ubuntu 10.04 failed trying to autodetect endianness
+        include( TestBigEndian )
+        TEST_BIG_ENDIAN( big_endian )
+        if( big_endian )
+            list( APPEND qt4_cfg_options -big-endian )
+        else()
+            list( APPEND qt4_cfg_options -little-endian )
+        endif()
+    
     endif()
     if( "${qt4_version}" VERSION_GREATER "4.3" )
         list( APPEND qt4_cfg_options -no-webkit )
@@ -544,7 +554,7 @@ macro( ADD_ILCSOFT_MARLIN_PACKAGE _pkg_name )
 
     if( "${install_${_lpkg_name}}" STREQUAL "YES" )
         message( "++ install ${_lpkg_name} (${${_lpkg_name}_version}) from source" )
-        set( MARLIN_DLL "${MARLIN_DLL}:${CMAKE_SHARED_LIBRARY_PREFIX}${_pkg_name}${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+        set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${_pkg_name}${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
     endif()
 
 endmacro()
@@ -595,7 +605,7 @@ ADD_ILCSOFT_CORE_PACKAGE( PandoraPFANew )
 # CORE_PACKAGE (due to MarlinRecoConfig.cmake) and Marlin plugin
 ADD_ILCSOFT_CORE_PACKAGE( MarlinReco )
 if( "${install_marlinreco}" STREQUAL "YES" )
-    set( MARLIN_DLL "${MARLIN_DLL}:${CMAKE_SHARED_LIBRARY_PREFIX}MarlinReco${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+    set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}MarlinReco${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
 endif()
 
 ADD_ILCSOFT_MARLIN_PACKAGE( CEDViewer )
