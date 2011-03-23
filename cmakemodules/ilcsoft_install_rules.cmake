@@ -75,10 +75,11 @@ macro( SET_PKG_EP_ARGS _pkg_name _pkg_version )
     if( NUMERIC_VERSION )
         set( _ep_base ${_lpkg_name}-${NUMERIC_VERSION}-prefix )
     else()
-        # replace slashes with underscores
-        string( REPLACE "/" "_" _pkg_version "${_pkg_version}" )
         set( _ep_base ${_lpkg_name}-${_pkg_version}-prefix )
     endif()
+
+    # replace slashes with underscores
+    string( REPLACE "/" "_" _ep_base "${_ep_base}" )
 
     # external project arguments passed to an ilcsoft package
     set( ${_lpkg_name}_ep_args ${${_lpkg_name}_ep_args}
