@@ -358,7 +358,7 @@ if( "${install_gsl}" STREQUAL "YES" )
         #${common_ep_args}
         URL "ftp://ftp.gnu.org/gnu/gsl/gsl-${gsl_version}.tar.gz"
         BUILD_IN_SOURCE 1
-        CONFIGURE_COMMAND ./configure --prefix=${external_install_prefix}
+        CONFIGURE_COMMAND ./configure --enable-static=no --prefix=${external_install_prefix}
     )
     # this variables have to be set in order to compile ROOT from source
     set( GSL_INCLUDE_DIRS "${external_install_prefix}/include" )
