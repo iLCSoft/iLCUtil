@@ -65,40 +65,6 @@ endif()
 
 
 
-# ----- helper macro to set common external project arguments ----------------
-macro( SET_PKG_EP_ARGS _pkg_name _pkg_version )
-
-    string( TOLOWER ${_pkg_name} _lpkg_name )
-
-    EXTRACT_NUMERIC_VERSION( "${_pkg_version}" )
-
-    if( NUMERIC_VERSION )
-        set( _ep_base ${_lpkg_name}-${NUMERIC_VERSION}-prefix )
-    else()
-        set( _ep_base ${_lpkg_name}-${_pkg_version}-prefix )
-    endif()
-
-    # replace slashes with underscores
-    string( REPLACE "/" "_" _ep_base "${_ep_base}" )
-
-    # external project arguments passed to an ilcsoft package
-    set( ${_lpkg_name}_ep_args ${${_lpkg_name}_ep_args}
-        LIST_SEPARATOR % # needed for CMAKE_PREFIX_PATH
-        SOURCE_DIR ${ilcsoft_sources_prefix}${_ep_base}/src
-        BINARY_DIR ${_ep_base}/build
-        DOWNLOAD_DIR ${_ep_base}/download
-        STAMP_DIR ${_ep_base}/stamp
-        TMP_DIR ${_ep_base}/tmp
-        #INSTALL_DIR ${_ep_base}/install
-        INSTALL_DIR ${ilcsoft_install_prefix}
-    )
-
-endmacro()
-# ----------------------------------------------------------------------------
-
-
-
-
 # ----- wrapper macro for cmake find_package commando ------------------------
 # tries to find a package with a given version. If not found it creates
 # a dummy custom_target needed to handle the dependencies between the
@@ -503,7 +469,29 @@ macro( ADD_ILCSOFT_PACKAGE _pkg_name )
 
     string( TOLOWER ${_pkg_name} _lpkg_name )
 
-    SET_PKG_EP_ARGS( ${_pkg_name} ${${_lpkg_name}_version} )
+
+    EXTRACT_NUMERIC_VERSION( "${${_lpkg_name}_version}" )
+
+    if( NUMERIC_VERSION )
+        set( ${_lpkg_name}_ep_base ${_lpkg_name}-${NUMERIC_VERSION}-prefix )
+    else()
+        set( ${_lpkg_name}_ep_base ${_lpkg_name}-${${_lpkg_name}_version}-prefix )
+    endif()
+
+    # replace slashes with underscores
+    string( REPLACE "/" "_" ${_lpkg_name}_ep_base "${${_lpkg_name}_ep_base}" )
+
+    # external project arguments passed to an ilcsoft package
+    list( APPEND ${_lpkg_name}_ep_args
+        LIST_SEPARATOR % # needed for CMAKE_PREFIX_PATH
+        SOURCE_DIR ${ilcsoft_sources_prefix}${${_lpkg_name}_ep_base}/src
+        BINARY_DIR ${${_lpkg_name}_ep_base}/build
+        DOWNLOAD_DIR ${${_lpkg_name}_ep_base}/download
+        STAMP_DIR ${${_lpkg_name}_ep_base}/stamp
+        TMP_DIR ${${_lpkg_name}_ep_base}/tmp
+        #INSTALL_DIR ${${_lpkg_name}_ep_base}/install
+        INSTALL_DIR ${ilcsoft_install_prefix}
+    )
 
     if( "${install_${_lpkg_name}}" STREQUAL "YES" )
 
@@ -589,7 +577,9 @@ ADD_ILCSOFT_CORE_PACKAGE( LCIO )
 ADD_ILCSOFT_CORE_PACKAGE( CED )
 ADD_ILCSOFT_CORE_PACKAGE( GEAR )
 ADD_ILCSOFT_CORE_PACKAGE( CondDBMySQL )
-file( APPEND ${ilcsoft_env_init_script} "export COND_DB_DEBUGLOG=/dev/stdout\n" )
+if( "${install_conddbmysql}" STREQUAL "YES" )
+    file( APPEND ${ilcsoft_env_init_script} "export COND_DB_DEBUGLOG=/dev/stdout\n" )
+endif()
 ADD_ILCSOFT_CORE_PACKAGE( LCCD )
 ADD_ILCSOFT_CORE_PACKAGE( RAIDA )
 ADD_ILCSOFT_CORE_PACKAGE( Marlin )
@@ -614,13 +604,19 @@ ADD_ILCSOFT_MARLIN_PACKAGE( LCFIVertex )
 ADD_ILCSOFT_MARLIN_PACKAGE( Garlic )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinPandora )
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraAnalysis )
+
 # FIXME cyclic dependency to pandorapfanew
 if( "${install_pandorapfanew}" STREQUAL "YES" )
     list( APPEND pandoramonitoring_cmake_args "-DPandoraPFANew_DIR=${ilcsoft_install_prefix}" )
 else()
     list( APPEND pandoramonitoring_cmake_args "-DPandoraPFANew_DIR=${PandoraPFANew_ROOT}" )
 endif()
+
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraMonitoring )
+if( "${install_pandoramonitoring}" STREQUAL "YES" )
+    string( REPLACE "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PandoraMonitoring${CMAKE_SHARED_LIBRARY_SUFFIX}:" "" MARLIN_DLL "${MARLIN_DLL}" )
+endif()
+
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraPFA )
 ADD_ILCSOFT_MARLIN_PACKAGE( SiliconDigi )
 ADD_ILCSOFT_MARLIN_PACKAGE( FastJetClustering )
@@ -631,8 +627,30 @@ ADD_ILCSOFT_MARLIN_PACKAGE( Eutelescope )
 # ----- Config packages ------------------------------------------------------
 
 ADD_ILCSOFT_CONFIG_PACKAGE( standardconfig )
+if( "${install_standardconfig}" STREQUAL "YES" )
+    ExternalProject_Get_Property( standardconfig source_dir )
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- STANDARDCONFIG -------------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export STANDARDCONFIG=${source_dir}\n" )
+endif()
+
 ADD_ILCSOFT_CONFIG_PACKAGE( mokkadbconfig )
+if( "${install_mokkadbconfig}" STREQUAL "YES" )
+    ExternalProject_Get_Property( mokkadbconfig source_dir )
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MOKKADBCONFIG --------------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export MOKKADBCONFIG=${source_dir}\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export PATH=$MOKKADBCONFIG/scripts:$PATH\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export MOKKA_DUMP_FILE=$MOKKADBCONFIG/mokka-dbdump.sql.tgz\n" )
+endif()
+
+
 ADD_ILCSOFT_CONFIG_PACKAGE( lcfimokkabasednets )
+if( "${install_lcfimokkabasednets}" STREQUAL "YES" )
+    ExternalProject_Get_Property( lcfimokkabasednets source_dir )
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- LCFIMOKKABASEDNETS ---------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export LCFIMOKKABASEDNETS=${source_dir}\n" )
+endif()
+
+
 ADD_ILCSOFT_CONFIG_PACKAGE( cmakemodules )
 
 
