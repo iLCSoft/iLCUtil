@@ -635,9 +635,9 @@ if( "${install_mokka}" STREQUAL "YES" )
     file( APPEND ${ilcsoft_env_init_script} ". $ENV{G4ENV_INIT}\n" )
     # disable some graphics drivers
     file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OIX_DRIVER G4VIS_USE_OIX_DRIVER G4VIS_USE_OIX\n" )
-    file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OPENGLXM_DRIVER G4VIS_USE_OPENGLXM" )
-    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XAW_SESSION G4UI_USE_XAW" )
-    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XM_SESSION G4UI_USE_XM" )
+    file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OPENGLXM_DRIVER G4VIS_USE_OPENGLXM\n" )
+    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XAW_SESSION G4UI_USE_XAW\n" )
+    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XM_SESSION G4UI_USE_XM\n" )
 
 endif()
 
