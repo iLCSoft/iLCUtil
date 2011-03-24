@@ -292,6 +292,7 @@ if( "${install_mysql}" STREQUAL "YES" )
     else()
         message( SEND_ERROR "please set install_mysql to NO or set CMAKE_PREFIX_PATH or MySQL_DIR to your own mysql installation" )
     endif()
+    # export MYSQL_HOME , export LD_LIBRARY_PATH=$MYSQL_HOME/lib/mysql ?
 endif()
 
 
@@ -346,6 +347,8 @@ if( "${install_clhep}" STREQUAL "YES" )
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND ./CLHEP/configure --prefix=${external_install_prefix}
     )
+
+    # export CLHEP_BASE_DIR , CLHEP_INCLUDE_DIR ?
 endif()
 
 
@@ -449,12 +452,7 @@ if( "${install_qt4}" STREQUAL "YES" )
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND echo yes | ./configure -prefix ${external_install_prefix} ${qt4_cfg_options}
     )
-else()
-    # set QTDIR from qmake in PATH
-    #file( APPEND ${ilcsoft_env_init_script} "\n\n\#---------------------- ${_upkg_name} -----------------------------------\n" )
-    #file( APPEND ${ilcsoft_env_init_script} "export ${_upkg_name}=${external_install_prefix}\n" )
-    #file( APPEND ${ilcsoft_env_init_script} "export PATH=$${_upkg_name}/bin:$PATH\n" )
-    #file( APPEND ${ilcsoft_env_init_script} "export LD_LIBRARY_PATH=$${_upkg_name}/lib:$LD_LIBRARY_PATH\n" )
+    # export QTDIR, QMAKESPEC ?
 endif()
 
 
@@ -622,6 +620,7 @@ ADD_ILCSOFT_MARLIN_PACKAGE( SiliconDigi )
 ADD_ILCSOFT_MARLIN_PACKAGE( FastJetClustering )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTPC )
 ADD_ILCSOFT_MARLIN_PACKAGE( Eutelescope )
+# millepede2 + eudaq
 
 
 # ----- Config packages ------------------------------------------------------
