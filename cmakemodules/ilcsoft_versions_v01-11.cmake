@@ -10,8 +10,8 @@ set( gsl_version                    "1.8"       )
 set( fastjet_version                "2.4.2"     )
 set( qt4_version                    "4.2.2"     )
 set( cernlib_version                "2006"      )
+set( geant4_version                 "9.3.p02"   )
 #set( java_version                  "1.6.0"     )
-#set( geant4_version                "9.3.p02"   )
 
 # ============ ilcsoft core packages ================
 set( lcio_version                   "tags/v01-51-02"        )
@@ -25,6 +25,9 @@ set( marlin_version                 "tags/v01-00"           )
 set( marlinutil_version             "tags/v01-02"           )
 set( kaltest_version                "tags/v01-01-01"        )
 set( kaldet_version                 "tags/v01-01-01"        )
+
+set( mokka_version                  "tags/mokka-07-06-p01"  )
+set( druid_version                  "tags/1.8"              )
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_version             "trunk"                 )
@@ -40,7 +43,7 @@ set( marlinpandora_version          "tags/v00-04"           )
 #set( silicondigi_version           "trunk"                 ) # DEPRECATED
 set( fastjetclustering_version      "tags/v00-02"           )
 set( marlintpc_version              "tags/v00-08-04"        )
-set( eutelescope_version            "branches/v00-06-00-pre"    )
+set( eutelescope_version            "branches/v00-06-00-pre")
 
 # ============ ilcsoft config packages ==============
 set( standardconfig_version         "trunk"         )

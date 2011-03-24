@@ -38,6 +38,9 @@ set( kaltest_download_url            SVN_REPOSITORY "${desy_svn_repository}/kalt
 set( kaldet_download_url             SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalDet/${kaldet_version}" )
 set( pandorapfanew_download_url      SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraPFANew/${pandorapfanew_version}" )
 
+set( mokka_download_url              SVN_REPOSITORY "http://llrforge.in2p3.fr/svn/Mokka/${mokka_version}" )
+set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Druid/${druid_version}" )
+
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinReco/${marlinreco_version}" )
 set( cedviewer_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/CEDViewer/${cedviewer_version}" )

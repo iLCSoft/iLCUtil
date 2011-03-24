@@ -289,10 +289,11 @@ if( "${install_mysql}" STREQUAL "YES" )
             BUILD_COMMAND ${CMAKE_COMMAND} -E echo "no build needed"
             INSTALL_COMMAND mkdir -p ${external_install_prefix} && tar --strip-components=1 -xzf ../mysql-${mysql_version}-${GCC_MACHINE}-gcc${GCC_VERSION}.tgz -C ${external_install_prefix}
         )
+        #file( APPEND ${ilcsoft_env_init_script} "export MYSQL_HOME=${external_install_prefix}\n" )
+        # export LD_LIBRARY_PATH=$MYSQL_HOME/lib64/mysql:$MYSQL_HOME/lib/mysql:$LD_LIBRARY_PATH ?
     else()
         message( SEND_ERROR "please set install_mysql to NO or set CMAKE_PREFIX_PATH or MySQL_DIR to your own mysql installation" )
     endif()
-    # export MYSQL_HOME , export LD_LIBRARY_PATH=$MYSQL_HOME/lib/mysql ?
 endif()
 
 
@@ -362,7 +363,7 @@ FIND_PACKAGE_WRAPPER_DUMMY_TARGET( ROOT ${root_version} EXACT )
 if( "${install_root}" STREQUAL "YES" )
     ExternalProject_Add( root
         #${common_ep_args}
-        DEPENDS ${root_depends}
+        ${root_depends}
         URL "ftp://root.cern.ch/root/root_v${root_version}.source.tar.gz"
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND ./configure --fail-on-missing --enable-explicitlink --enable-builtin-pcre --enable-gdml --enable-gsl-shared --enable-minuit2 --enable-roofit --enable-soversion --enable-table --enable-unuran --enable-xrootd --with-gsl-incdir=${GSL_INCLUDE_DIRS} --with-gsl-libdir=${GSL_LIBRARY_DIRS}
@@ -395,7 +396,6 @@ if( "${install_fastjet}" STREQUAL "YES" )
         #${common_ep_args}
         URL "http://www.lpthe.jussieu.fr/~salam/fastjet/repo/fastjet-${fastjet_version}.tar.gz"
         BUILD_IN_SOURCE 1
-        #CONFIGURE_COMMAND ./configure --prefix=${external_install_prefix} --enable-shared #--enable-allplugins 
         CONFIGURE_COMMAND ${fastjet_configure_command}
     )
 endif()
@@ -503,7 +503,7 @@ macro( ADD_ILCSOFT_PACKAGE _pkg_name )
 
 
         ExternalProject_Add( ${_lpkg_name}
-            DEPENDS ${${_lpkg_name}_depends}
+            ${${_lpkg_name}_depends}
             ${common_ep_args}
             ${${_lpkg_name}_ep_args}
             ${${_lpkg_name}_download_url}
@@ -572,10 +572,21 @@ endmacro()
 
 ADD_ILCSOFT_CORE_PACKAGE( ILCUTIL )
 ADD_ILCSOFT_CORE_PACKAGE( LCIO )
+if( "${install_lcio}" STREQUAL "YES" )
+    # needed for mokka
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- LCIO -----------------------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export LCIO=${ilcsoft_install_prefix}\n" )
+endif()
 ADD_ILCSOFT_CORE_PACKAGE( CED )
 ADD_ILCSOFT_CORE_PACKAGE( GEAR )
+if( "${install_gear}" STREQUAL "YES" )
+    # needed for mokka
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- GEAR -----------------------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export GEAR=${ilcsoft_install_prefix}\n" )
+endif()
 ADD_ILCSOFT_CORE_PACKAGE( CondDBMySQL )
 if( "${install_conddbmysql}" STREQUAL "YES" )
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- CONDDBMYSQL ----------------------------\n" )
     file( APPEND ${ilcsoft_env_init_script} "export COND_DB_DEBUGLOG=/dev/stdout\n" )
 endif()
 ADD_ILCSOFT_CORE_PACKAGE( LCCD )
@@ -585,6 +596,71 @@ ADD_ILCSOFT_CORE_PACKAGE( MarlinUtil )
 ADD_ILCSOFT_CORE_PACKAGE( KalTest )
 ADD_ILCSOFT_CORE_PACKAGE( KalDet )
 ADD_ILCSOFT_CORE_PACKAGE( PandoraPFANew )
+
+
+# ----------------------------------------------------------------------------
+# --- Mokka
+# ----------------------------------------------------------------------------
+
+if( "${install_mokka}" STREQUAL "YES" )
+
+    message( "++ install mokka (${mokka_version}) from source" )
+
+    list( APPEND mokka_ep_args
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
+        BUILD_COMMAND . ${ilcsoft_env_init_script} && eval ${CMAKE_BUILD_TOOL} -j1 -C $G4WORKDIR/source
+        INSTALL_COMMAND . ${ilcsoft_env_init_script} && eval ${CMAKE_COMMAND} -E copy $G4WORKDIR/bin/$G4SYSTEM/Mokka ${ilcsoft_install_prefix}/bin
+    )
+
+    #ADD_ILCSOFT_CORE_PACKAGE( Mokka )
+    ADD_ILCSOFT_PACKAGE( Mokka )
+
+    #ExternalProject_Add( mokka
+    #    ${mokka_depends}
+    #    ${mokka_download_url}
+    #    BUILD_IN_SOURCE 1
+    #    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
+    #    BUILD_COMMAND . ${ilcsoft_env_init_script} && ${CMAKE_BUILD_TOOL} -j1 -C source
+    #    INSTALL_COMMAND . ${ilcsoft_env_init_script} && eval ${CMAKE_COMMAND} -E copy $G4WORKDIR/bin/$G4SYSTEM/Mokka ${ilcsoft_install_prefix}/bin
+    #)
+
+    if( NOT DEFINED ENV{G4ENV_INIT} )
+        message( FATAL_ERROR "please set G4ENV_INIT=/path/to/geant4/env.sh script or install_mokka to NO" )
+    endif()
+
+    ExternalProject_Get_Property( mokka source_dir )
+
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MOKKA ----------------------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export G4WORKDIR=${source_dir}\n" )
+    file( APPEND ${ilcsoft_env_init_script} ". $ENV{G4ENV_INIT}\n" )
+    # disable some graphics drivers
+    file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OIX_DRIVER G4VIS_USE_OIX_DRIVER G4VIS_USE_OIX\n" )
+    file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OPENGLXM_DRIVER G4VIS_USE_OPENGLXM" )
+    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XAW_SESSION G4UI_USE_XAW" )
+    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XM_SESSION G4UI_USE_XM" )
+
+endif()
+
+
+# ---------------------------------------------------------------------------
+# --- Druid
+# ---------------------------------------------------------------------------
+
+if( "${install_druid}" STREQUAL "YES" )
+
+    message( "++ install druid (${druid_version}) from source" )
+
+    # add as ILCSOFT_PACKAGE ?
+
+    ExternalProject_Add( druid
+        ${druid_depends}
+        ${druid_download_url}
+        BUILD_IN_SOURCE 1
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
+        BUILD_COMMAND . ${ilcsoft_env_init_script} && ${CMAKE_BUILD_TOOL} -j1 -C src
+        INSTALL_COMMAND ${CMAKE_COMMAND} -E copy bin/Druid ${ilcsoft_install_prefix}/bin
+    )
+endif()
 
 
 # ----- Marlin plugins -------------------------------------------------------
@@ -623,6 +699,14 @@ ADD_ILCSOFT_MARLIN_PACKAGE( Eutelescope )
 # millepede2 + eudaq
 
 
+file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MARLIN_DLL -----------------------------\n" )
+file( APPEND ${ilcsoft_env_init_script} "if test -n \"$MARLIN_DLL\" ; then\n" )
+file( APPEND ${ilcsoft_env_init_script} "   echo \"overwritting MARLIN_DLL previously set to $MARLIN_DLL\"\n" )
+file( APPEND ${ilcsoft_env_init_script} "fi\n" )
+file( APPEND ${ilcsoft_env_init_script} "export MARLIN_DLL=${MARLIN_DLL}\n" )
+
+
+
 # ----- Config packages ------------------------------------------------------
 
 ADD_ILCSOFT_CONFIG_PACKAGE( standardconfig )
@@ -653,13 +737,8 @@ endif()
 ADD_ILCSOFT_CONFIG_PACKAGE( cmakemodules )
 
 
+# ============================================================================
 
-
-file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MARLIN_DLL -----------------------------\n" )
-file( APPEND ${ilcsoft_env_init_script} "if test -n \"$MARLIN_DLL\" ; then\n" )
-file( APPEND ${ilcsoft_env_init_script} "   echo \"overwritting MARLIN_DLL previously set to $MARLIN_DLL\"\n" )
-file( APPEND ${ilcsoft_env_init_script} "fi\n" )
-file( APPEND ${ilcsoft_env_init_script} "export MARLIN_DLL=${MARLIN_DLL}\n" )
 
 
 if(APPLE)
