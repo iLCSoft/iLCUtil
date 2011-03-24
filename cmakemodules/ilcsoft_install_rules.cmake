@@ -396,7 +396,7 @@ if( "${install_root}" STREQUAL "YES" )
         DEPENDS ${root_depends}
         URL "ftp://root.cern.ch/root/root_v${root_version}.source.tar.gz"
         BUILD_IN_SOURCE 1
-        CONFIGURE_COMMAND ./configure --fail-on-missing --enable-explicitlink --enable-gdml --enable-gsl-shared --enable-minuit2 --enable-roofit --enable-soversion --enable-table --enable-unuran --enable-xrootd --with-gsl-incdir=${GSL_INCLUDE_DIRS} --with-gsl-libdir=${GSL_LIBRARY_DIRS}
+        CONFIGURE_COMMAND ./configure --fail-on-missing --enable-explicitlink --enable-builtin-pcre --enable-gdml --enable-gsl-shared --enable-minuit2 --enable-roofit --enable-soversion --enable-table --enable-unuran --enable-xrootd --with-gsl-incdir=${GSL_INCLUDE_DIRS} --with-gsl-libdir=${GSL_LIBRARY_DIRS}
         INSTALL_COMMAND ROOTSYS=${external_install_prefix} make install
     )
 
