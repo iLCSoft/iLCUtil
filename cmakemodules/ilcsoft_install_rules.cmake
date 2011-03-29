@@ -133,13 +133,12 @@ macro( FIND_PACKAGE_WRAPPER_DUMMY_TARGET )
 
             if( ${_pkg_name}_FOUND OR ${_upkg_name}_FOUND )
                 find_package( ${_args} ) # repeat find_package without QUIET arg to show debug infos
-                message( STATUS "found ${_lpkg_name} (${_pkg_version})" )
             else()
                 if( "${_pkg_install_flag}" STREQUAL "AUTO" OR "${_pkg_install_flag}" STREQUAL "" )
                     message( STATUS "could not find ${_lpkg_name} (${_pkg_version})" )
                     set( _pkg_install_flag "YES" ) # if the package was not found it should be installed
                 else()
-                    message( "Warning: ${_lpkg_name} package disabled!" )
+                    message( "Warning: ${_lpkg_name} package disabled! Please disable any other packages or options depending on ${_lpkg_name}" )
                     set( _pkg_install_flag "SKIP" ) # unless it is set to NO
                 endif()
             endif()
@@ -240,7 +239,7 @@ if( "${install_cernlib}" STREQUAL "YES" )
     if( "${install_cernlib}" STREQUAL "YES" )
 
         ExternalProject_Add( cernlib
-            URL "http://www.desy.de/~engels/cernlib/cernlib-${cernlib_version}-${GCC_MACHINE}-gcc${GCC_VERSION}.tgz"
+            URL "http://ilcsoft.desy.de/cernlib/cernlib-${cernlib_version}-${GCC_MACHINE}-gcc${GCC_VERSION}.tgz"
             BUILD_IN_SOURCE 1
             CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
             BUILD_COMMAND ${CMAKE_COMMAND} -E echo "no build needed"
@@ -259,41 +258,10 @@ endif()
 # --- MySQL
 # ----------------------------------------------------------------------------
 
-FIND_PACKAGE_WRAPPER_DUMMY_TARGET( MySQL ${mysql_version} ) #EXACT )
+FIND_PACKAGE( MySQL ${mysql_version} ) #EXACT )
 
-if( "${install_mysql}" STREQUAL "YES" )
-
-    if( NOT "${mysql_version}" STREQUAL "5.0.45" )
-        message( SEND_ERROR "mysql install support currently only given for version 5.0.45" )
-        set( install_mysql "NO" )
-    endif()
-
-    if( NOT "${GCC_VERSION}" STREQUAL "34" AND
-        NOT "${GCC_VERSION}" STREQUAL "41" )
-        message( SEND_ERROR "mysql install support currently only given for gcc34 or gcc41" )
-        set( install_mysql "NO" )
-    endif()
-
-    if( NOT "${GCC_MACHINE}" STREQUAL "i386" AND
-        NOT "${GCC_MACHINE}" STREQUAL "x86_64" )
-        message( SEND_ERROR "mysql install support curreently only given for i386 or x86_64" )
-        set( install_mysql "NO" )
-    endif()
-
-
-    if( "${install_mysql}" STREQUAL "YES" )
-        ExternalProject_Add( mysql
-            URL "http://www.desy.de/~engels/mysql/mysql-${mysql_version}-${GCC_MACHINE}-gcc${GCC_VERSION}.tgz"
-            BUILD_IN_SOURCE 1
-            CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
-            BUILD_COMMAND ${CMAKE_COMMAND} -E echo "no build needed"
-            INSTALL_COMMAND mkdir -p ${external_install_prefix} && tar --strip-components=1 -xzf ../mysql-${mysql_version}-${GCC_MACHINE}-gcc${GCC_VERSION}.tgz -C ${external_install_prefix}
-        )
-        #file( APPEND ${ilcsoft_env_init_script} "export MYSQL_HOME=${external_install_prefix}\n" )
-        # export LD_LIBRARY_PATH=$MYSQL_HOME/lib64/mysql:$MYSQL_HOME/lib/mysql:$LD_LIBRARY_PATH ?
-    else()
-        message( SEND_ERROR "please set install_mysql to NO or set CMAKE_PREFIX_PATH or MySQL_DIR to your own mysql installation" )
-    endif()
+if( NOT MYSQL_FOUND )
+    message( "Warning: mysql not found! Please disable any packages or options depending on mysql" )
 endif()
 
 
@@ -687,6 +655,8 @@ else()
 endif()
 
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraMonitoring )
+
+# remove libPandoraMonitoring from MARLIN_DLL
 if( "${install_pandoramonitoring}" STREQUAL "YES" )
     string( REPLACE "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PandoraMonitoring${CMAKE_SHARED_LIBRARY_SUFFIX}:" "" MARLIN_DLL "${MARLIN_DLL}" )
 endif()
