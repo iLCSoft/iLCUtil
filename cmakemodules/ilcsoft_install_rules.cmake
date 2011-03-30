@@ -20,6 +20,15 @@ include( MacroExtractNumericVersion )
 # ----------------------------------------------------------------------------
 
 
+# ----- default install prefix set to PROJECT_BINARY_DIR ---------------------
+if( NOT DEFINED ilcsoft_install_prefix )
+    set( ilcsoft_install_prefix "${PROJECT_BINARY_DIR}/ilcsoft" )
+endif()
+
+if( NOT DEFINED external_install_prefix )
+    set( external_install_prefix "${ilcsoft_install_prefix}-external" )
+endif()
+# ----------------------------------------------------------------------------
 
 
 # ----- generate script for reconfiguring a package --------------------------
