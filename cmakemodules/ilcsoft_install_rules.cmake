@@ -721,7 +721,7 @@ ADD_ILCSOFT_CONFIG_PACKAGE( cmakemodules )
 
 
 if(APPLE)
-    file( APPEND ${ilcsoft_env_init_script} "export DYLD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DYLD_LIBRARY_PATH\n" )
+    file( APPEND ${ilcsoft_env_init_script} "\nexport DYLD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DYLD_LIBRARY_PATH\n" )
 endif(APPLE)
 
 file( APPEND ${ilcsoft_env_init_script} "\n\n" )
