@@ -528,7 +528,7 @@ macro( ADD_ILCSOFT_CONFIG_PACKAGE _pkg_name )
     string( TOLOWER ${_pkg_name} _lpkg_name )
 
     # no configure, build, install steps needed
-    set( ${_lpkg_name}_ep_args ${_lpkg_name}_ep_args
+    list( APPEND ${_lpkg_name}_ep_args
         CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
         BUILD_COMMAND ${CMAKE_COMMAND} -E echo "no build needed"
         INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "no install needed"
