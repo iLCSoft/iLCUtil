@@ -383,7 +383,7 @@ endif()
 # --- QT4
 # ----------------------------------------------------------------------------
 
-FIND_PACKAGE_WRAPPER_DUMMY_TARGET( Qt4 ${qt4_version} EXACT )
+FIND_PACKAGE_WRAPPER_DUMMY_TARGET( Qt4 ${qt4_version} ) #EXACT )
 
 if( "${install_qt4}" STREQUAL "YES" )
 
