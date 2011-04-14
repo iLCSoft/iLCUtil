@@ -8,11 +8,11 @@
 
  - modules added:
     - FindFastJet.cmake
-    - FindEUDAQ.cmake
  
  - modules removed:
     - FindLCIO.cmake (LCIOConfig.cmake should be used for cmake builds)
     - FindAIDAJNI.cmake (DEPRECATED)
+    - FindJAVA.cmake (moved to LCIO)
 
 
  - added configuration files ILCSOFT_CMAKE_MODULESConfig.cmake
