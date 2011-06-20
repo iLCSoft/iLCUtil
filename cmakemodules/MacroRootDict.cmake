@@ -120,8 +120,8 @@ MACRO( GEN_ROOT_DICT_SOURCE _dict_src_filename )
         #SET( _dict_includes ${_dict_includes} -I${_inc} )
     ENDFOREACH()
 
-    STRING( REPLACE "/" "_" _dict_src_filename ${_dict_src_filename} )
-    SET( _dict_src_file ${ROOT_DICT_OUTPUT_DIR}/${_dict_src_filename} )
+    STRING( REPLACE "/" "_" _dict_src_filename_nosc ${_dict_src_filename} )
+    SET( _dict_src_file ${ROOT_DICT_OUTPUT_DIR}/${_dict_src_filename_nosc} )
     STRING( REGEX REPLACE "^(.*)\\.(.*)$" "\\1.h" _dict_hdr_file "${_dict_src_file}" )
     ADD_CUSTOM_COMMAND(
         OUTPUT  ${_dict_src_file} ${_dict_hdr_file}
