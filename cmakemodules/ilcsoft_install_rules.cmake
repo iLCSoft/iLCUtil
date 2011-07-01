@@ -44,10 +44,11 @@ execute_process( COMMAND chmod 755 ${ilcsoft_pkg_reconfigure_script} )
 
 # ----- generate script for reconfiguring ilcsoft ----------------------------
 set( ilcsoft_reconfigure_script "${PROJECT_BINARY_DIR}/reconfigure-ilcsoft.sh" )
-file( WRITE ${ilcsoft_reconfigure_script} "read -p\"reconfigure EVERYTHING FROM SCRATCH?\ [y/n] \" r\n" )
+file( WRITE ${ilcsoft_reconfigure_script} "read -p\"reconfigure EVERYTHING FROM SCRATCH? This will ERASE DIRECTORY [${ilcsoft_install_prefix}] [y/n] \" r\n" )
 file( APPEND ${ilcsoft_reconfigure_script} "test \"\${r:0:1}\" != \"y\" && exit 0\n" )
 file( APPEND ${ilcsoft_reconfigure_script} "for i in ${PROJECT_BINARY_DIR}/*-*-prefix; do test -d $i/build && pushd $i/build && make clean uninstall && popd ; done\n" )
 file( APPEND ${ilcsoft_reconfigure_script} "find ${PROJECT_BINARY_DIR}/*-*-prefix -name CMakeCache.txt -exec rm -v {} \;\n" )
+file( APPEND ${ilcsoft_reconfigure_script} "rm -rf \"${ilcsoft_install_prefix}\"\n" )
 file( APPEND ${ilcsoft_reconfigure_script} "echo -e \"\\ntype 'make' to recompile ilcsoft\\n\"\n" )
 execute_process( COMMAND chmod 755 ${ilcsoft_reconfigure_script} )
 
