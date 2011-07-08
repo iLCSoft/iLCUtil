@@ -13,6 +13,8 @@ list( APPEND ced_ep_args        PATCH_COMMAND wget "${cdash_server_url}?projecti
 list( APPEND gear_ep_args       PATCH_COMMAND wget "${cdash_server_url}?projectid=09" -O CTestConfig.cmake )
 list( APPEND lccd_ep_args       PATCH_COMMAND wget "${cdash_server_url}?projectid=10" -O CTestConfig.cmake )
 list( APPEND raida_ep_args      PATCH_COMMAND wget "${cdash_server_url}?projectid=08" -O CTestConfig.cmake )
+list( APPEND kaltest_ep_args    PATCH_COMMAND wget "${cdash_server_url}?projectid=27" -O CTestConfig.cmake )
+list( APPEND kaldet_ep_args     PATCH_COMMAND wget "${cdash_server_url}?projectid=28" -O CTestConfig.cmake )
 list( APPEND marlin_ep_args     PATCH_COMMAND wget "${cdash_server_url}?projectid=02" -O CTestConfig.cmake )
 list( APPEND marlinutil_ep_args PATCH_COMMAND wget "${cdash_server_url}?projectid=07" -O CTestConfig.cmake )
 list( APPEND marlinreco_ep_args PATCH_COMMAND wget "${cdash_server_url}?projectid=06" -O CTestConfig.cmake )
