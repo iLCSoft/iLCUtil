@@ -14,7 +14,7 @@ set( raida_depends              DEPENDS ilcutil root )
 set( marlin_depends             DEPENDS ilcutil lcio gear raida lccd clhep qt4 )
 set( marlinutil_depends         DEPENDS ilcutil marlin ced gsl )
 set( kaltest_depends            DEPENDS ilcutil root )
-set( kaldet_depends             DEPENDS marlin kaltest )
+set( kaldet_depends             DEPENDS marlinutil kaltest )
 set( pandorapfanew_depends      DEPENDS ilcutil )
 
 set( mokka_depends              DEPENDS lcio gear ) # mysql )
