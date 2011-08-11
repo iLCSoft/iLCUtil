@@ -18,6 +18,7 @@ list( APPEND kaldet_ep_args     PATCH_COMMAND wget "${cdash_server_url}?projecti
 list( APPEND marlin_ep_args     PATCH_COMMAND wget "${cdash_server_url}?projectid=02" -O CTestConfig.cmake )
 list( APPEND marlinutil_ep_args PATCH_COMMAND wget "${cdash_server_url}?projectid=07" -O CTestConfig.cmake )
 list( APPEND marlinreco_ep_args PATCH_COMMAND wget "${cdash_server_url}?projectid=06" -O CTestConfig.cmake )
+list( APPEND marlintpc_ep_args  PATCH_COMMAND wget "${cdash_server_url}?projectid=29" -O CTestConfig.cmake )
 list( APPEND cedviewer_ep_args  PATCH_COMMAND wget "${cdash_server_url}?projectid=04" -O CTestConfig.cmake )
 list( APPEND overlay_ep_args    PATCH_COMMAND wget "${cdash_server_url}?projectid=13" -O CTestConfig.cmake )
 
