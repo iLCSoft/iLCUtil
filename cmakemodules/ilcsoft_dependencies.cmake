@@ -22,7 +22,8 @@ set( druid_depends              DEPENDS lcio gear )
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_depends         DEPENDS marlinutil cernlib )
-set( cedviewer_depends          DEPENDS marlinutil )
+set( marlintpc_depends          DEPENDS marlin kaldet gsl )
+set( cedviewer_depends          DEPENDS marlinutil marlintpc lccd )
 set( overlay_depends            DEPENDS marlin )
 set( lcfivertex_depends         DEPENDS marlinutil )
 set( garlic_depends             DEPENDS marlinutil )
@@ -32,6 +33,5 @@ set( pandoramonitoring_depends  DEPENDS pandorapfanew root )
 set( pandorapfa_depends         DEPENDS marlinutil )   # DEPRECATED
 set( silicondigi_depends        DEPENDS marlin gsl )   # DEPRECATED
 set( fastjetclustering_depends  DEPENDS marlin fastjet )
-set( marlintpc_depends          DEPENDS marlin kaldet gsl )
 set( eutelescope_depends        DEPENDS marlinutil )
 

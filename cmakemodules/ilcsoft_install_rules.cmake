@@ -644,11 +644,19 @@ endif()
 # ----- Marlin plugins -------------------------------------------------------
 
 # MarlinReco needs special treatment because it is both:
-# CORE_PACKAGE (due to MarlinRecoConfig.cmake) and Marlin plugin
+# CORE_PACKAGE (due to MarlinRecoConfig.cmake) and a Marlin plugin
 ADD_ILCSOFT_CORE_PACKAGE( MarlinReco )
 if( "${install_marlinreco}" STREQUAL "YES" )
     set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}MarlinReco${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
 endif()
+
+# MarlinTPC needs special treatment because it is both:
+# CORE_PACKAGE (due to MarlinTPCConfig.cmake) and a Marlin plugin
+ADD_ILCSOFT_CORE_PACKAGE( MarlinTPC )
+if( "${install_marlintpc}" STREQUAL "YES" )
+    set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}MarlinTPC${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
+endif()
+
 
 ADD_ILCSOFT_MARLIN_PACKAGE( CEDViewer )
 ADD_ILCSOFT_MARLIN_PACKAGE( Overlay )
@@ -674,7 +682,7 @@ endif()
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraPFA )
 ADD_ILCSOFT_MARLIN_PACKAGE( SiliconDigi )
 ADD_ILCSOFT_MARLIN_PACKAGE( FastJetClustering )
-ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTPC )
+#ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTPC )
 ADD_ILCSOFT_MARLIN_PACKAGE( Eutelescope )
 # millepede2 + eudaq
 
