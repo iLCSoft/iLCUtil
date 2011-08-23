@@ -43,6 +43,7 @@ set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Drui
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinReco/${marlinreco_version}" )
+set( marlinkinfit_download_url       SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinKinfit/${marlinkinfit_version}" )
 set( cedviewer_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/CEDViewer/${cedviewer_version}" )
 set( overlay_download_url            SVN_REPOSITORY "${desy_svn_repository}/marlin/Overlay/${overlay_version}" )
 set( lcfivertex_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/LCFIVertex/${lcfivertex_version}" )

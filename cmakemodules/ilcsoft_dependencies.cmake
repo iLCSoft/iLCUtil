@@ -22,6 +22,7 @@ set( druid_depends              DEPENDS lcio gear )
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_depends         DEPENDS marlinutil cernlib )
+set( marlinkinfit_depends       DEPENDS marlin gsl )
 set( marlintpc_depends          DEPENDS marlin kaldet gsl )
 set( cedviewer_depends          DEPENDS marlinutil marlintpc lccd )
 set( overlay_depends            DEPENDS marlin )
