@@ -488,6 +488,10 @@ macro( ADD_ILCSOFT_PACKAGE _pkg_name )
             CMAKE_ARGS ${common_cmake_args} ${${_lpkg_name}_cmake_args}
         )
 
+        if( DEFINED ${_lpkg_name}_cmake_args )
+            message( STATUS "${_lpkg_name}_cmake_args ${${_lpkg_name}_cmake_args}" )
+        endif()
+
     endif()
 
     file( GLOB _aux ${PROJECT_BINARY_DIR}/${_lpkg_name}-*-prefix )
