@@ -38,7 +38,6 @@ set( garlic_version                 "tags/v2.0.4"           )
 set( pandorapfanew_version          "tags/v00-06"           )
 set( marlinpandora_version          "tags/v00-05"           )
 set( pandoraanalysis_version        "tags/v00-02"           )
-#set( pandoramonitoring_version     "trunk"                 )
 #set( pandorapfa_version            "trunk"                 ) # DEPRECATED
 #set( silicondigi_version           "trunk"                 ) # DEPRECATED
 set( fastjetclustering_version      "tags/v00-02"           )

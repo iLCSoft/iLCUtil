@@ -50,7 +50,6 @@ set( lcfivertex_download_url         SVN_REPOSITORY "${desy_svn_repository}/marl
 set( garlic_download_url             SVN_REPOSITORY "${desy_svn_repository}/Garlic/${garlic_version}" )
 set( marlinpandora_download_url      SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/MarlinPandora/${marlinpandora_version}" )
 set( pandoraanalysis_download_url    SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraAnalysis/${pandoraanalysis_version}" )
-set( pandoramonitoring_download_url  SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraMonitoring/${pandoramonitoring_version}" )
 set( pandorapfa_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/PandoraPFA/${pandorapfa_version}" )
 set( silicondigi_download_url        SVN_REPOSITORY "${desy_svn_repository}/marlinreco/SiliconDigi/${silicondigi_version}" )
 set( fastjetclustering_download_url  SVN_REPOSITORY "${desy_svn_repository}/marlinreco/FastJetClustering/${fastjetclustering_version}" )

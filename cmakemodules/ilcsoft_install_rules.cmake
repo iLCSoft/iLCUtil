@@ -665,27 +665,17 @@ ADD_ILCSOFT_MARLIN_PACKAGE( LCFIVertex )
 ADD_ILCSOFT_MARLIN_PACKAGE( Garlic )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinPandora )
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraAnalysis )
-
-# FIXME cyclic dependency to pandorapfanew
-if( "${install_pandorapfanew}" STREQUAL "YES" )
-    list( APPEND pandoramonitoring_cmake_args "-DPandoraPFANew_DIR=${ilcsoft_install_prefix}" )
-else()
-    list( APPEND pandoramonitoring_cmake_args "-DPandoraPFANew_DIR=${PandoraPFANew_ROOT}" )
-endif()
-
-ADD_ILCSOFT_MARLIN_PACKAGE( PandoraMonitoring )
-
-# remove libPandoraMonitoring from MARLIN_DLL
-if( "${install_pandoramonitoring}" STREQUAL "YES" )
-    string( REPLACE "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PandoraMonitoring${CMAKE_SHARED_LIBRARY_SUFFIX}:" "" MARLIN_DLL "${MARLIN_DLL}" )
-endif()
-
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraPFA )
 ADD_ILCSOFT_MARLIN_PACKAGE( SiliconDigi )
 ADD_ILCSOFT_MARLIN_PACKAGE( FastJetClustering )
-#ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTPC )
 ADD_ILCSOFT_MARLIN_PACKAGE( Eutelescope )
 # millepede2 + eudaq
+
+# example for removing library from MARLIN_DLL
+#if( "${install_eutelescope}" STREQUAL "YES" )
+#    string( REPLACE "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}Eutelescope${CMAKE_SHARED_LIBRARY_SUFFIX}:" "" MARLIN_DLL "${MARLIN_DLL}" )
+#endif()
+
 
 
 file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MARLIN_DLL -----------------------------\n" )

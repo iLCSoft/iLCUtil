@@ -17,6 +17,7 @@ set( druid_version              "trunk" )
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_version         "trunk" )
+set( marlintpc_version          "trunk" )
 set( marlinkinfit_version       "trunk" )
 set( cedviewer_version          "trunk" )
 set( overlay_version            "trunk" )
@@ -24,11 +25,9 @@ set( lcfivertex_version         "trunk" )
 set( garlic_version             "trunk" )
 set( marlinpandora_version      "trunk" )
 set( pandoraanalysis_version    "trunk" )
-set( pandoramonitoring_version  "trunk" )
 set( pandorapfa_version         "trunk" )# DEPRECATED
 set( silicondigi_version        "trunk" )# DEPRECATED
 set( fastjetclustering_version  "trunk" )
-set( marlintpc_version          "trunk" )
 set( eutelescope_version        "trunk" )
 
 # ============ ilcsoft config packages ==============

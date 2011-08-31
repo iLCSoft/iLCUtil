@@ -3,7 +3,7 @@
 
 # ===== external tools ================
 set( glut_version                   "2.6.0"     )
-set( root_version                   "5.30.00"   )
+set( root_version                   "5.28.00f"   )
 set( mysql_version                  "5.0.45"    )
 set( clhep_version                  "2.0.4.5"   )
 set( gsl_version                    "1.14"      )
@@ -39,7 +39,6 @@ set( garlic_version                 "trunk"           )
 set( pandorapfanew_version          "trunk"           )
 set( marlinpandora_version          "trunk"           )
 set( pandoraanalysis_version        "trunk"           )
-#set( pandoramonitoring_version     "trunk"                 )
 #set( pandorapfa_version            "trunk"                 ) # DEPRECATED
 #set( silicondigi_version           "trunk"                 ) # DEPRECATED
 set( fastjetclustering_version      "tags/v00-02"           )

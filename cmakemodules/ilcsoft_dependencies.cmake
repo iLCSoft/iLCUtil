@@ -15,7 +15,7 @@ set( marlin_depends             DEPENDS ilcutil lcio gear raida lccd clhep qt4 )
 set( marlinutil_depends         DEPENDS ilcutil marlin ced gsl )
 set( kaltest_depends            DEPENDS ilcutil root )
 set( kaldet_depends             DEPENDS marlinutil kaltest )
-set( pandorapfanew_depends      DEPENDS ilcutil )
+set( pandorapfanew_depends      DEPENDS ilcutil root )
 
 set( mokka_depends              DEPENDS lcio gear ) # mysql )
 set( druid_depends              DEPENDS lcio gear )
@@ -30,7 +30,6 @@ set( lcfivertex_depends         DEPENDS marlinutil )
 set( garlic_depends             DEPENDS marlinutil )
 set( marlinpandora_depends      DEPENDS marlinutil pandorapfanew )
 set( pandoraanalysis_depends    DEPENDS marlin )
-set( pandoramonitoring_depends  DEPENDS pandorapfanew root )
 set( pandorapfa_depends         DEPENDS marlinutil )   # DEPRECATED
 set( silicondigi_depends        DEPENDS marlin gsl )   # DEPRECATED
 set( fastjetclustering_depends  DEPENDS marlin fastjet )
