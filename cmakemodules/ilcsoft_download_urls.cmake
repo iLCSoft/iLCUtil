@@ -46,6 +46,7 @@ set( marlinreco_download_url         SVN_REPOSITORY "${desy_svn_repository}/marl
 set( marlintpc_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlintpc/${marlintpc_version}" )
 set( marlintrk_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrk/${marlintrk_version}" )
 set( marlintrkprocessors_download_url SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrkProcessors/${marlintrkprocessors_version}" )
+set( forwardtracking_download_url    SVN_REPOSITORY "${desy_svn_repository}/marlinreco/ForwardTracking/${forwardtracking_version}" )
 set( marlinkinfit_download_url       SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinKinfit/${marlinkinfit_version}" )
 set( cedviewer_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/CEDViewer/${cedviewer_version}" )
 set( overlay_download_url            SVN_REPOSITORY "${desy_svn_repository}/marlin/Overlay/${overlay_version}" )
