@@ -661,7 +661,9 @@ if( "${install_marlintpc}" STREQUAL "YES" )
     set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}MarlinTPC${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
 endif()
 
+ADD_ILCSOFT_CORE_PACKAGE( MarlinTrk )
 
+ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTrkProcessors )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinKinfit )
 ADD_ILCSOFT_MARLIN_PACKAGE( CEDViewer )
 ADD_ILCSOFT_MARLIN_PACKAGE( Overlay )

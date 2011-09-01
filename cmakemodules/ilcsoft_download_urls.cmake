@@ -43,6 +43,9 @@ set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Drui
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinReco/${marlinreco_version}" )
+set( marlintpc_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlintpc/${marlintpc_version}" )
+set( marlintrk_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrk/${marlintrk_version}" )
+set( marlintrkprocessors_download_url SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrkProcessors/${marlintrkprocessors_version}" )
 set( marlinkinfit_download_url       SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinKinfit/${marlinkinfit_version}" )
 set( cedviewer_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/CEDViewer/${cedviewer_version}" )
 set( overlay_download_url            SVN_REPOSITORY "${desy_svn_repository}/marlin/Overlay/${overlay_version}" )
@@ -53,7 +56,6 @@ set( pandoraanalysis_download_url    SVN_REPOSITORY "${desy_svn_repository}/Pand
 set( pandorapfa_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/PandoraPFA/${pandorapfa_version}" )
 set( silicondigi_download_url        SVN_REPOSITORY "${desy_svn_repository}/marlinreco/SiliconDigi/${silicondigi_version}" )
 set( fastjetclustering_download_url  SVN_REPOSITORY "${desy_svn_repository}/marlinreco/FastJetClustering/${fastjetclustering_version}" )
-set( marlintpc_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlintpc/${marlintpc_version}" )
 set( eutelescope_download_url        SVN_REPOSITORY "${desy_svn_repository}/eutelescope/Eutelescope/${eutelescope_version}" )
 
 # ============ ilcsoft config packages ==============

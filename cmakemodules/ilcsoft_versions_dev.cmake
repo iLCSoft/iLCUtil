@@ -18,6 +18,8 @@ set( druid_version              "trunk" )
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_version         "trunk" )
 set( marlintpc_version          "trunk" )
+set( marlintrk_version          "trunk" )
+set( marlintrkprocessors_version "trunk" )
 set( marlinkinfit_version       "trunk" )
 set( cedviewer_version          "trunk" )
 set( overlay_version            "trunk" )
