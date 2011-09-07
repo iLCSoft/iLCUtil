@@ -24,6 +24,7 @@ list( APPEND marlin_ep_args     PATCH_COMMAND ${download_cmd} CTestConfig.cmake 
 list( APPEND marlinutil_ep_args PATCH_COMMAND ${download_cmd} CTestConfig.cmake "${cdash_server_url}?projectid=07" )
 list( APPEND marlinreco_ep_args PATCH_COMMAND ${download_cmd} CTestConfig.cmake "${cdash_server_url}?projectid=06" )
 list( APPEND marlintpc_ep_args  PATCH_COMMAND ${download_cmd} CTestConfig.cmake "${cdash_server_url}?projectid=29" )
+list( APPEND marlintrk_ep_args  PATCH_COMMAND ${download_cmd} CTestConfig.cmake "${cdash_server_url}?projectid=30" )
 list( APPEND cedviewer_ep_args  PATCH_COMMAND ${download_cmd} CTestConfig.cmake "${cdash_server_url}?projectid=04" )
 list( APPEND overlay_ep_args    PATCH_COMMAND ${download_cmd} CTestConfig.cmake "${cdash_server_url}?projectid=13" )
 
