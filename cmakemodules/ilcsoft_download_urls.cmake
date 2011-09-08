@@ -57,6 +57,7 @@ set( pandoraanalysis_download_url    SVN_REPOSITORY "${desy_svn_repository}/Pand
 set( pandorapfa_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/PandoraPFA/${pandorapfa_version}" )
 set( silicondigi_download_url        SVN_REPOSITORY "${desy_svn_repository}/marlinreco/SiliconDigi/${silicondigi_version}" )
 set( fastjetclustering_download_url  SVN_REPOSITORY "${desy_svn_repository}/marlinreco/FastJetClustering/${fastjetclustering_version}" )
+set( marlinfastjet_download_url      SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinFastJet/${marlinfastjet_version}" )
 set( eutelescope_download_url        SVN_REPOSITORY "${desy_svn_repository}/eutelescope/Eutelescope/${eutelescope_version}" )
 
 # ============ ilcsoft config packages ==============
