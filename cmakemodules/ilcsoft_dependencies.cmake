@@ -36,5 +36,6 @@ set( pandoraanalysis_depends    DEPENDS marlin )
 set( pandorapfa_depends         DEPENDS marlinutil )   # DEPRECATED
 set( silicondigi_depends        DEPENDS marlin gsl )   # DEPRECATED
 set( fastjetclustering_depends  DEPENDS marlin fastjet )
+set( marlinfastjet_depends      DEPENDS marlin fastjet )
 set( eutelescope_depends        DEPENDS marlinutil )
 

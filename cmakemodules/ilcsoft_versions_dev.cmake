@@ -31,6 +31,7 @@ set( pandoraanalysis_version    "trunk" )
 set( pandorapfa_version         "trunk" )# DEPRECATED
 set( silicondigi_version        "trunk" )# DEPRECATED
 set( fastjetclustering_version  "trunk" )
+set( marlinfastjet_version      "trunk" )
 set( eutelescope_version        "trunk" )
 
 # ============ ilcsoft config packages ==============
