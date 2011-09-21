@@ -647,13 +647,6 @@ endif()
 
 # ----- Marlin plugins -------------------------------------------------------
 
-# MarlinReco needs special treatment because it is both:
-# CORE_PACKAGE (due to MarlinRecoConfig.cmake) and a Marlin plugin
-ADD_ILCSOFT_CORE_PACKAGE( MarlinReco )
-if( "${install_marlinreco}" STREQUAL "YES" )
-    set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}MarlinReco${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
-endif()
-
 # MarlinTPC needs special treatment because it is both:
 # CORE_PACKAGE (due to MarlinTPCConfig.cmake) and a Marlin plugin
 ADD_ILCSOFT_CORE_PACKAGE( MarlinTPC )
@@ -663,6 +656,7 @@ endif()
 
 ADD_ILCSOFT_CORE_PACKAGE( MarlinTrk )
 
+ADD_ILCSOFT_MARLIN_PACKAGE( MarlinReco )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTrkProcessors )
 ADD_ILCSOFT_MARLIN_PACKAGE( ForwardTracking )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinKinfit )
