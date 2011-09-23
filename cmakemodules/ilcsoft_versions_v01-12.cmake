@@ -47,7 +47,7 @@ set( eutelescope_version            "tags/v00-06-03" )
 
 # ============ ilcsoft config packages ==============
 set( standardconfig_version         "tags/v03-00" )
-set( mokkadbconfig_version          "tags/v03-01" )
+set( mokkadbconfig_version          "tags/v03-02" )
 set( lcfimokkabasednets_version     "tags/v00-01" )
 
 # EOF
