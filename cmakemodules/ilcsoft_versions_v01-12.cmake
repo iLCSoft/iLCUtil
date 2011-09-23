@@ -25,13 +25,13 @@ set( marlin_version                 "tags/v01-01" )
 set( marlinutil_version             "tags/v01-04" )
 set( kaltest_version                "tags/v01-02" )
 set( kaldet_version                 "tags/v01-02" )
+set( marlintrk_version              "tags/v01-00" )
 
-set( mokka_version                  "trunk"  )
+set( mokka_version                  "tags/mokka-07-07" )
 set( druid_version                  "tags/1.8"    )
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_version             "tags/v00-30" )
-set( marlintrk_version              "tags/v01-00" )
 set( marlinkinfit_version           "tags/v00-01" )
 set( cedviewer_version              "tags/v01-03" )
 set( overlay_version                "tags/v00-11" )
@@ -47,7 +47,7 @@ set( eutelescope_version            "tags/v00-06-03" )
 
 # ============ ilcsoft config packages ==============
 set( standardconfig_version         "tags/v03-00" )
-set( mokkadbconfig_version          "tags/v03-00" )
+set( mokkadbconfig_version          "tags/v03-01" )
 set( lcfimokkabasednets_version     "tags/v00-01" )
 
 # EOF

@@ -34,6 +34,7 @@ set( lccd_download_url               SVN_REPOSITORY "${desy_svn_repository}/lccd
 set( raida_download_url              SVN_REPOSITORY "${desy_svn_repository}/ilctools/RAIDA/${raida_version}" )
 set( marlin_download_url             SVN_REPOSITORY "${desy_svn_repository}/marlin/Marlin/${marlin_version}" )
 set( marlinutil_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinUtil/${marlinutil_version}" )
+set( marlintrk_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrk/${marlintrk_version}" )
 set( kaltest_download_url            SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalTest/${kaltest_version}" )
 set( kaldet_download_url             SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalDet/${kaldet_version}" )
 set( pandorapfanew_download_url      SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraPFANew/${pandorapfanew_version}" )
@@ -44,7 +45,6 @@ set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Drui
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinReco/${marlinreco_version}" )
 set( marlintpc_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlintpc/${marlintpc_version}" )
-set( marlintrk_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrk/${marlintrk_version}" )
 set( marlintrkprocessors_download_url SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrkProcessors/${marlintrkprocessors_version}" )
 set( forwardtracking_download_url    SVN_REPOSITORY "${desy_svn_repository}/marlinreco/ForwardTracking/${forwardtracking_version}" )
 set( marlinkinfit_download_url       SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinKinfit/${marlinkinfit_version}" )
