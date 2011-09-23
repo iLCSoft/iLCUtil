@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Content-Style-Type" content="text/css">
+        <style type="text/css">
+            div.code {
+                font-family: "Courier New", monospace;
+                white-space: pre-line;
+                text-indent:3em;
+                background: #eee;
+                border: 1px dashed #bbb;
+                padding: 0em 1em 1em 1.5em;
+                margin: 1em 5em 0em 2em;
+                float: left;
+            }
+            div.clear {
+                clear: both;
+            }
+            body {
+                white-space: pre-line;
+                margin: 0% 10% 5% 10%;
+            }
+            div.center {
+                text-align: center;
+            }
+            h1 {
+                text-align: center;
+            }
+            h3 {
+                text-align: center;
+            }
+            p {
+                white-space: normal;
+            }
+        </style>
+        <title>CMakeModules Documentation</title>
+    </head>
+    <body>
+
+        <h1>CMakeModules</h1>
+
+        <p><b>CMakeModules</b> are a collection of cmake macros and modules for building software packages in the context of HEP.</p>
+
+        <h3>CMake FindModules</h3>
+        <p>A collection of Find modules are available in order to <i>find</i> some of the most common software packages within the hep community, e.g.</p>
+        <ul>
+            <li>FindCERNLIB</li>
+            <li>FindCLHEP</li>
+            <li>FindFORTRAN_LIBRARY</li>
+            <li>FindFastJet</li>
+            <li>FindGSL</li>
+            <li>FindMySQL</li>
+            <li>FindROOT</li>
+        </ul>
+        <p>This modules can be used in order to use one of the packages in question in your cmake project.
+            The next two examples show how to find the GSL and the ROOT packages with slight different options.
+            Please visit the cmake documentation of 
+            <a href="http://www.cmake.org/cmake/help/cmake-2-8-docs.html#command:find_package">find_package</a>
+            for more information on the syntax.
+        </p>
+        <div class="code">
+            FIND_PACKAGE( GSL )
+
+            IF( GSL_FOUND )
+            &nbsp;&nbsp;&nbsp;INCLUDE_DIRECTORIES( ${GSL_INCLUDE_DIRS} )
+            &nbsp;&nbsp;&nbsp;LINK_LIBRARIES( ${GSL_LIBRARIES} )
+            ENDIF( GSL_FOUND )
+        </div><div class="clear"></div>
+
+        <div class="code">
+            FIND_PACKAGE( ROOT 5.28 REQUIRED COMPONENTS MathMore )
+            INCLUDE_DIRECTORIES( ${ROOT_INCLUDE_DIRS} )
+            LINK_LIBRARIES( ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES} )
+        </div><div class="clear"></div>
+
+
+        <h3>CMake Macros</h3>
+
+        <p>An additional set ot cmake macros are available in order to facilitate writing new CMakeLists for your project.</p> 
+        <ul>
+            <li><h4>MacroAddSharedLibrary</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+
+                        <div class="code">
+                            ADD_SHARED_LIBRARY( libname source1 source2 ... sourceN )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Adds a versioned shared library with the given sources. The library version is set from the following variables:
+
+                        <div class="code">
+                            VERSION = ${${PROJECT_NAME}_VERSION}
+                            SOVERSION = ${${PROJECT_NAME}_SOVERSION}
+                        </div><div class="clear"></div>
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroCheckPackageLibs</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+
+                        <div class="code">
+                            CHECK_PACKAGE_LIBS( pkgname stdlib1 stdlib2 ... stdlibn )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Macro for checkin package libraries in the package installation directory, i.e. ${PKG_ROOT}/lib.
+                        Only the standard libraries should be passed as arguments to the macro. The component libraries should
+                        instead be given in PKG_FIND_COMPONENTS (when calling FIND_PACKAGE with COMPONENTS argument) or
+                        through the variable PKG_USE_COMPONENTS.
+                    </li>
+
+                    <li><b>Required Variables:</b>
+                            
+                        PKG_ROOT    : path to PKG root directory
+                    </li>
+
+                    <li><b>Variables Returned:</b>
+
+                        PKG_LIBRARY_DIRS : list of paths to be used with LINK_DIRECTORIES
+                        PKG_LIBRARIES    : list of STANDARD libraries (NOT including COMPONENTS)
+                        PKG_COMPONENT_LIBRARIES    : list of COMPONENT libraries
+                        PKG_${COMPONENT}_FOUND     : set to TRUE or FALSE for each library
+                        PKG_${COMPONENT}_LIBRARY   : path to each individual library
+                        PKG_LIBRARIES and PKG_LIBRARY_DIRS will be empty if any of the standard libraries is missing
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroCheckPackageVersion</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            CHECK_PACKAGE_VERSION( name version )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+                            
+                        Macro for checking a package version.
+                        
+                        This macro should be called from your PKGVersion.cmake configuration file or from a FindPKG.cmake
+                            module with the name and version arguments.
+                        
+                        The following conventions are used:
+                        
+                        If FIND_PACKAGE is called with EXACT argument than the version has to match EXACTLY, i.e.:
+                        
+                              1.5 == 1.5
+                              1.5 == 1.5.0
+                              1.5 == 1.5.0.0
+                              1.5.2 == 1.5.2.0
+                              1.5.2.1 == 1.5.2.1
+                              1.5.2 != 1.5.2.1
+                              1.5 != 1.5.0.1
+                        
+                        Otherwise a MINIMUM_REQUIRED version is checked for, i.e. the same behavior as with the
+                            cmake variable CMAKE_MINIMUM_REQUIRED, e.g.:
+                        
+                              searching: 1.2     -- installed: 1.5.2.2 -- compatible
+                              searching: 1.5     -- installed: 1.5.2.2 -- compatible
+                              searching: 1.5.2.1 -- installed: 1.5.2.2 -- compatible
+                              searching: 1.5.2.3 -- installed: 1.5.2.2 -- unsuitable
+                              searching: 1.7     -- installed: 1.5.2.2 -- unsuitable
+                        
+                        Following variables are returned (internally to cmake):
+
+                        PACKAGE_VERSION_EXACT       : set to TRUE if exact version was found
+                        PACKAGE_VERSION_COMPATIBLE  : set to TRUE if version is compatible
+                        PACKAGE_VERSION_UNSUITABLE  : set to TRUE if version found is unsuitable
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroDisplayStandardVariables</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            DISPLAY_STD_VARIABLES()
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+                        
+                        This macro prints out some of the standard cmake variables, e.g.
+
+                        CMAKE_INSTALL_PREFIX
+                        CMAKE_BUILD_TYPE
+                        BUILD_TESTING
+                        CMAKE_PREFIX_PATH
+                        CMAKE_MODULE_PATH
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroExportPackageDeps</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            EXPORT_PACKAGE_DEPENDENCIES( pkgname )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Macro for exporting additional dependencies of a package.
+                        
+                        If you have a package A which depends on package B it might be useful to
+                        export the libraries of package B when linking to package A. For this
+                        purpose this macro is intended to be used in the PkgAConfig.cmake.in file from
+                        package A.
+
+                        <div class="code">
+                            # load macro for exporting dependencies
+                            INCLUDE( "@cmake4hep_ROOT@/MacroExportPackageDeps.cmake" )
+
+                            # set dependency variables to be exported ( this variables should be
+                            # previously set in the CMakeLists.txt of PkgA
+                            SET( PkgA_DEPENDS_INCLUDE_DIRS  @PkgA_DEPENDS_INCLUDE_DIRS@ )
+                            SET( PkgA_DEPENDS_LIBRARY_DIRS  @PkgA_DEPENDS_LIBRARY_DIRS@ )
+                            SET( PkgA_DEPENDS_LIBRARIES     @PkgA_DEPENDS_LIBRARIES@ )
+
+                            # export the previously defined dependencies (if set)
+                            EXPORT_PACKAGE_DEPENDENCIES( PkgA )
+                        </div><div class="clear"></div>
+
+                        This causes the previously defined dependencies to be added as well to the list of common
+                        cmake variables, i.e. if now package C wants to link against package A it will get the
+                        dependencies of package A for free.
+
+                        <div class="code">
+                            # CMakeLists.txt of PkgC
+                            FIND_PACKAGE( PkgA )
+                            LINK_LIBRARIES( ${PkgA_LIBRARIES} ) # also includes PkgB_LIBRARIES
+                        </div><div class="clear"></div>
+                        
+                        The variable FIND_PACKAGE_SKIP_DEPENDENCIES can be used for NOT adding the dependencies of PkgB into
+                        the variables of PkgA per default, i.e.
+
+                        <div class="code">
+                            # CMakeLists.txt of PkgC
+                            SET( FIND_PACKAGE_SKIP_DEPENDENCIES TRUE )
+                            FIND_PACKAGE( PkgA )
+                            LINK_LIBRARIES( ${PkgA_LIBRARIES} ) # does NOT include PkgB_LIBRARIES
+                            LINK_LIBRARIES( ${PkgA_DEPENDS_LIBRARIES} ) # includes PkgB_LIBRARIES
+                        </div><div class="clear"></div>
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroExtractNumericVersion</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            EXTRACT_NUMERIC_VERSION( version_string )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Extracts a numeric version from a string, e.g.:
+
+                        <div class="code">
+                            EXTRACT_NUMERIC_VERSION( "v01-00-03" )
+                            MESSAGE( "NUMERIC VERSION: ${NUMERIC_VERSION}" )
+                        </div><div class="clear"></div>
+                        
+                        output: NUMERIC VERSION: 01.00.03
+                    </li>
+
+                    <li><b>Variables Returned:</b>
+
+                        If a version is found, the following variables are returned:
+                        
+                        NUMERIC_VERSION : contains the whole extracted version (as shown above)
+                        VERSION_MAJOR : the major version
+                        VERSION_MINOR : the minor version
+                        VERSION_PATCH : the patch version (if found)
+                        VERSION_TWEAK : the tweak version (if found)
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroGeneratePackageConfigFiles</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            GENERATE_PACKAGE_CONFIGURATION_FILES( pkgnameConfig.cmake [pkgnameConfigVersion.cmake] [pkgnameLibDeps.cmake] )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Configures and installs <b>cmake.in</b> configuration files located in folder ${PROJECT_SOURCE_DIR}/cmake.
+                        
+                        The configure step replaces all occurences of @CMAKE_VARIABLES@ in the pkgnameConfig.cmake.in input files by
+                        their corresponding values @ configure time.
+                        
+                        The configured files are installed to the following locations:
+                        pkgnameConfig.cmake : ${CMAKE_PREFIX_PATH}
+                        pkgnameConfigVersion.cmake : ${CMAKE_PREFIX_PATH}
+                        pkgnameLibDeps.cmake : ${CMAKE_PREFIX_PATH}/lib/cmake
+                        ...
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroInstallDirectory</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            INSTALL_DIRECTORY( dir DESTINATION dest ... )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+                            
+                        Wrapper macro which calls the standard cmake INSTALL command and excludes typical patterns as follows:
+
+                        <div class="code">
+                            INSTALL( DIRECTORY ${ARGN}
+                            &nbsp;&nbsp;&nbsp;PATTERN "*~" EXCLUDE
+                            &nbsp;&nbsp;&nbsp;PATTERN "*#*" EXCLUDE
+                            &nbsp;&nbsp;&nbsp;PATTERN ".#*" EXCLUDE
+                            &nbsp;&nbsp;&nbsp;PATTERN "*CVS" EXCLUDE
+                            &nbsp;&nbsp;&nbsp;PATTERN "*.svn" EXCLUDE
+                            )
+                        </div><div class="clear"></div>
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroInstallSharedLibrary</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+                            
+                        <div class="code">
+                            INSTALL_SHARED_LIBRARY( target DESTINATION dest ... )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Wrapper macro which calls the standard cmake INSTALL command and sets executable PERMISSIONS for
+                        shared libraries as follows:
+
+                        <div class="code">
+                            INSTALL( TARGETS ${ARGN}
+                            &nbsp;&nbsp;&nbsp;PERMISSIONS
+                            &nbsp;&nbsp;&nbsp;OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                            &nbsp;&nbsp;&nbsp;GROUP_READ GROUP_EXECUTE
+                            &nbsp;&nbsp;&nbsp;WORLD_READ WORLD_EXECUTE
+                            )
+                         </div><div class="clear"></div>
+                    </li>
+                </ul>
+            </li>
+            <li><h4>MacroRootDict</h4>
+                <ul>
+                    <li><b>Syntax:</b>
+
+                         <div class="code">
+                            FIND_PACKAGE( ROOT REQUIRED )
+
+                            # load helper macros for using rootcint
+                            INCLUDE( ${ROOT_DICT_MACROS_FILE} )
+                        </div><div class="clear"></div>
+                    </li>
+
+                    <li><b>Description:</b>
+
+                        Additional helper macros for using rootcint.
+                        
+                        <p>An example follows on how to get a list of header files in a given input directory (containing a possible LinkDef.h
+                        header file), use that list of headers with rootcint for generating dictionary sources and finally add the generated
+                        dictionary sources to a given library.</p>
+                        <p>Get the list of headers in input_dir and store it in variable ROOT_DICT_INPUT_HEADERS. If the header file
+                            LinkDef.h exists in this directory it is automatically placed as the last header (required by rootcint!)</p>
+                        <div class="code">
+                            PREPARE_ROOT_DICT_HEADERS( input_dir)
+                        </div><div class="clear"></div>
+
+                        <p>If there isn't a header file called LinkDef.h in the headers directory it can be generated using the macro
+                        GEN_ROOT_DICT_LINKDEF_HEADER. This macro generates the header file namespace_LinkDef.h by addig the following line
+                        for each of the header files passed as an argument to the macro.</p>
+                        <div class="code">
+                        #pragma link C++ defined_in "${header}"; 
+                        </div><div class="clear"></div>
+
+                        The macro should be called as follows:
+
+                        <div class="code">
+                            GEN_ROOT_DICT_LINKDEF_HEADER( namespace ${ROOT_DICT_INPUT_HEADERS} )
+                        </div><div class="clear"></div>
+
+                        <p>After the list of header files (including the LinkDef.h header) has been gathered and stored in variable
+                        ROOT_DICT_INPUT_HEADERS it is possible to generate a dictionary source using rootcint. The file name of the dictionary source
+                        should be passed as an argument to the macro. The directory where the generated source file gets placed is given by the cmake
+                        variable ROOT_DICT_OUTPUT_DIR. For convenience the full path to the generated dictionary source file is automatically
+                        <b>appended</b> to the cmake variable ROOT_DICT_OUTPUT_SOURCES.</p>
+                        <div class="code">
+                            # generate dictionary sources using rootcint
+                            GEN_ROOT_DICT_SOURCE( dictname.cxx )
+                        </div><div class="clear"></div>
+
+                        <p>Finally add the generated sources stored in the variable ROOT_DICT_OUTPUT_SOURCES to the list of my library sources.</p>
+                        <div class="code">
+                            LIST( APPEND mylib_sources ${ROOT_DICT_OUTPUT_SOURCES} )
+                        </div><div class="clear"></div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <p><a href="http://www.validome.org/referer"><img style="border:none"
+            src="http://www.validome.org/images/set6/valid_html_4_0_1.gif"
+            alt="Valid HTML 4.01" width="80" height="15"></a>
+        </p>
+    </body>
+</html>
+
