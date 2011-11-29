@@ -51,6 +51,7 @@ set( marlinkinfit_download_url       SVN_REPOSITORY "${desy_svn_repository}/marl
 set( cedviewer_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/CEDViewer/${cedviewer_version}" )
 set( overlay_download_url            SVN_REPOSITORY "${desy_svn_repository}/marlin/Overlay/${overlay_version}" )
 set( lcfivertex_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/LCFIVertex/${lcfivertex_version}" )
+set( lcfiplus_download_url           SVN_REPOSITORY "${desy_svn_repository}/marlinreco/LCFIPlus/${lcfiplus_version}" )
 set( garlic_download_url             SVN_REPOSITORY "${desy_svn_repository}/Garlic/${garlic_version}" )
 set( marlinpandora_download_url      SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/MarlinPandora/${marlinpandora_version}" )
 set( pandoraanalysis_download_url    SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraAnalysis/${pandoraanalysis_version}" )

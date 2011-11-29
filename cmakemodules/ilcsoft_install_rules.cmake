@@ -655,13 +655,22 @@ if( "${install_marlintpc}" STREQUAL "YES" )
     set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}MarlinTPC${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
 endif()
 
+# LCFIVertex needs special treatment because it is both:
+# CORE_PACKAGE and a Marlin plugin
+ADD_ILCSOFT_CORE_PACKAGE( LCFIVertex )
+if( "${install_lcfivertex}" STREQUAL "YES" )
+    set( MARLIN_DLL "${ilcsoft_install_prefix}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}LCFIVertex${CMAKE_SHARED_LIBRARY_SUFFIX}:${MARLIN_DLL}" )
+endif()
+
+
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinReco )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinTrkProcessors )
 ADD_ILCSOFT_MARLIN_PACKAGE( ForwardTracking )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinKinfit )
 ADD_ILCSOFT_MARLIN_PACKAGE( CEDViewer )
 ADD_ILCSOFT_MARLIN_PACKAGE( Overlay )
-ADD_ILCSOFT_MARLIN_PACKAGE( LCFIVertex )
+#ADD_ILCSOFT_MARLIN_PACKAGE( LCFIVertex )
+ADD_ILCSOFT_MARLIN_PACKAGE( LCFIPlus )
 ADD_ILCSOFT_MARLIN_PACKAGE( Garlic )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinPandora )
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraAnalysis )
