@@ -1,4 +1,4 @@
-# package versions from the ilcsoft release v01-11
+# package versions from the ilcsoft release v01-12
 # this file should not be changed!
 
 # ===== external tools ================
