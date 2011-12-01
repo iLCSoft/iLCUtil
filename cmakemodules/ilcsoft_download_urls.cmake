@@ -46,6 +46,7 @@ set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Drui
 set( marlinreco_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinReco/${marlinreco_version}" )
 set( marlintpc_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlintpc/${marlintpc_version}" )
 set( marlintrkprocessors_download_url SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrkProcessors/${marlintrkprocessors_version}" )
+set( clupatra_download_url           SVN_REPOSITORY "${desy_svn_repository}/marlinreco/Clupatra/${clupatra_version}" )
 set( forwardtracking_download_url    SVN_REPOSITORY "${desy_svn_repository}/marlinreco/ForwardTracking/${forwardtracking_version}" )
 set( marlinkinfit_download_url       SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinKinfit/${marlinkinfit_version}" )
 set( cedviewer_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/CEDViewer/${cedviewer_version}" )
