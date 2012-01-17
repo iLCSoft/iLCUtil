@@ -18,7 +18,7 @@ set( kaldet_depends             DEPENDS marlinutil kaltest )
 set( pandorapfanew_depends      DEPENDS ilcutil root )
 set( marlintrk_depends          DEPENDS marlinutil kaldet )
 
-set( mokka_depends              DEPENDS lcio gear ) # mysql )
+set( mokka_depends              DEPENDS lcio gear ) #geant4 ) # mysql )
 set( druid_depends              DEPENDS lcio gear )
 
 # ============ ilcsoft marlin plugins ===============

@@ -24,6 +24,8 @@ endif()
 #)
 ## ----------------------------------------------------------------------------
 
+set( geant4_download_url             URL            "http://geant4.cern.ch/support/source/geant${geant4_version}.tar.gz" )
+
 # ============ ilcsoft core packages ================
 set( lcio_download_url               SVN_REPOSITORY "svn://svn.freehep.org/lcio/${lcio_version}" )
 set( ilcutil_download_url            SVN_REPOSITORY "${desy_svn_repository}/ilctools/ilcutil/${ilcutil_version}" )

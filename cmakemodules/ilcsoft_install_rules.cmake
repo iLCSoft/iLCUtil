@@ -552,6 +552,8 @@ endmacro()
 
 # ----- iLCSoft core packages ------------------------------------------------
 
+ADD_ILCSOFT_CORE_PACKAGE( GEANT4 )
+
 ADD_ILCSOFT_CORE_PACKAGE( ILCUTIL )
 ADD_ILCSOFT_CORE_PACKAGE( LCIO )
 if( "${install_lcio}" STREQUAL "YES" )
