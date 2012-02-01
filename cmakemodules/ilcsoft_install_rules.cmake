@@ -726,6 +726,14 @@ if( "${install_lcfimokkabasednets}" STREQUAL "YES" )
 endif()
 
 
+ADD_ILCSOFT_CONFIG_PACKAGE( ildconfig )
+if( "${install_ildconfig}" STREQUAL "YES" )
+    ExternalProject_Get_Property( ildconfig source_dir )
+    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- ILDCONFIG -------------------------\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export ILDCONFIG=${source_dir}\n" )
+endif()
+
+
 ADD_ILCSOFT_CONFIG_PACKAGE( cmakemodules )
 
 

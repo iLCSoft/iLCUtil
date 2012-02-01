@@ -69,4 +69,5 @@ set( cmakemodules_download_url       SVN_REPOSITORY "${desy_svn_repository}/ilct
 set( standardconfig_download_url     SVN_REPOSITORY "${desy_svn_repository}/marlinreco/StandardConfig/${standardconfig_version}" )
 set( mokkadbconfig_download_url      SVN_REPOSITORY "${desy_svn_repository}/ilctools/MokkaDBConfig/${mokkadbconfig_version}" )
 set( lcfimokkabasednets_download_url SVN_REPOSITORY "${desy_svn_repository}/tagnet/LCFI_MokkaBasedNets/${lcfimokkabasednets_version}" )
+set( ildconfig_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/ILDConfig/${ildconfig_version}" )
 

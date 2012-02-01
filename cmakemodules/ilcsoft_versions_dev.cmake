@@ -38,7 +38,8 @@ set( eutelescope_version        "trunk" )
 
 # ============ ilcsoft config packages ==============
 set( cmakemodules_version       "trunk" )# DEPRECATED
-set( standardconfig_version     "trunk" )
-set( mokkadbconfig_version      "trunk" )
+set( standardconfig_version     "trunk" )# DEPRECATED
+set( mokkadbconfig_version      "trunk" )# DEPRECATED
+set( ildconfig_version          "trunk" )# DEPRECATED?
 set( lcfimokkabasednets_version "trunk" )
 
