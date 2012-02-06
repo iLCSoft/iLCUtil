@@ -40,6 +40,7 @@ set( marlintrk_download_url          SVN_REPOSITORY "${desy_svn_repository}/marl
 set( kaltest_download_url            SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalTest/${kaltest_version}" )
 set( kaldet_download_url             SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalDet/${kaldet_version}" )
 set( pandorapfanew_download_url      SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraPFANew/${pandorapfanew_version}" )
+set( pathfinder_download_url         SVN_REPOSITORY "${desy_svn_repository}/pathfinder/${pathfinder_version}" )
 
 set( mokka_download_url              SVN_REPOSITORY "http://llrforge.in2p3.fr/svn/Mokka/${mokka_version}" )
 set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Druid/${druid_version}" )

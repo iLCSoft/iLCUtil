@@ -17,6 +17,7 @@ set( kaltest_depends            DEPENDS ilcutil root )
 set( kaldet_depends             DEPENDS marlinutil kaltest )
 set( pandorapfanew_depends      DEPENDS ilcutil root )
 set( marlintrk_depends          DEPENDS marlinutil kaldet )
+set( pathfinder_depends         DEPENDS root )
 
 set( mokka_depends              DEPENDS lcio gear ) #geant4 ) # mysql )
 set( druid_depends              DEPENDS lcio gear )

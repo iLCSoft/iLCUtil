@@ -12,6 +12,7 @@ set( kaltest_version            "trunk" )
 set( kaldet_version             "trunk" )
 set( marlintrk_version          "trunk" )
 set( pandorapfanew_version      "trunk" )
+set( pathfinder_version         "trunk" )
 
 set( mokka_version              "trunk" )
 set( druid_version              "trunk" )

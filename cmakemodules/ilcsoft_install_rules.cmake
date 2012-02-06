@@ -581,6 +581,7 @@ ADD_ILCSOFT_CORE_PACKAGE( KalTest )
 ADD_ILCSOFT_CORE_PACKAGE( KalDet )
 ADD_ILCSOFT_CORE_PACKAGE( MarlinTrk )
 ADD_ILCSOFT_CORE_PACKAGE( PandoraPFANew )
+ADD_ILCSOFT_CORE_PACKAGE( PathFinder )
 
 
 # ----------------------------------------------------------------------------
