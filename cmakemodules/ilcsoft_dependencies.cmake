@@ -24,7 +24,7 @@ set( druid_depends              DEPENDS lcio gear )
 
 # ============ ilcsoft marlin plugins ===============
 set( marlinreco_depends         DEPENDS marlinutil cernlib )
-set( marlintpc_depends          DEPENDS marlin kaldet gsl )
+set( marlintpc_depends          DEPENDS marlin pathfinder kaldet gsl )
 set( marlintrkprocessors_depends DEPENDS marlintrk )
 set( clupatra_depends           DEPENDS marlintrk )
 set( forwardtracking_depends    DEPENDS marlintrk )
