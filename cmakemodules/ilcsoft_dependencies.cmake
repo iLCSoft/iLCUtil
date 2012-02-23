@@ -7,7 +7,7 @@ set( root_depends               DEPENDS gsl  )
 # ============ ilcsoft core packages ================
 set( lcio_depends               DEPENDS ilcutil root ) # ilcutil ?
 set( ced_depends                DEPENDS ilcutil glut )
-set( gear_depends               DEPENDS ilcutil root )
+set( gear_depends               DEPENDS ilcutil clhep root )
 set( conddbmysql_depends        DEPENDS ilcutil ) # mysql )
 set( lccd_depends               DEPENDS ilcutil lcio conddbmysql )
 set( raida_depends              DEPENDS ilcutil root )
@@ -19,7 +19,7 @@ set( pandorapfanew_depends      DEPENDS ilcutil root )
 set( marlintrk_depends          DEPENDS marlinutil kaldet )
 set( pathfinder_depends         DEPENDS root )
 
-set( mokka_depends              DEPENDS lcio gear ) #geant4 ) # mysql )
+set( mokka_depends              DEPENDS lcio gear geant4 ) # mysql )
 set( druid_depends              DEPENDS lcio gear )
 
 # ============ ilcsoft marlin plugins ===============
