@@ -143,6 +143,7 @@ macro( FIND_PACKAGE_WRAPPER_DUMMY_TARGET )
 
             if( ${_pkg_name}_FOUND OR ${_upkg_name}_FOUND )
                 find_package( ${_args} ) # repeat find_package without QUIET arg to show debug infos
+                message( STATUS "looking for ${_lpkg_name} (${_pkg_version}) -- found" )
             else()
                 if( "${_pkg_install_flag}" STREQUAL "AUTO" OR "${_pkg_install_flag}" STREQUAL "" )
                     message( STATUS "could not find ${_lpkg_name} (${_pkg_version})" )
@@ -326,8 +327,6 @@ if( "${install_clhep}" STREQUAL "YES" )
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND ./CLHEP/configure --prefix=${external_install_prefix}
     )
-
-    # export CLHEP_BASE_DIR , CLHEP_INCLUDE_DIR ?
 endif()
 
 
@@ -430,7 +429,6 @@ if( "${install_qt4}" STREQUAL "YES" )
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND echo yes | ./configure -prefix ${external_install_prefix} ${qt4_cfg_options}
     )
-    # export QTDIR, QMAKESPEC ?
 endif()
 
 
@@ -552,19 +550,19 @@ endmacro()
 
 # ----- iLCSoft core packages ------------------------------------------------
 
-ADD_ILCSOFT_CORE_PACKAGE( GEANT4 )
+ADD_ILCSOFT_CORE_PACKAGE( Geant4 )
 
 ADD_ILCSOFT_CORE_PACKAGE( ILCUTIL )
 ADD_ILCSOFT_CORE_PACKAGE( LCIO )
 if( "${install_lcio}" STREQUAL "YES" )
-    # needed for mokka
+    # needed for druid
     file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- LCIO -----------------------------------\n" )
     file( APPEND ${ilcsoft_env_init_script} "export LCIO=${ilcsoft_install_prefix}\n" )
 endif()
 ADD_ILCSOFT_CORE_PACKAGE( CED )
 ADD_ILCSOFT_CORE_PACKAGE( GEAR )
 if( "${install_gear}" STREQUAL "YES" )
-    # needed for mokka
+    # needed for druid
     file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- GEAR -----------------------------------\n" )
     file( APPEND ${ilcsoft_env_init_script} "export GEAR=${ilcsoft_install_prefix}\n" )
 endif()
@@ -582,50 +580,7 @@ ADD_ILCSOFT_CORE_PACKAGE( KalDet )
 ADD_ILCSOFT_CORE_PACKAGE( MarlinTrk )
 ADD_ILCSOFT_CORE_PACKAGE( PandoraPFANew )
 ADD_ILCSOFT_CORE_PACKAGE( PathFinder )
-
-
-# ----------------------------------------------------------------------------
-# --- Mokka
-# ----------------------------------------------------------------------------
-
-if( "${install_mokka}" STREQUAL "YES" )
-
-    message( "++ install mokka (${mokka_version}) from source" )
-
-    list( APPEND mokka_ep_args
-        CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
-        BUILD_COMMAND . ${ilcsoft_env_init_script} && eval ${CMAKE_BUILD_TOOL} -j1 -C $G4WORKDIR/source
-        INSTALL_COMMAND . ${ilcsoft_env_init_script} && eval ${CMAKE_COMMAND} -E copy $G4WORKDIR/bin/$G4SYSTEM/Mokka ${ilcsoft_install_prefix}/bin
-    )
-
-    #ADD_ILCSOFT_CORE_PACKAGE( Mokka )
-    ADD_ILCSOFT_PACKAGE( Mokka )
-
-    #ExternalProject_Add( mokka
-    #    ${mokka_depends}
-    #    ${mokka_download_url}
-    #    BUILD_IN_SOURCE 1
-    #    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "no configure needed"
-    #    BUILD_COMMAND . ${ilcsoft_env_init_script} && ${CMAKE_BUILD_TOOL} -j1 -C source
-    #    INSTALL_COMMAND . ${ilcsoft_env_init_script} && eval ${CMAKE_COMMAND} -E copy $G4WORKDIR/bin/$G4SYSTEM/Mokka ${ilcsoft_install_prefix}/bin
-    #)
-
-    if( NOT DEFINED ENV{G4ENV_INIT} )
-        message( FATAL_ERROR "please set G4ENV_INIT=/path/to/geant4/env.sh script or install_mokka to NO" )
-    endif()
-
-    ExternalProject_Get_Property( mokka source_dir )
-
-    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MOKKA ----------------------------------\n" )
-    file( APPEND ${ilcsoft_env_init_script} "export G4WORKDIR=${source_dir}\n" )
-    file( APPEND ${ilcsoft_env_init_script} ". $ENV{G4ENV_INIT}\n" )
-    # disable some graphics drivers
-    file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OIX_DRIVER G4VIS_USE_OIX_DRIVER G4VIS_USE_OIX\n" )
-    file( APPEND ${ilcsoft_env_init_script} "unset G4VIS_BUILD_OPENGLXM_DRIVER G4VIS_USE_OPENGLXM\n" )
-    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XAW_SESSION G4UI_USE_XAW\n" )
-    file( APPEND ${ilcsoft_env_init_script} "unset G4UI_BUILD_XM_SESSION G4UI_USE_XM\n" )
-
-endif()
+ADD_ILCSOFT_CORE_PACKAGE( Mokka )
 
 
 # ---------------------------------------------------------------------------
@@ -635,8 +590,6 @@ endif()
 if( "${install_druid}" STREQUAL "YES" )
 
     message( "++ install druid (${druid_version}) from source" )
-
-    # add as ILCSOFT_PACKAGE ?
 
     ExternalProject_Add( druid
         ${druid_depends}
@@ -673,13 +626,10 @@ ADD_ILCSOFT_MARLIN_PACKAGE( ForwardTracking )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinKinfit )
 ADD_ILCSOFT_MARLIN_PACKAGE( CEDViewer )
 ADD_ILCSOFT_MARLIN_PACKAGE( Overlay )
-#ADD_ILCSOFT_MARLIN_PACKAGE( LCFIVertex )
 ADD_ILCSOFT_MARLIN_PACKAGE( LCFIPlus )
 ADD_ILCSOFT_MARLIN_PACKAGE( Garlic )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinPandora )
 ADD_ILCSOFT_MARLIN_PACKAGE( PandoraAnalysis )
-ADD_ILCSOFT_MARLIN_PACKAGE( PandoraPFA )
-ADD_ILCSOFT_MARLIN_PACKAGE( SiliconDigi )
 ADD_ILCSOFT_MARLIN_PACKAGE( FastJetClustering )
 ADD_ILCSOFT_MARLIN_PACKAGE( MarlinFastJet )
 ADD_ILCSOFT_MARLIN_PACKAGE( Eutelescope )
@@ -702,41 +652,17 @@ file( APPEND ${ilcsoft_env_init_script} "export MARLIN_DLL=${MARLIN_DLL}\n" )
 
 # ----- Config packages ------------------------------------------------------
 
-ADD_ILCSOFT_CONFIG_PACKAGE( standardconfig )
-if( "${install_standardconfig}" STREQUAL "YES" )
-    ExternalProject_Get_Property( standardconfig source_dir )
-    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- STANDARDCONFIG -------------------------\n" )
-    file( APPEND ${ilcsoft_env_init_script} "export STANDARDCONFIG=${source_dir}\n" )
-endif()
-
-ADD_ILCSOFT_CONFIG_PACKAGE( mokkadbconfig )
-if( "${install_mokkadbconfig}" STREQUAL "YES" )
-    ExternalProject_Get_Property( mokkadbconfig source_dir )
-    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- MOKKADBCONFIG --------------------------\n" )
-    file( APPEND ${ilcsoft_env_init_script} "export MOKKADBCONFIG=${source_dir}\n" )
-    file( APPEND ${ilcsoft_env_init_script} "export PATH=$MOKKADBCONFIG/scripts:$PATH\n" )
-    file( APPEND ${ilcsoft_env_init_script} "export MOKKA_DUMP_FILE=$MOKKADBCONFIG/mokka-dbdump.sql.tgz\n" )
-endif()
-
-
-ADD_ILCSOFT_CONFIG_PACKAGE( lcfimokkabasednets )
-if( "${install_lcfimokkabasednets}" STREQUAL "YES" )
-    ExternalProject_Get_Property( lcfimokkabasednets source_dir )
-    file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- LCFIMOKKABASEDNETS ---------------------\n" )
-    file( APPEND ${ilcsoft_env_init_script} "export LCFIMOKKABASEDNETS=${source_dir}\n" )
-endif()
-
-
 ADD_ILCSOFT_CONFIG_PACKAGE( ildconfig )
 if( "${install_ildconfig}" STREQUAL "YES" )
     ExternalProject_Get_Property( ildconfig source_dir )
     file( APPEND ${ilcsoft_env_init_script} "\n\n#---------------------- ILDCONFIG -------------------------\n" )
     file( APPEND ${ilcsoft_env_init_script} "export ILDCONFIG=${source_dir}\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export STANDARDCONFIG=$ILDCONFIG/StandardConfig\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export MOKKADBCONFIG=$ILDCONFIG/MokkaDBConfig\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export PATH=$MOKKADBCONFIG/scripts:$PATH\n" )
+    file( APPEND ${ilcsoft_env_init_script} "export MOKKA_DUMP_FILE=$MOKKADBCONFIG/mokka-dbdump.sql.tgz\n" )
+    #file( APPEND ${ilcsoft_env_init_script} "export LCFIMOKKABASEDNETS=$ILDCONFIG/LCFI_MokkaBasedNets\n" )
 endif()
-
-
-ADD_ILCSOFT_CONFIG_PACKAGE( cmakemodules )
-
 
 # ============================================================================
 
