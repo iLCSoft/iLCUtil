@@ -11,7 +11,6 @@ set( clhep_version                  "2.1.0.1"   )
 set( ced_version                    "tags/v01-04-01" )
 set( kaldet_version                 "tags/v01-04" )
 set( marlintrk_version              "tags/v01-02" )
-
 set( mokka_version                  "tags/mokka-07-07-p04" )
 
 # ============ ilcsoft marlin plugins ===============
