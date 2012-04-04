@@ -36,7 +36,7 @@ set( druid_version                  "tags/1.8"    )
 # ============ ilcsoft marlin plugins ===============
 set( marlinkinfit_version           "tags/v00-01-01" )
 set( lcfivertex_version             "tags/v00-06-01" )
-set( marlinreco_version             "tags/v01-00-01" )
+set( marlinreco_version             "tags/v01-01-01" )
 set( cedviewer_version              "tags/v01-05" )
 set( overlay_version                "tags/v00-11-01" )
 set( marlintrkprocessors_version    "tags/v01-04" )
