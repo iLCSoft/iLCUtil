@@ -11,6 +11,8 @@ set( marlinutil_version         "trunk" )
 set( kaltest_version            "trunk" )
 set( kaldet_version             "trunk" )
 set( marlintrk_version          "trunk" )
+set( kitrack_version            "trunk" )
+set( kitrackmarlin_version      "trunk" )
 set( pandorapfanew_version      "trunk" )
 set( pathfinder_version         "trunk" )
 

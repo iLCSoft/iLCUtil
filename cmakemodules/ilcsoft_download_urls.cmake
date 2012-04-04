@@ -37,6 +37,8 @@ set( raida_download_url              SVN_REPOSITORY "${desy_svn_repository}/ilct
 set( marlin_download_url             SVN_REPOSITORY "${desy_svn_repository}/marlin/Marlin/${marlin_version}" )
 set( marlinutil_download_url         SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinUtil/${marlinutil_version}" )
 set( marlintrk_download_url          SVN_REPOSITORY "${desy_svn_repository}/marlinreco/MarlinTrk/${marlintrk_version}" )
+set( kitrack_download_url            SVN_REPOSITORY "${desy_svn_repository}/marlinreco/KiTrack/${kitrack_version}" )
+set( kitrackmarlin_download_url      SVN_REPOSITORY "${desy_svn_repository}/marlinreco/KiTrackMarlin/${kitrackmarlin_version}" )
 set( kaltest_download_url            SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalTest/${kaltest_version}" )
 set( kaldet_download_url             SVN_REPOSITORY "${desy_svn_repository}/kaltest/KalDet/${kaldet_version}" )
 set( pandorapfanew_download_url      SVN_REPOSITORY "${desy_svn_repository}/PandoraPFANew/PandoraPFANew/${pandorapfanew_version}" )
