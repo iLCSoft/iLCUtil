@@ -23,6 +23,7 @@ set( kitrack_depends            DEPENDS marlin )
 set( kitrackmarlin_depends      DEPENDS kitrack )
 
 set( mokka_depends              DEPENDS lcio gear geant4 ) # mysql )
+set( bbq_depends                DEPENDS lcio gear )
 set( druid_depends              DEPENDS lcio gear )
 
 # ============ ilcsoft marlin plugins ===============

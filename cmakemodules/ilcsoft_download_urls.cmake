@@ -45,6 +45,7 @@ set( pandorapfanew_download_url      SVN_REPOSITORY "${desy_svn_repository}/Pand
 set( pathfinder_download_url         SVN_REPOSITORY "${desy_svn_repository}/pathfinder/${pathfinder_version}" )
 
 set( mokka_download_url              SVN_REPOSITORY "http://llrforge.in2p3.fr/svn/Mokka/${mokka_version}" )
+set( bbq_download_url                SVN_REPOSITORY "${desy_svn_repository}/bbq/${bbq_version}" )
 set( druid_download_url              SVN_REPOSITORY "${desy_svn_repository}/Druid/${druid_version}" )
 
 # ============ ilcsoft marlin plugins ===============

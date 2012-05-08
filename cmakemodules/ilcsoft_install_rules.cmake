@@ -583,6 +583,7 @@ ADD_ILCSOFT_CORE_PACKAGE( KiTrackMarlin )
 ADD_ILCSOFT_CORE_PACKAGE( PandoraPFANew )
 ADD_ILCSOFT_CORE_PACKAGE( PathFinder )
 ADD_ILCSOFT_CORE_PACKAGE( Mokka )
+ADD_ILCSOFT_CORE_PACKAGE( BBQ )
 
 
 # ---------------------------------------------------------------------------

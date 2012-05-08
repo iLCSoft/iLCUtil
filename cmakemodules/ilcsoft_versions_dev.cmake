@@ -17,6 +17,7 @@ set( pandorapfanew_version      "trunk" )
 set( pathfinder_version         "trunk" )
 
 set( mokka_version              "trunk" )
+set( bbq_version                "trunk" )
 set( druid_version              "trunk" )
 
 # ============ ilcsoft marlin plugins ===============
