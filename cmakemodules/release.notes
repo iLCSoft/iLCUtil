@@ -3,6 +3,19 @@
 #####################################################
 
 -----------------------------------------------------
+ v01-12
+-----------------------------------------------------
+
+- Changes to FindROOT.cmake
+  - modified findroot module to first check for ROOT in $ROOTSYS, then
+    in $PATH directories, before looking in /usr/bin; this makes sure
+    that the ROOT version installed with ILCsoft or local
+    installations (if existing/set up correctly) are preferred over
+    system-wide packages and avoids conflicts between the
+    installtions.
+
+
+-----------------------------------------------------
  v01-11
 -----------------------------------------------------
 
