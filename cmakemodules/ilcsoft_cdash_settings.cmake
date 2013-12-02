@@ -11,7 +11,7 @@ if( "${hostname}" MATCHES "desy.de" )
     message( STATUS "running inside desy network" )
 
     # this server is only visible inside the desy network
-    set( cdash_server_url "http://zitxserve1.desy.de/~aplin/CDash/generateCTestConfig.php" )
+    set( cdash_server_url "http://aidasoft.desy.de/CDash/generateCTestConfig.php" )
 
     set( download_cmd wget -O )
     if( APPLE )
