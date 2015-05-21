@@ -58,9 +58,9 @@ ENDIF( FastJet_CONFIG_EXECUTABLE )
 SET( FastJet_INCLUDE_DIRS FastJet_INCLUDE_DIRS-NOTFOUND )
 MARK_AS_ADVANCED( FastJet_INCLUDE_DIRS )
 
-FIND_PATH( FastJet_INCLUDE_DIRS NAMES JetDefinition.hh PATHS ${FastJet_DIR}/include NO_DEFAULT_PATH )
+FIND_PATH( FastJet_INCLUDE_DIRS NAMES fastjet/JetDefinition.hh PATHS ${FastJet_DIR}/include NO_DEFAULT_PATH )
 IF( NOT FastJet_DIR )
-    FIND_PATH( FastJet_INCLUDE_DIRS NAMES JetDefinition.hh )
+    FIND_PATH( FastJet_INCLUDE_DIRS NAMES fastjet/JetDefinition.hh )
 ENDIF()
 
 
