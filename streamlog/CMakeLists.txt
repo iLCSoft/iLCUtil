@@ -15,8 +15,7 @@ SET( ${PROJECT_NAME}_VERSION_MINOR 2 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 
-# load default ilcsoft settings (install prefix, build type, rpath, etc.)
-LIST( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
+FIND_PACKAGE( ILCUTIL REQUIRED COMPONENTS ILCSOFT_CMAKE_MODULES )
 INCLUDE( ilcsoft_default_settings )
 
 
