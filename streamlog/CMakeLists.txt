@@ -33,9 +33,6 @@ ENDIF()
 
 ### LIBRARY #################################################################
 
-# definitions to pass to the compiler
-ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
-
 # include directories
 INCLUDE_DIRECTORIES( BEFORE ./source/include )
 INSTALL( DIRECTORY ./source/include DESTINATION . PATTERN ".svn" EXCLUDE )
