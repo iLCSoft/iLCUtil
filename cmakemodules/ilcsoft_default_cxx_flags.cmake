@@ -1,6 +1,9 @@
 ## Set the default compiler flags for all projects picking up default ilcutil settings
 ## This runs checks if compilers support the flag and sets them, if they do
 ## this will create a humongous amount of warnings when compiling :)
+
+INCLUDE(CheckCXXCompilerFlag)
+
 SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -Wl,-no-undefined  )
 MESSAGE( STATUS "FLAGS ${COMPILER_FLAGS}" )
 FOREACH( FLAG ${COMPILER_FLAGS} )
@@ -13,12 +16,6 @@ FOREACH( FLAG ${COMPILER_FLAGS} )
     MESSAGE ( STATUS "NOT Adding ${FLAG} to CXX_FLAGS ${CXX_FLAG_WORKS}" )
   ENDIF()
 ENDFOREACH()
-
-
-
-IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  SET(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" CACHE PATH "Where to install ${PROJECT_NAME}" FORCE)
-ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 OPTION( USE_CXX11 "Use CXX Standard 2011" True )
 IF( ${USE_CXX11} )
