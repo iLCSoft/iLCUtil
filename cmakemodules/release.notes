@@ -2,8 +2,17 @@
 # CMakeModules for the ILC Software - Release Notes
 #####################################################
 
+
 -----------------------------------------------------
- v01-14-01
+ v01-15
+-----------------------------------------------------
+  A.Sailer
+  - Add Macro to set the default cxx flags for all packages depending on ilcutil
+  - Add option for USE_CXX11 and set it to True by default
+
+
+-----------------------------------------------------
+ V01-14-01
 -----------------------------------------------------
   - patch release: fix FindFastJet.cmake
      ( using file JetDefinition.hh also present in newer 
