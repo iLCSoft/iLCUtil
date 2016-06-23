@@ -4,7 +4,12 @@
 
 INCLUDE(CheckCXXCompilerFlag)
 
-SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -Wl,-no-undefined  )
+if( APPLE )
+  SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized )
+else()
+  SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -Wl,-no-undefined  )
+endif()
+
 MESSAGE( STATUS "FLAGS ${COMPILER_FLAGS}" )
 FOREACH( FLAG ${COMPILER_FLAGS} )
   CHECK_CXX_COMPILER_FLAG( "${FLAG}" CXX_FLAG_WORKS_${FLAG} )
