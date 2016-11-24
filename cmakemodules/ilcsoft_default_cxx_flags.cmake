@@ -6,7 +6,7 @@ INCLUDE(CheckCXXCompilerFlag)
 
 SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized )
 
-IF( NOT APPLE )
+IF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
  LIST( APPEND COMPILER_FLAGS -Wl,-no-undefined )
 ENDIF()
 
