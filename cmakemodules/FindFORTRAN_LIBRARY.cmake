@@ -42,7 +42,8 @@ ENDIF()
 
 LIST( APPEND FORTRAN_LIBRARY_SEARCH_PATH
     /usr/lib/gcc/${GCC_MACHINE}/${GCC_VERSION}
-    #/usr/lib64
+    /usr/local/lib64
+    /usr/local/lib
     #/usr/lib
 )
 
