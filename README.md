@@ -1,4 +1,5 @@
 # iLCUtil
+[![Build Status](https://travis-ci.org/iLCSoft/iLCUtil.svg?branch=master)](https://travis-ci.org/iLCSoft/iLCUtil)
 
 ILCUTIL is a utility package for the iLCSoft software framework. It is intended to be a "meta-package" which packages together a set of independent utility packages living in separate sub-directories.
 
