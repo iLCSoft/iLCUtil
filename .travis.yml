@@ -1,12 +1,30 @@
-#!/bin/bash
+sudo: required
+dist: trusty
 
-ILCSOFT=/cvmfs/clicdp.cern.ch/iLCSoft/builds/current/CI_${COMPILER}
-source $ILCSOFT/init_ilcsoft.sh
+services:
+  - docker
 
-cd /Package
-mkdir build
-cd build
-cmake -GNinja -C $ILCSOFT/ILCSoft.cmake -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" ..
-ninja
-ctest --output-on-failure
+language: cpp
 
+env:
+  matrix:
+    - COMPILER=gcc
+    - COMPILER=llvm
+
+# command to install dependencies
+install:
+  - shopt -s extglob dotglob
+  - mkdir Package
+  - mv !(Package) Package
+  - shopt -u dotglob
+  - export PKGDIR=${PWD}/Package
+  - curl -O https://lcd-data.web.cern.ch/lcd-data/CernVM/cernvm3-docker-latest.tar
+  - cat cernvm3-docker-latest.tar | docker import - cernvm
+
+# command to run tests
+script:
+  - docker run -t -v $PKGDIR:/Package -e COMPILER=$COMPILER cernvm /init /Package/.travis-ci.d/compile_and_test.sh
+
+# Don't send e-mail notifications
+notifications:
+  email: false
