@@ -65,7 +65,7 @@ namespace streamlog{
   protected: 
     logstream* _ls ;
     std::string _name ;
-    int _level;
+    long _level;
     logscope() {}
     
   };
