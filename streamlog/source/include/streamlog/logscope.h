@@ -23,6 +23,10 @@ namespace streamlog{
   class logscope{
 
   public:
+    logscope() = delete ;
+    logscope(const logscope&) = delete ;
+    logscope& operator=(const logscope&) = delete ;
+
     /** Instantiate a scope object for the given logstream.
      */
     logscope(logstream& ls) : _ls(&ls) , _name("") , _level(-1) { }
@@ -63,10 +67,9 @@ namespace streamlog{
     }
    
   protected: 
-    logstream* _ls ;
-    std::string _name ;
-    long _level;
-    logscope() {}
+    logstream* _ls = nullptr ;
+    std::string _name{} ;
+    long _level{};
     
   };
   
