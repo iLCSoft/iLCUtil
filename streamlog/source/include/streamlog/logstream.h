@@ -60,7 +60,8 @@ namespace streamlog{
   public :
 
     logstream() ; 
-
+    logstream(const logstream&) = delete ;
+    logstream& operator=(const logstream&) = delete ;
     ~logstream() ;
 
     /** Initialize the logstream with an std::ostream, e.g. std::cout and 
@@ -150,13 +151,13 @@ namespace streamlog{
     } ;
   
 
-    nullstream* _ns ;    // the nullstream
-    std::ostream* _os ; // wrapper for actual ostream
-    unsigned _level ;   // current log level 
-    bool _active ;      // boolean helper 
-    logbuffer* _lb ;        // log buffer adds prefix to everu log message
-    prefix_base* _prefix ;  // prefix formatter
-    LevelMap _map ;         // string map of level names
+    nullstream* _ns = nullptr ;    // the nullstream
+    std::ostream* _os = nullptr ; // wrapper for actual ostream
+    unsigned _level {};   // current log level 
+    bool _active {};      // boolean helper 
+    logbuffer* _lb = nullptr ;        // log buffer adds prefix to everu log message
+    prefix_base* _prefix= nullptr ;  // prefix formatter
+    LevelMap _map {};         // string map of level names
     
   } ;
 

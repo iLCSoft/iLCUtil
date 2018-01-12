@@ -22,8 +22,8 @@ namespace streamlog{
     friend class logstream ;
 
   protected:
-    std::string _name ;
-    std::string _levelName ;
+    std::string _name{} ;
+    std::string _levelName{} ;
   
   public:
     prefix_base() ;

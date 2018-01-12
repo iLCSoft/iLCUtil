@@ -17,14 +17,15 @@ namespace streamlog{
    */
   class logbuffer : public std::streambuf {
     
-    std::streambuf* _sbuf ;
-    logstream* _ls ;
+    std::streambuf* _sbuf = nullptr ;
+    logstream* _ls = nullptr ;
 
     logbuffer();
 
 
   public:
-
+    logbuffer(const logbuffer&) = delete ;
+    logbuffer& operator=(const logbuffer&) = delete ;
     logbuffer( std::streambuf* sbuf, logstream* logstream ) : _sbuf( sbuf ), _ls(logstream) {} 
   
     ~logbuffer() {
