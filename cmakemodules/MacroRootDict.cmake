@@ -1,3 +1,48 @@
+# ==============================================
+# ===        ROOT_CONFIG_EXECUTABLE          ===
+# ==============================================
+
+SET( ROOT_CONFIG_EXECUTABLE ROOT_CONFIG_EXECUTABLE-NOTFOUND )
+MARK_AS_ADVANCED( ROOT_CONFIG_EXECUTABLE )
+# FIND_PROGRAM: Once one of the calls succeeds the result variable will be set and stored in the cache so that no call will search again. 
+FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config PATHS ${ROOT_DIR}/bin NO_DEFAULT_PATH )
+FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config PATHS $ENV{ROOTSYS}/bin NO_DEFAULT_PATH)
+FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config PATHS ENV PATH )
+FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config )
+
+# ==============================================
+# ===          ROOT_BIN_DIR                  ===
+# ==============================================
+
+# get bindir from root-config output
+EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --bindir
+    OUTPUT_VARIABLE ROOT_BIN_DIR
+    RESULT_VARIABLE _exit_code
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+IF( NOT _exit_code EQUAL 0 )
+    # clear variable if root-config exits with error
+    # it might contain garbage
+    SET( ROOT_BIN_DIR )
+ENDIF()
+
+
+# ==============================================
+# ===          ROOT_CINT_EXECUTABLE          ===
+# ==============================================
+
+
+# find rootcint
+SET( ROOT_CINT_EXECUTABLE ROOT_CINT_EXECUTABLE-NOTFOUND )
+MARK_AS_ADVANCED( ROOT_CINT_EXECUTABLE )
+FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint PATHS ${ROOT_BIN_DIR} NO_DEFAULT_PATH )
+
+IF( NOT ROOT_FIND_QUIETLY )
+    MESSAGE( STATUS "Check for ROOT_CINT_EXECUTABLE: ${ROOT_CINT_EXECUTABLE}" )
+ENDIF()
+
+# -----------------------------------------------------------------
+
 IF(APPLE)
     SET( LD_LIBRARY_PATH_VAR DYLD_LIBRARY_PATH )
 ELSE()
