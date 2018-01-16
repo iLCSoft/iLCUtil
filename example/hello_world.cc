@@ -14,7 +14,7 @@ static ILCTest ilctest = ILCTest( "hello_world" , std::cout );
 
 //=============================================================================
 
-int main(int argc, char** argv ){
+int main(int , char** ){
     
     try{
     
