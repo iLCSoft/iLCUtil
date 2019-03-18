@@ -43,7 +43,7 @@ namespace streamlog {
       out << "[" ;
       // log level
       if ( printLevel ) {
-        out << " " << msg._logLevelName ;
+        out << " " << msg._levelName ;
       }
       // logger name
       if ( printLogger ) {
