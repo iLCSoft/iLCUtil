@@ -15,14 +15,47 @@
 
 namespace streamlog {
 
-  template <typename mutex_type>
+  class logsink ;
+  typedef std::shared_ptr<logsink> logsink_ptr ;
+
   class logsink {
   public:
     typedef std::shared_ptr<formatter> formatter_ptr ;
 
     logsink() = default ;
+    virtual ~logsink() = default ;
 
   public:
+    /**
+     *  @brief  log the message
+     *
+     *  @param  msg the message to log
+     */
+    virtual void log( const logmessage &msg ) = 0 ;
+
+    /**
+     *  @brief  Flush out the message
+     */
+    virtual void flush() = 0 ;
+
+    /**
+     *  @brief  Set the log message formatter to use
+     *
+     *  @param  formatter the formatter to use
+     */
+    virtual void setFormatter( formatter_ptr formatter ) = 0 ;
+
+  protected:
+    /// The log message formatter
+    formatter_ptr          _formatter {nullptr} ;
+  };
+
+  template <typename mutex_type>
+  class base_sink : public logsink {
+  public:
+    base_sink() = default ;
+    virtual ~base_sink() = default ;
+
     /**
      *  @brief  log the message
      *
@@ -55,10 +88,6 @@ namespace streamlog {
      */
     virtual void doFlush() = 0 ;
 
-  protected:
-    /// The log message formatter
-    formatter_ptr          _formatter {nullptr} ;
-
   private:
     /// The logging mutex
     mutex_type             _mutex {} ;
@@ -68,7 +97,7 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline void logsink<mutex_type>::log( const logmessage &msg ) {
+  inline void base_sink<mutex_type>::log( const logmessage &msg ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     doLog( msg ) ;
   }
@@ -76,7 +105,7 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline void logsink<mutex_type>::flush() {
+  inline void base_sink<mutex_type>::flush() {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     doFlush() ;
   }
@@ -84,7 +113,7 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline void logsink<mutex_type>::setFormatter( formatter_ptr formatter ) {
+  inline void base_sink<mutex_type>::setFormatter( formatter_ptr formatter ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     _formatter = formatter ;
   }
@@ -97,14 +126,14 @@ namespace streamlog {
    *  Standard std::cout output
    */
   template <typename mutex_type>
-  class console_sink : public logsink<mutex_type> {
+  class console_sink : public base_sink<mutex_type> {
   public:
     console_sink() = default ;
 
   private:
     void doLog( const logmessage &msg ) {
       std::stringstream ss ;
-      logsink<mutex_type>::_formatter->format( msg , ss ) ;
+      base_sink<mutex_type>::_formatter->format( msg , ss ) ;
       std::cout << ss.str() ;
     }
 
@@ -121,14 +150,14 @@ namespace streamlog {
    *  Standard std::cout output with fancy colors
    */
   template <typename mutex_type>
-  class colored_console_sink : public logsink<mutex_type> {
+  class colored_console_sink : public base_sink<mutex_type> {
   public:
     colored_console_sink() = default ;
 
   private:
     void doLog( const logmessage &msg ) {
       std::stringstream ss ;
-      logsink<mutex_type>::_formatter->format( msg , ss ) ;
+      base_sink<mutex_type>::_formatter->format( msg , ss ) ;
       std::cout << color( msg._logLevel ) << ss.str() << color::reset ;
     }
 
@@ -137,17 +166,17 @@ namespace streamlog {
     }
 
     const color_helper &color( unsigned int level ) const {
-      if ( logstream::error_base_level ) {
+      if ( streamlog::error_base_level ) {
         return color::bold_red ;
       }
-      if ( logstream::warning_base_level ) {
+      if ( streamlog::warning_base_level ) {
         return color::bold_yellow ;
       }
-      if ( logstream::message_base_level ) {
+      if ( streamlog::message_base_level ) {
         return color::bold_blue ;
       }
-      if ( logstream::debug_base_level ) {
-        return color::green ;
+      if ( streamlog::debug_base_level ) {
+        return color::normal_green ;
       }
       return color::default_color ;
     }
@@ -162,7 +191,7 @@ namespace streamlog {
    *  Standard std::cout output
    */
   template <typename mutex_type>
-  class simple_file_sink : public logsink<mutex_type> {
+  class simple_file_sink : public base_sink<mutex_type> {
   public:
     /**
      *  @brief  Constructor
@@ -187,7 +216,7 @@ namespace streamlog {
   private:
     void doLog( const logmessage &msg ) {
       std::stringstream ss ;
-      logsink<mutex_type>::_formatter->format( msg , ss ) ;
+      base_sink<mutex_type>::_formatter->format( msg , ss ) ;
       _fstream << ss.str() ;
     }
 
@@ -199,9 +228,6 @@ namespace streamlog {
     /// The log file stream
     std::ofstream           _fstream {} ;
   };
-
-
-
 
 }
 
