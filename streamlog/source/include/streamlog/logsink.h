@@ -3,6 +3,7 @@
 #define streamlog_logsink_h
 
 // -- std headers
+#include <map>
 #include <mutex>
 #include <iostream>
 #include <fstream>
@@ -227,6 +228,88 @@ namespace streamlog {
   private:
     /// The log file stream
     std::ofstream           _fstream {} ;
+  };
+
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
+  /**
+   *  @brief  thread_file_sink class
+   *  Opens a log file per thread and log respective message in
+   *  the different log file depending on the log message thread id
+   */
+  class thread_file_sink : public base_sink<std::mutex> {
+  public:
+    using thread_id = logmessage::thread_id ;
+    using stream_map = std::map<thread_id, std::ofstream> ;
+
+  public:
+    /**
+     *  @brief  Constructor
+     *
+     *  @param  basename the base log file name
+     *  @param  mode the opening mode
+     */
+    thread_file_sink(
+      const std::string &basename,
+      const std::string &extension,
+      std::ios_base::openmode mode = std::ios_base::out ) :
+      _basename(basename),
+      _extension(extension),
+      _openmode(mode) {
+      /* nop */
+    }
+
+    /**
+     *  @brief  Destructor. Close the file streams
+     */
+    ~thread_file_sink() {
+      for ( auto &s : _fstreams ) {
+        s.second.close() ;
+      }
+    }
+
+  private:
+    void doLog( const logmessage &msg ) {
+      std::stringstream ss ;
+      base_sink<std::mutex>::_formatter->format( msg , ss ) ;
+      stream( msg._threadId ) << ss.str() ;
+    }
+
+    void doFlush() {
+      for ( auto &s : _fstreams ) {
+        s.second.flush() ;
+      }
+    }
+
+    std::ofstream &stream( thread_id id ) {
+      auto iter = _fstreams.find( id ) ;
+      if ( _fstreams.end() == iter ) {
+        iter = _fstreams.insert( stream_map::value_type( id, open(id) ) ).first ;
+      }
+      return iter->second ;
+    }
+
+    std::ofstream open( thread_id id ) const {
+      std::ofstream fs ;
+      std::stringstream ss ;
+      ss << _basename << "_" << id << _extension ;
+      fs.open( ss.str() , _openmode ) ;
+      if ( not fs.is_open() ) {
+        throw std::runtime_error( "thread_file_sink: couldn't open log file '" + ss.str() + "'!" ) ;
+      }
+      return std::move( fs ) ;
+    }
+
+  private:
+    /// The log file stream map (map with thread id)
+    stream_map              _fstreams {} ;
+    /// The log file base name
+    std::string             _basename {} ;
+    /// The log file extension
+    std::string             _extension {} ;
+    /// The log file open mode
+    std::ios_base::openmode _openmode {} ;
   };
 
 }
