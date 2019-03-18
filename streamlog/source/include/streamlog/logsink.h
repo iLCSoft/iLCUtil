@@ -159,7 +159,7 @@ namespace streamlog {
     void doLog( const logmessage &msg ) {
       std::stringstream ss ;
       base_sink<mutex_type>::_formatter->format( msg , ss ) ;
-      std::cout << color( msg._logLevel ) << ss.str() << color::reset ;
+      std::cout << color( msg._level ) << ss.str() << color::reset ;
     }
 
     void doFlush() {
