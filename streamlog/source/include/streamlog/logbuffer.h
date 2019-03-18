@@ -6,7 +6,7 @@
 #include <cstdio>
 #include "streamlog/logstream.h"
 
-namespace streamlog{
+namespace streamlog {
 
 
   /** Helper class that adds a prefix to every new line that is written to its
@@ -16,21 +16,15 @@ namespace streamlog{
    *  @version $Id: logbuffer.h,v 1.1.1.1 2007-07-12 17:14:48 gaede Exp $
    */
   class logbuffer : public std::streambuf {
-    
-    std::streambuf* _sbuf = nullptr ;
-    logstream* _ls = nullptr ;
-
-    logbuffer();
-
+    logbuffer() = delete ;
 
   public:
     logbuffer(const logbuffer&) = delete ;
     logbuffer& operator=(const logbuffer&) = delete ;
     logbuffer( std::streambuf* sbuf, logstream* logstream ) : _sbuf( sbuf ), _ls(logstream) {} 
-  
-    ~logbuffer() {
+    ~logbuffer() = default ;
     
-    }
+  private:
 
     
   /** This is where the logstream's current prefix is  added to every
@@ -38,35 +32,37 @@ namespace streamlog{
    *  Idea taken from J.Samson, DESY.
    */
     inline virtual int overflow( int c = EOF ) {
-      
-      static bool hasNewLine = true ;
-      
+
       if ( c == EOF ) 
-	return EOF ;
-    
+        return EOF ;
+
       bool success = true;
-    
-      if ( hasNewLine == true ) {
-	
-	std::string pre = (* _ls->prefix() )() ;
 
-	success &= (  (unsigned) _sbuf->sputn( pre.c_str() , pre.size() ) == pre.size()  ) ;
+      if ( _hasNewLine ) {
 
-	hasNewLine = false;
+        std::string pre = (* _ls->prefix() )() ;
+
+        success &= (  (unsigned) _sbuf->sputn( pre.c_str() , pre.size() ) == pre.size()  ) ;
+
+        _hasNewLine = false;
       }
 
       if ( c == '\n' )
-	hasNewLine = true;
-    
+        _hasNewLine = true;
+
       if ( success )
-	success &= ( _sbuf->sputc(c) != EOF ) ;
-    
+        success &= ( _sbuf->sputc(c) != EOF ) ;
+
       if( success ) 
-	return 0 ;
+        return 0 ;
 
       return EOF ;
     }
-
+    
+  private:
+    std::streambuf* _sbuf = nullptr ;
+    logstream* _ls = nullptr ;
+    bool _hasNewLine {true} ;
   } ;
 
 }
