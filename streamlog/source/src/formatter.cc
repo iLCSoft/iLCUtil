@@ -21,41 +21,13 @@ namespace streamlog {
 
   //--------------------------------------------------------------------------
 
-  inline std::string standard_formatter::colorPrefix( const logmessage<string_type>& msg ) const {
-    if ( msg._logLevel > streamlog::error_base_level ) {
-      return "\033[1m\033[31m" ;
-    }
-    if ( msg._logLevel > streamlog::warning_base_level ) {
-      return "\033[1m\033[33m" ;
-    }
-    if ( msg._logLevel > streamlog::message_base_level ) {
-      return "\033[1m\033[34m" ;
-    }
-    if ( msg._logLevel > streamlog::debug_base_level ) {
-      return "\033[32m" ;
-    }
-    return "";
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline std::string standard_formatter::resetColor() const {
-    return "\033[0m" ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void standard_formatter::format( const logmessage<string_type>& msg, std::stringstream &out ) {
+  inline void standard_formatter::format( const logmessage& msg, std::stringstream &out ) {
     const bool printLogger = optionSet( print_option::logger ) ;
     const bool printLevel = optionSet( print_option::level ) ;
     const bool printLoggerOrLevel = ( printLogger || printLevel ) ;
-    const bool withColor = optionSet( print_option::color ) ;
-    if ( withColor ) {
-      out << colorStart( msg ) ;
-    }
     // date and time
     if ( optionSet( print_option::time ) ) {
-      auto tt = std::chrono::system_clock::to_time_t( msg ) ;
+      auto tt = std::chrono::system_clock::to_time_t( msg._time ) ;
       std::tm tm {} ;
       // deal with thread safety details here
   #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
@@ -64,14 +36,14 @@ namespace streamlog {
       localtime_r(&tt, &tm) ; // POSIX
   #endif
       char buffer[1024] ;
-      auto success = std::strftime( buffer, 1024, "%c", &tm ) ;
+      std::strftime( buffer, 1024, "%c", &tm ) ;
       out << "[" << std::string(buffer) << "] " ;
     }
     if ( printLoggerOrLevel ) {
       out << "[" ;
       // log level
       if ( printLevel ) {
-        out << " " << msg._level ;
+        out << " " << msg._logLevelName ;
       }
       // logger name
       if ( printLogger ) {
@@ -84,9 +56,6 @@ namespace streamlog {
       out << "[thread " << msg._threadId << "] " ;
     }
     out << msg._message.str() ;
-    if ( withColor ) {
-      out << resetColor() ;
-    }
   }
 
 }
