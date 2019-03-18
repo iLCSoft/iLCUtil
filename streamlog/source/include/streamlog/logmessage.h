@@ -6,16 +6,14 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include <sstream>
 
 namespace streamlog {
   
   /**
    *  @brief  logmessage struct
    *  Hold a log message and related metadata to be logged
-   *  The string_type template parameter allows for a future use 
-   *  of string_view to avoid string copy
    */
-  template <typename string_type>
   struct logmessage {
     /// The logger name initiating the message
     std::string                 _loggerName { "UNKNOWN" } ;
@@ -28,7 +26,7 @@ namespace streamlog {
     /// The time at which the message was published
     std::chrono::system_clock   _time { std::chrono::system_clock::now() } ;
     /// The log message
-    string_type                 _message {} ;
+    std::stringstream           _message {} ;
   };
   
 }
