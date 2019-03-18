@@ -112,13 +112,7 @@ namespace streamlog{
       _map[ T::name() ] = T::level ;
     }
 
-
-    // interface for friend classes: scope and logbuffer
-
-  protected:
-
-    /** Set the current level - user need to use a streamlog::logscope object 
-     *  to do this.
+    /** Set the current level - might be done by using a streamlog::logscope object 
      */
     void setLevel( unsigned level ) { _level = level ; } 
 
@@ -126,6 +120,14 @@ namespace streamlog{
      *  the stream through addLevelName will have an effect.
      */
     unsigned setLevel( const std::string& levelName )  ; 
+    
+    /** Added all default levels defined in loglevels.h to this logstream
+     */
+    void addDefaultLevels() ;
+
+    // interface for friend classes: scope and logbuffer
+
+  protected:
 
     /** Returns the prefix for the logbuffer object */
     prefix_base* prefix() { return _prefix ; }
