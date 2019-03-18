@@ -102,7 +102,8 @@ namespace streamlog {
    */
   class color {
   public:
-    // reset color
+    // default and reset colors
+    static const color_helper default_color ;
     static const color_helper reset ;
     // normal colors
     static const color_helper normal_black ;
