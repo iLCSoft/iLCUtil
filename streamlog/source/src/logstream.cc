@@ -11,7 +11,7 @@ namespace streamlog{
     _level(0) ,
     _active(false) , 
     _lb(0),
-    _prefix( new streamlog::prefix) {
+    _prefix( std::make_shared<streamlog::prefix>()) {
     
   } 
 
@@ -30,11 +30,6 @@ namespace streamlog{
     if( _lb ){
       delete _lb ;
       _lb = NULL ;
-    }
-    
-    if( _prefix ){
-      delete _prefix ;
-      _prefix = NULL ; 
     }
   }
   
