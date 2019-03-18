@@ -5,6 +5,7 @@
 #include "streamlog/prefix.h"
 
 #include <iostream>
+#include <memory>
 #include <map>
 
 namespace streamlog{
@@ -50,12 +51,11 @@ namespace streamlog{
    *  @version $Id: logstream.h,v 1.3 2007-08-08 13:08:34 gaede Exp $
    */
   class logstream {
-
     friend class logscope ;
     friend class logbuffer ;
-
-
-    typedef std::map< std::string,  unsigned > LevelMap ;
+    // typedefs
+    typedef std::map< std::string,  unsigned >     LevelMap ;
+    typedef std::shared_ptr<prefix_base>           prefix_type ;
 
   public :
 
@@ -77,7 +77,6 @@ namespace streamlog{
      */
     template<class T>
     inline bool write() {
-      
       // dont' call chek_level if T::active == false
       return (  T::active   &&    check_level<T>()  ) ;
     }
@@ -89,7 +88,6 @@ namespace streamlog{
      */
     template<class T>
     inline bool would_write() {
-      
       return (  T::active   &&  T::level >= _level ) ;
     }
 
@@ -108,7 +106,6 @@ namespace streamlog{
      */
     template <class T>
     void addLevelName() {
-
       _map[ T::name() ] = T::level ;
     }
 
@@ -124,21 +121,25 @@ namespace streamlog{
     /** Added all default levels defined in loglevels.h to this logstream
      */
     void addDefaultLevels() ;
-
-    // interface for friend classes: scope and logbuffer
+    
+    /** Set the logging prefix. Default one instantiated is a 'prefix' object 
+     */
+    template <typename TYPE, typename ...Args, class = typename std::enable_if<std::is_base_of<prefix_base, TYPE>::value>::type>
+    inline prefix_type setPrefix(Args ...args) {
+      _prefix = std::make_shared<TYPE>(args...) ;
+      return _prefix ;
+    }
+    
+    /** Returns the prefix for the logbuffer object */
+    prefix_type prefix() { return _prefix ; }
 
   protected:
-
-    /** Returns the prefix for the logbuffer object */
-    prefix_base* prefix() { return _prefix ; }
-
     /** used internally by write<T> */
     template<class T>
     bool check_level() {
-      
       if( T::level >= _level ){
-	_active = true ;
-	_prefix->_levelName = T::name() ;
+      	_active = true ;
+      	_prefix->_levelName = T::name() ;
       }
       return _active ;
     }
@@ -153,15 +154,14 @@ namespace streamlog{
     } ;
   
 
-    nullstream* _ns = nullptr ;    // the nullstream
-    std::ostream* _os = nullptr ; // wrapper for actual ostream
-    unsigned _level {};   // current log level 
-    bool _active {};      // boolean helper 
-    logbuffer* _lb = nullptr ;        // log buffer adds prefix to everu log message
-    prefix_base* _prefix= nullptr ;  // prefix formatter
-    LevelMap _map {};         // string map of level names
-    
-  } ;
+    nullstream*         _ns = nullptr ;    // the nullstream
+    std::ostream*       _os = nullptr ; // wrapper for actual ostream
+    unsigned            _level {};   // current log level 
+    bool                _active {};      // boolean helper 
+    logbuffer*          _lb = nullptr ;        // log buffer adds prefix to everu log message
+    prefix_type         _prefix {nullptr} ;  // prefix formatter
+    LevelMap            _map {};         // string map of level names
+  };
 
   extern logstream out ;
 
