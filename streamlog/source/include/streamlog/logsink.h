@@ -312,6 +312,16 @@ namespace streamlog {
     std::ios_base::openmode _openmode {} ;
   };
 
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
+  using simple_file_sink_st = simple_file_sink<streamlog::nullmutex> ;
+  using simple_file_sink_mt = simple_file_sink<std::mutex> ;
+  using console_sink_st = console_sink<streamlog::nullmutex> ;
+  using console_sink_mt = console_sink<std::mutex> ;
+  using colored_console_sink_st = colored_console_sink<streamlog::nullmutex> ;
+  using colored_console_sink_mt = colored_console_sink<std::mutex> ;
+
 }
 
 #endif
