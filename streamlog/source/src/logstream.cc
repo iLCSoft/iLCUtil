@@ -12,8 +12,10 @@ namespace streamlog{
     _active(false) , 
     _lb(0),
     _prefix( std::make_shared<streamlog::prefix>()) {
-    
-  } 
+    /* nop */
+  }
+  
+  //--------------------------------------------------------------------------
 
   logstream::~logstream() {
     
@@ -32,6 +34,8 @@ namespace streamlog{
       _lb = NULL ;
     }
   }
+  
+  //--------------------------------------------------------------------------
   
   void logstream::init( std::ostream& os , const std::string name ) {
     
@@ -60,6 +64,8 @@ namespace streamlog{
       std::cerr << "ERROR: logstream::init() invalid ostream given " << std::endl ;      
     }
   }
+  
+  //--------------------------------------------------------------------------
 
   unsigned logstream::setLevel( const std::string& levelName ) {
 
@@ -69,8 +75,9 @@ namespace streamlog{
       _level = it->second ;
     }
     return l ;
-  } 
+  }
   
+  //--------------------------------------------------------------------------
   
   void logstream::addDefaultLevels() {
     addLevelName<DEBUG>() ;
@@ -120,6 +127,7 @@ namespace streamlog{
     addLevelName<SILENT>() ;
   }
 
+  //--------------------------------------------------------------------------
 
   std::ostream& logstream::operator()() { 
     
@@ -133,6 +141,9 @@ namespace streamlog{
       return *_ns ;
     
   }
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   /** global instance of logstream */
   logstream out ;
