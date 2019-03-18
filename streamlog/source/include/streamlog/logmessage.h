@@ -9,12 +9,15 @@
 #include <sstream>
 
 namespace streamlog {
-  
+
   /**
    *  @brief  logmessage struct
    *  Hold a log message and related metadata to be logged
    */
   struct logmessage {
+    using time_point = std::chrono::system_clock::time_point ;
+    using thread_id = std::thread::id ;
+    
     /// The logger name initiating the message
     std::string                 _loggerName { "UNKNOWN" } ;
     /// The log level publishing the message
@@ -22,13 +25,13 @@ namespace streamlog {
     /// The log level name publishing the message
     std::string                 _logLevelName { "VERBOSE" } ;
     /// The thread id in which the message was generated
-    std::thread::id             _threadId { std::thread::get_id() } ;
+    thread_id                   _threadId { std::this_thread::get_id() } ;
     /// The time at which the message was published
-    std::chrono::system_clock   _time { std::chrono::system_clock::now() } ;
+    time_point                  _time { std::chrono::system_clock::now() } ;
     /// The log message
     std::stringstream           _message {} ;
   };
-  
+
 }
 
 #endif
