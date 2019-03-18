@@ -2,6 +2,7 @@
 
 namespace streamlog {
 
+  const color_helper default_color   {color_code::fg_default, false};
   const color_helper reset           {};
   const color_helper normal_black    {color_code::fg_black, false} ;
   const color_helper normal_red      {color_code::fg_red, false} ;
