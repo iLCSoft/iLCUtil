@@ -3,9 +3,11 @@
 #define logstream_h
 
 #include "streamlog/prefix.h"
+#include "streamlog/definitions.h"
 
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <map>
 
 namespace streamlog{
@@ -55,7 +57,7 @@ namespace streamlog{
     friend class logbuffer ;
     // typedefs
     typedef std::map< std::string,  unsigned >     LevelMap ;
-    typedef std::shared_ptr<prefix_base>           prefix_type ;
+    typedef std::shared_ptr<formatter>             formatter_type ;
 
   public :
 
@@ -95,6 +97,9 @@ namespace streamlog{
      *  a nullstream unless prepended by a successfull call to write<MESSAGELEVEL>()
      */
     std::ostream& operator()() ;
+    
+    template <typename T>
+    logstream &operator<<( const T &t ) ;
 
     /** Adds a level name to the stream for setting the log level with a string through 
      *  a scope class. Only names added with this method will have an effect - other log 
@@ -122,16 +127,18 @@ namespace streamlog{
      */
     void addDefaultLevels() ;
     
-    /** Set the logging prefix. Default one instantiated is a 'prefix' object 
+    /** Set the logger formatter. Create a new one from template parameter. The existing is deleted
      */
-    template <typename TYPE, typename ...Args, class = typename std::enable_if<std::is_base_of<prefix_base, TYPE>::value>::type>
-    inline prefix_type setPrefix(Args ...args) {
-      _prefix = std::make_shared<TYPE>(args...) ;
-      return _prefix ;
+    template <typename TYPE, typename ...Args, class = typename std::enable_if<std::is_base_of<formatter, TYPE>::value>::type>
+    inline formatter_type setFormatter( Args ...args ) {
+      _formatter = std::make_shared<TYPE>( args... ) ;
     }
     
-    /** Returns the prefix for the logbuffer object */
-    prefix_type prefix() { return _prefix ; }
+    /** Get the logger formatter
+     */
+    inline formatter_type formatter() const {
+      return _formatter ;
+    }
 
   protected:
     /** used internally by write<T> */
@@ -153,15 +160,40 @@ namespace streamlog{
       nullstream() : std::ios( 0 ), std::ostream( 0 ) {} ;
     } ;
   
-
-    nullstream*         _ns = nullptr ;    // the nullstream
-    std::ostream*       _os = nullptr ; // wrapper for actual ostream
-    unsigned            _level {};   // current log level 
-    bool                _active {};      // boolean helper 
-    logbuffer*          _lb = nullptr ;        // log buffer adds prefix to everu log message
-    prefix_type         _prefix {nullptr} ;  // prefix formatter
-    LevelMap            _map {};         // string map of level names
+  private:
+    /// the nullstream
+    nullstream*         _ns = nullptr ;
+    /// wrapper for actual ostream
+    std::ostream*       _os = nullptr ;
+    /// current log level 
+    unsigned            _level {};   
+    /// boolean helper 
+    bool                _active {};      
+    /// log buffer adds prefix to everu log message
+    logbuffer*          _lb = nullptr ;        
+    /// prefix formatter
+    prefix_type         _prefix {nullptr} ;  
+    /// string map of level names
+    LevelMap            _map {};         
+    /// thread safety inssurance regarding sinks
+    mutex               _mutex {} ;
   };
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
+  template <typename T>
+  inline logstream &logstream::operator<<( const T &t ) {
+    std::lock_guard<mutex> lock( _mutex ) ;
+    if( _active && _os ) {
+      (*_os) << t ;
+      _active = false ;
+    }
+    return *this ;
+  }
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   extern logstream out ;
 
