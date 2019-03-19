@@ -21,7 +21,7 @@ namespace streamlog {
 
   class logsink {
   public:
-    typedef std::shared_ptr<formatter> formatter_ptr ;
+    typedef std::unique_ptr<formatter> formatter_ptr ;
 
     logsink() = default ;
     virtual ~logsink() = default ;
@@ -116,7 +116,7 @@ namespace streamlog {
   template <typename mutex_type>
   inline void base_sink<mutex_type>::setFormatter( formatter_ptr formatter ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
-    _formatter = formatter ;
+    _formatter = std::move( formatter ) ;
   }
 
   //--------------------------------------------------------------------------
