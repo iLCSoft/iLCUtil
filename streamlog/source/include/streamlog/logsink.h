@@ -50,6 +50,9 @@ namespace streamlog {
     /// The log message formatter
     formatter_ptr          _formatter {streamlog::make_unique<standard_formatter>()} ;
   };
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   template <typename mutex_type>
   class base_sink : public logsink {
