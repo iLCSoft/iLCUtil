@@ -25,12 +25,12 @@ namespace streamlog {
    *  Typically only this instance is needed, e.g.: <br>
    *  <pre>
    *    // in int main() :
-   *    streamlog::global().setName( argv[0] ) ;
+   *    logstream::global().setName( argv[0] ) ;
    *
    *    //...
    *
-   *    if( streamlog::global().write< streamlog::DEBUG1 >() )
-   *       streamlog::global() << " this message will only be printed if level >= DEBUG1::level "
+   *    if( logstream::global().write< streamlog::DEBUG1 >() )
+   *       logstream::global() << " this message will only be printed if level >= DEBUG1::level "
    *                        << std::endl ;
    *
    *    // or the same, simply using a macro:
@@ -55,6 +55,13 @@ namespace streamlog {
     typedef std::unique_ptr<formatter>             formatter_ptr ;
     typedef std::vector<logsink_ptr>               logsink_list ;
 
+  private:
+    /**
+     *  @brief  Constructor
+     *  Only available for the global logger instance
+     */
+    logstream() ;
+
   public:
     logstream(const logstream&) = delete ;
     logstream& operator=(const logstream&) = delete ;
@@ -64,12 +71,6 @@ namespace streamlog {
      *  @brief  Return the global logger instance (always defined)
      */
     static logstream &global() ;
-
-    /**
-     *  @brief  Constructor.
-     *  The logger is initialized with a console sink (mt)
-     */
-    logstream() ;
 
     /**
      *  @brief  Constructor.
@@ -170,11 +171,6 @@ namespace streamlog {
      */
     template <typename T>
     unsigned int setLevel() ;
-
-    /** 
-     *  @brief  Add all default levels defined in loglevels.h to this logstream
-     */
-    void addDefaultLevels() ;
     
     /**
      *  @brief  Get the current log level
@@ -192,6 +188,11 @@ namespace streamlog {
      */
     template<class T>
     bool check_level() ;
+    
+    /** 
+     *  @brief  Add all default levels defined in loglevels.h to this logstream
+     */
+    void addDefaultLevels() ;
 
   private:
     /// The logger name
