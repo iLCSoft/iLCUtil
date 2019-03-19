@@ -127,7 +127,7 @@ namespace streamlog {
 
   //--------------------------------------------------------------------------
 
-  std::ostream &operator<<( std::ostream &out, const color_helper &c ) {
+  inline std::ostream &operator<<( std::ostream &out, const color_helper &c ) {
     out << c.str() ;
     return out ;
   }
