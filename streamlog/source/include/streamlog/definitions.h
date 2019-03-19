@@ -4,6 +4,7 @@
 
 #include <string>
 #include <ostream>
+#include <memory>
 
 /**
  *  The variable STREAMLOG_LOGGING_TS can be tweaked before including this header:
@@ -131,6 +132,21 @@ namespace streamlog {
     out << c.str() ;
     return out ;
   }
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
+  /**
+   *  @brief  Helper function for c++11/14 transition
+   */
+  template <typename T, typename ...Args>
+  inline std::unique_ptr<T> make_unique(Args ...args) {
+#ifdef __cpp_lib_make_unique
+    return std::make_unique<T>( args... ) ;
+#else
+    return std::unique_ptr<T>( new T( args... ) ) ;
+#endif
+  }
 
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
@@ -151,6 +167,9 @@ namespace streamlog {
     void unlock() {}
     void try_lock() {}
   };
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
 #ifdef STREAMLOG_LOGGING_TS // logging thread safety
 #include <mutex>
