@@ -1,6 +1,6 @@
 // -*- mode: c++;
-#ifndef streamlog_h
-#define streamlog_h
+#ifndef streamlog_streamlog_h
+#define streamlog_streamlog_h
 
   /**
    *  Main header file for the streamlog library.

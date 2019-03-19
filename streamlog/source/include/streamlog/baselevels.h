@@ -1,7 +1,7 @@
 // -*- mode: c++;
 
-#ifndef baselevels_h
-#define baselevels_h
+#ifndef streamlog_baselevels_h
+#define streamlog_baselevels_h
 /* 
  *  Define base log level classes for streamlog::logstream. There are the following
  *  groups of log level classes: DEBUG, WARNING, MESSAGE and ERROR. 
@@ -17,7 +17,7 @@
  */
 
 
-namespace streamlog{
+namespace streamlog {
 
 #define STREAMLOG_MAX_LEVEL 0xFFFFFFFF 
     

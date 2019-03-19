@@ -1,6 +1,6 @@
 // -*- mode: c++;
-#ifndef logstream_h
-#define logstream_h
+#ifndef streamlog_logstream_h
+#define streamlog_logstream_h
 
 // -- streamlog headers
 #include "streamlog/definitions.h"
