@@ -15,19 +15,22 @@
 
 namespace streamlog {
 
-  /** Class defining a log stream that is used to print log messages depending
-   *  on current log level. Can be initialized with any std::ostream, typically either
-   *  std::cout or an std::ofstream file handler.
-   *  There is one global instance of this class defined in the library: logstream::out  <br>
+  /** 
+   *  @brief  logstream class.
+   *  
+   *  Class defining a log stream that is used to print log messages depending
+   *  on current log level. Can be initialized with different sinks (console, file, ...).
+   *  There is one global instance of this class defined in the library accessible through
+   *  the method logstream::global() <br>
    *  Typically only this instance is needed, e.g.: <br>
    *  <pre>
    *    // in int main() :
-   *    streamlog::out.init( std::cout, argv[0] ) ;
+   *    streamlog::global().setName( argv[0] ) ;
    *
    *    //...
    *
-   *    if( streamlog::out.write< streamlog::DEBUG1 >() )
-   *       streamlog::out() << " this message will only be printed if level >= DEBUG1::level "
+   *    if( streamlog::global().write< streamlog::DEBUG1 >() )
+   *       streamlog::global() << " this message will only be printed if level >= DEBUG1::level "
    *                        << std::endl ;
    *
    *    // or the same, simply using a macro:
@@ -41,25 +44,26 @@ namespace streamlog {
    *  if streamlog::DEBUG1::active is false and else if the log level is smaller than
    *  streamlog::DEBUG1::level no formatting of the message will happen, i.e. also very little
    *  runtime cost is involved. <br>
-   *  the behaviour of the logstream, i.e. the current log level and log scope name can be changed only
-   *  through an object of streamlog::logscope.
-   *
-   *  @see logstream::write()
-   *  @see logscope
    *
    *  @author F. Gaede, DESY
+   *  @author R. Ete, DESY
    *  @version $Id: logstream.h,v 1.3 2007-08-08 13:08:34 gaede Exp $
    */
   class logstream {
     // typedefs
     typedef std::map<std::string, unsigned int>    level_map ;
-    typedef std::shared_ptr<formatter>             formatter_type ;
+    typedef std::unique_ptr<formatter>             formatter_ptr ;
     typedef std::vector<logsink_ptr>               logsink_list ;
 
-  public :
+  public:
     logstream(const logstream&) = delete ;
     logstream& operator=(const logstream&) = delete ;
     ~logstream() = default ;
+    
+    /**
+     *  @brief  Return the global logger instance (always defined)
+     */
+    static logstream &global() ;
 
     /**
      *  @brief  Constructor.
@@ -102,27 +106,51 @@ namespace streamlog {
      *  @brief  Get the logger name
      */
     const std::string &name() const ;
-
-   /** True if next log message of the current level (class T ) will be written, i.e.
-     *  the next call to logstream& operator<<() will return a valid logstream.
+    
+    /**
+     *  @brief  Set the formatter instance
+     *  The formatter is cloned and set for every sink. The sinks must be 
+     *  set before calling this methods else the formatter won't be adopted 
+     *  
+     *  @param  formatter the formatter to clone and set
+     */
+    void setFormatter( formatter_ptr formatter ) ;
+    
+    /**
+     *  @brief  Return the logger instance (*this) after being configured for 
+     *  logging with the specified log level. Usage:
+     *  @code{cpp}
+     *  logstream logger( "main" ) ;
+     *  logger.addDefaultLevels() ;
+     *  logger.setLevel<MESSAGE>() ;
+     *  // this will log something
+     *  logger.log<MESSAGE2>() << "Hello world !" << std::endl ;
+     *  // this won't log anything
+     *  logger.log<DEBUG3>() << "Nobody's there ? :-(" << std::endl ;
+     *  @endcode
+     */
+    template <typename T>
+    logstream &log() ;
+    
+    /** 
+     *  @brief  True if next log message of the current level (class T ) will be written, i.e.
+     *  the next call to logstream& operator<<() will return a valid logstream. 
      */
     template<class T>
-    inline bool write() {
-      // dont' call chek_level if T::active == false
-      return (  T::active   &&    check_level<T>()  ) ;
-    }
+    bool write() ;
 
-    /** True if next log message of the current level (class T ) would be written
-     *  - can be used to conditionally execute code blocks that are needed before writing to
-     * the outstream.
+    /** 
+     *  @brief  True if next log message of the current level (class T ) would be written
+     *  Can be used to conditionally execute code blocks that are needed before writing to
+     *  the outstream.
      */
     template<class T>
-    inline bool would_write() {
-      return (  T::active   &&  T::level >= _level ) ;
-    }
+    bool would_write() ;
 
     /**
-     *  @brief  Overloaded stream operator
+     *  @brief  Overloaded stream operator.
+     *
+     *  @param  t the object to log
      */
     template <typename T>
     logstream &operator<<( const T &t ) ;
@@ -136,37 +164,34 @@ namespace streamlog {
      *  @see logstream::logscope::setLevel(const std::string levelName )
      */
     template <class T>
-    void addLevelName() {
-      _levelMap[ T::name() ] = T::level ;
-    }
+    void addLevelName() ;
 
     /** Set the current level (level and name)
      */
     template <typename T>
-    unsigned int setLevel() {
-      unsigned int l = _level ;
-      auto iter = _levelMap.find( T::name() ) ;
-      if( iter != _levelMap.end() ) {
-        _level = iter->second ;
-        _levelName = iter->first ;
-      }
-      return l ;
-    }
+    unsigned int setLevel() ;
 
-    /** Added all default levels defined in loglevels.h to this logstream
+    /** 
+     *  @brief  Add all default levels defined in loglevels.h to this logstream
      */
     void addDefaultLevels() ;
+    
+    /**
+     *  @brief  Get the current log level
+     */
+    unsigned int level() const ;
+
+    /**
+     *  @brief  Get the current log level name
+     */
+    const std::string &levelName() const ;
 
   protected:
-    /** used internally by write<T> */
+    /**
+     *  @brief  Used internally by write<T>
+     */
     template<class T>
-    bool check_level() {
-      if( T::level >= _level ){
-      	_active = true ;
-        setLevel<T>() ;
-      }
-      return _active ;
-    }
+    bool check_level() ;
 
   private:
     /// The logger name
@@ -187,6 +212,14 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename T>
+  inline logstream &logstream::log() {
+    (void)write<T>();
+    return *this ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  template <typename T>
   inline logstream &logstream::operator<<( const T &t ) {
     if( _active ) {
       logmessage msg ;
@@ -201,11 +234,57 @@ namespace streamlog {
     }
     return *this ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  template<class T>
+  inline bool logstream::write() {
+    // dont' call chek_level if T::active == false
+    return (  T::active   &&    check_level<T>()  ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template<class T>
+  inline bool logstream::would_write() {
+    return (  T::active   &&  T::level >= _level ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  template <class T>
+  inline void logstream::addLevelName() {
+    _levelMap[ T::name() ] = T::level ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  template <typename T>
+  inline unsigned int logstream::setLevel() {
+    unsigned int l = _level ;
+    auto iter = _levelMap.find( T::name() ) ;
+    if( iter != _levelMap.end() ) {
+      _level = iter->second ;
+      _levelName = iter->first ;
+    }
+    return l ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  template<class T>
+  inline bool logstream::check_level() {
+    if( T::level >= _level ){
+      _active = true ;
+      setLevel<T>() ;
+    }
+    return _active ;
+  }
 
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
-  extern logstream out ;
+  // extern logstream out ;
 
 }
 #endif

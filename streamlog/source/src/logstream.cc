@@ -1,7 +1,20 @@
 #include "streamlog/logstream.h"
 #include "streamlog/loglevels.h"
 
-namespace streamlog{
+namespace streamlog {
+  
+  /** global instance of logstream */
+  logstream out ;
+  out.addDefaultLevels() ;
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
+  logstream &logstream::global() {
+    return out ;
+  }
+  
+  //--------------------------------------------------------------------------
 
   logstream::logstream() :
     _name("UNKNOWN") {
@@ -42,6 +55,14 @@ namespace streamlog{
 
   const std::string &logstream::name() const {
     return _name ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void logstream::setFormatter( formatter_ptr formatter ) {
+    for ( auto& sink : _sinks ) {
+      sink->setFormatter( formatter->clone() ) ;
+    }
   }
 
   //--------------------------------------------------------------------------
@@ -93,10 +114,17 @@ namespace streamlog{
     addLevelName<ERROR9>() ;
     addLevelName<SILENT>() ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  unsigned int logstream::level() const {
+    return _level ;
+  }
 
   //--------------------------------------------------------------------------
-  //--------------------------------------------------------------------------
 
-  /** global instance of logstream */
-  logstream out ;
+  const std::string &logstream::levelName() const {
+    return _levelName ;
+  }
+
 }
