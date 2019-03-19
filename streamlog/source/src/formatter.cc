@@ -2,26 +2,33 @@
 
 namespace streamlog {
 
-  inline standard_formatter::standard_formatter() {
+  standard_formatter::standard_formatter() {
     setOption( print_option::logger , true ) ;
     setOption( print_option::level , true ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  standard_formatter::standard_formatter( const std::bitset<noptions> &bs ) :
+    _options(bs) {
+    
   }
 
   //--------------------------------------------------------------------------
 
-  inline bool standard_formatter::optionSet( print_option opt ) const {
+  bool standard_formatter::optionSet( print_option opt ) const {
     return _options.test( static_cast<std::size_t>(opt) ) ;
   }
 
   //--------------------------------------------------------------------------
 
-  inline void standard_formatter::setOption( print_option opt , bool val ) {
+  void standard_formatter::setOption( print_option opt , bool val ) {
     _options.set( static_cast<std::size_t>(opt), val ) ;
   }
 
   //--------------------------------------------------------------------------
 
-  inline void standard_formatter::format( const logmessage& msg, std::stringstream &out ) {
+  void standard_formatter::format( const logmessage& msg, std::stringstream &out ) {
     const bool printLogger = optionSet( print_option::logger ) ;
     const bool printLevel = optionSet( print_option::level ) ;
     const bool printLoggerOrLevel = ( printLogger || printLevel ) ;
@@ -56,6 +63,12 @@ namespace streamlog {
       out << "[thread " << msg._threadId << "] " ;
     }
     out << msg._message.str() ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  std::unique_ptr<formatter> standard_formatter::clone() const {
+    return std::unique_ptr<formatter>( new standard_formatter( _options ) ) ;
   }
 
 }

@@ -33,6 +33,11 @@ namespace streamlog {
      *  @param  out the output stringstream to receive
      */
     virtual void format( const logmessage& msg, std::stringstream &out ) = 0 ;
+    
+    /**
+     *  @brief  Clone the formatter as a unique pointer
+     */
+    virtual std::unique_ptr<formatter> clone() const = 0 ;
   };
 
   //--------------------------------------------------------------------------
@@ -74,7 +79,9 @@ namespace streamlog {
     void setOption( print_option opt , bool val = true ) ;
 
   private:
+    standard_formatter( const std::bitset<noptions> &bs ) ;
     void format( const logmessage& msg, std::stringstream &out ) ;
+    std::unique_ptr<formatter> clone() const ;
 
   private:
     /// The printing options
