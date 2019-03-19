@@ -3,14 +3,10 @@
 
 namespace streamlog {
   
-  /** global instance of logstream */
-  logstream out ;
-  out.addDefaultLevels() ;
-  
-  //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
   
   logstream &logstream::global() {
+    static logstream out ;
     return out ;
   }
   
@@ -20,6 +16,7 @@ namespace streamlog {
     _name("UNKNOWN") {
     // default sink is console
     _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
+    addDefaultLevels() ;
   }
 
   //--------------------------------------------------------------------------
@@ -28,6 +25,7 @@ namespace streamlog {
     _name(name) {
     // default sink is console
     _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
+    addDefaultLevels() ;
   }
 
   //--------------------------------------------------------------------------
@@ -35,7 +33,7 @@ namespace streamlog {
   logstream::logstream( const std::string &name , const logsink_list &sinks ) :
     _name(name),
     _sinks(sinks) {
-    /* nop */
+    addDefaultLevels() ;
   }
 
   //--------------------------------------------------------------------------
@@ -43,6 +41,7 @@ namespace streamlog {
   logstream::logstream( const std::string &name , const logsink_ptr &sink ) :
     _name(name) {
     _sinks.push_back( sink ) ;
+    addDefaultLevels() ;
   }
 
   //--------------------------------------------------------------------------
