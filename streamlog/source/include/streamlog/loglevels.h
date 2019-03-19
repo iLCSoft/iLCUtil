@@ -26,8 +26,8 @@
  *  @version $Id: loglevels.h,v 1.3 2007-08-08 13:58:33 gaede Exp $
  */
 
-#ifndef loglevels_h
-#define loglevels_h
+#ifndef streamlog_loglevels_h
+#define streamlog_loglevels_h
 
 #include "streamlog/baselevels.h"
 
