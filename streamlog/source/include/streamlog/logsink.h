@@ -48,7 +48,7 @@ namespace streamlog {
 
   protected:
     /// The log message formatter
-    formatter_ptr          _formatter {nullptr} ;
+    formatter_ptr          _formatter {streamlog::make_unique<standard_formatter>()} ;
   };
 
   template <typename mutex_type>
