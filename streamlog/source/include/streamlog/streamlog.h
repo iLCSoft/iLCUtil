@@ -18,7 +18,7 @@
 
 #ifdef  USE_STREAMLOG
 
-#include <streamlog/logstream.h">
+#include <streamlog/logstream.h>
 #include <streamlog/logscope.h>
 #include <streamlog/loglevels.h>
 
