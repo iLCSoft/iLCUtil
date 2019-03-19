@@ -1,84 +1,51 @@
 #include "streamlog/logstream.h"
 #include "streamlog/loglevels.h"
-#include "streamlog/logbuffer.h"
-#include "streamlog/prefix.h"
 
 namespace streamlog{
-  
-  logstream::logstream() : 
-    _ns( new nullstream ) , 
-    _os(0) , 
-    _level(0) ,
-    _active(false) , 
-    _lb(0),
-    _prefix( std::make_shared<streamlog::prefix>()) {
+
+  logstream::logstream() :
+    _name("UNKNOWN") {
+    // default sink is console
+    _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  logstream::logstream( const std::string &name ) :
+    _name(name) {
+    // default sink is console
+    _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  logstream::logstream( const std::string &name , const logsink_list &sinks ) :
+    _name(name),
+    _sinks(sinks) {
     /* nop */
   }
-  
+
   //--------------------------------------------------------------------------
 
-  logstream::~logstream() {
-    
-    if( _ns ){ 
-        delete _ns ;
-        _ns = NULL ;
-    }
-    
-    if( _os ){ 
-      delete _os ;
-      _os = NULL ;
-    }
-    
-    if( _lb ){
-      delete _lb ;
-      _lb = NULL ;
-    }
+  logstream::logstream( const std::string &name , const logsink_ptr &sink ) :
+    _name(name) {
+    _sinks.push_back( sink ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
-  void logstream::init( std::ostream& os , const std::string name ) {
-    
-    static bool first=true ;
-    
-    if( first && os ) {
-      
-      //      _name = name ;      
-      
-      // create a new log buffer and attach this to a wrapper to the given ostream  
 
-      _lb = new logbuffer( os.rdbuf() , this ) ;
-      
-      _os = new std::ostream( _lb ) ;
-      
-      //attach also the original stream to the logger...
-      //os.rdbuf( _lb ) ; // this needs some work 
-      // FIXME : this needs to go to the c'tor !!!!
-     
-      _prefix->_name = name ;
-
-      first = false ;
-    }
-    
-    else if( !os) {
-      std::cerr << "ERROR: logstream::init() invalid ostream given " << std::endl ;      
-    }
+  void logstream::setName( const std::string &n ) {
+    _name = n ;
   }
-  
+
   //--------------------------------------------------------------------------
 
-  unsigned logstream::setLevel( const std::string& levelName ) {
-
-    unsigned l = _level ;
-    LevelMap::iterator it = _map.find( levelName ) ;
-    if( it != _map.end() ) {
-      _level = it->second ;
-    }
-    return l ;
+  const std::string &logstream::name() const {
+    return _name ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void logstream::addDefaultLevels() {
     addLevelName<DEBUG>() ;
     addLevelName<DEBUG0>() ;
@@ -127,21 +94,6 @@ namespace streamlog{
     addLevelName<SILENT>() ;
   }
 
-  //--------------------------------------------------------------------------
-
-  std::ostream& logstream::operator()() { 
-    
-    if( _active && _os ) {
-      
-      _active = false ;
-      
-      return *_os ;
-    }
-    else
-      return *_ns ;
-    
-  }
-  
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
