@@ -15,9 +15,98 @@
 
 namespace streamlog {
 
-  /** 
+  class logstream ;
+
+  /**
+   *  @brief  outstream class
+   *  Encapsulate a log message and its context.
+   *  For every line break or end of logging line (meaning
+   *  on object destruction) a new log message is sinked in
+   *  the associated logstream object
+   */
+  class outstream : public std::ostream {
+  public:
+    // typedefs
+    typedef std::ostream         base_type ;
+
+  private:
+    /**
+     *  @brief  streambuf class
+     *  Internal buffer used for detecing line breaks
+     */
+    class streambuf : public std::streambuf {
+      friend class outstream ;
+    public:
+      typedef std::streambuf             base_type ;
+      typedef base_type::int_type        int_type ;
+      typedef base_type::char_type       char_type ;
+      typedef base_type::traits_type     traits_type ;
+
+    public:
+      streambuf( outstream *s ) ;
+      streambuf( streambuf &&rhs ) ;
+      streambuf &operator=( streambuf &&rhs ) ;
+      streambuf( const streambuf & ) = delete ;
+      streambuf &operator=( const streambuf & ) = delete ;
+      int_type overflow( int_type c = traits_type::eof() ) override ;
+
+    private:
+      outstream          *_outstream {nullptr} ;
+      bool                _writeOnDestruct {true} ;
+    };
+    friend class streambuf ;
+
+  public:
+    outstream(const outstream &) = delete ;
+    outstream &operator=(const outstream &) = delete ;
+
+    /**
+     *  @brief  Constructor for active stream with logcontext
+     */
+    outstream( logstream *ls, const logcontext &ctx ) ;
+
+    /**
+     *  @brief  Constructor for inactive stream
+     */
+    outstream( logstream *ls ) ;
+
+    /**
+     *  @brief  Move contructor
+     */
+    outstream( outstream &&rhs ) ;
+
+    /**
+     *  @brief  Destructor.
+     *  Write buffered message if any
+     */
+    ~outstream() ;
+
+    /**
+     *  @brief  Assignement operator
+     */
+    outstream &operator=(outstream &&rhs) ;
+
+    /**
+     *  @brief  Log the buffered message to the logstream sinks
+     */
+    void writeMessage( bool newLine ) ;
+
+  private:
+    /// The logger instance
+    logstream             *_logstream {nullptr} ;
+    /// The internal stream buffer mediator
+    streambuf              _streambuf ;
+    /// The log message buffer
+    std::stringstream      _message {} ;
+    /// The log entry context
+    logcontext             _context {} ;
+    /// Whether the log entry is active
+    bool                   _active {false} ;
+  };
+
+  /**
    *  @brief  logstream class.
-   *  
+   *
    *  Class defining a log stream that is used to print log messages depending
    *  on current log level. Can be initialized with different sinks (console, file, ...).
    *  There is one global instance of this class defined in the library accessible through
@@ -50,13 +139,14 @@ namespace streamlog {
    *  @version $Id: logstream.h,v 1.3 2007-08-08 13:08:34 gaede Exp $
    */
   class logstream {
+    friend class outstream ;
     // typedefs
     typedef std::map<std::string, unsigned int>    level_map ;
     typedef std::unique_ptr<formatter>             formatter_ptr ;
     typedef std::vector<logsink_ptr>               logsink_list ;
     typedef std::ostringstream::char_type          char_type ;
     typedef std::ostringstream::traits_type        char_traits ;
-    typedef std::ostream                           stream_type ;
+    typedef outstream                              stream_type ;
 
   private:
     /**
@@ -69,7 +159,7 @@ namespace streamlog {
     logstream(const logstream&) = delete ;
     logstream& operator=(const logstream&) = delete ;
     ~logstream() = default ;
-    
+
     /**
      *  @brief  Return the global logger instance (always defined)
      */
@@ -110,22 +200,21 @@ namespace streamlog {
      *  @brief  Get the logger name
      */
     const std::string &name() const ;
-    
+
     /**
      *  @brief  Set the formatter instance
-     *  The formatter is cloned and set for every sink. The sinks must be 
-     *  set before calling this methods else the formatter won't be adopted 
-     *  
+     *  The formatter is cloned and set for every sink. The sinks must be
+     *  set before calling this methods else the formatter won't be adopted
+     *
      *  @param  formatter the formatter to clone and set
      */
     void setFormatter( formatter_ptr formatter ) ;
-    
+
     /**
-     *  @brief  Return the logger instance (*this) after being configured for 
+     *  @brief  Return the logger instance (*this) after being configured for
      *  logging with the specified log level. Usage:
      *  @code{cpp}
      *  logstream logger( "main" ) ;
-     *  logger.addDefaultLevels() ;
      *  logger.setLevel<MESSAGE>() ;
      *  // this will log something
      *  logger.log<MESSAGE2>() << "Hello world !" << std::endl ;
@@ -134,45 +223,15 @@ namespace streamlog {
      *  @endcode
      */
     template <typename T>
-    std::ostream &log() ;
-    
-    void flush() ;
-    
-    /** 
-     *  @brief  True if next log message of the current level (class T ) will be written, i.e.
-     *  the next call to logstream& operator<<() will return a valid logstream. 
-     */
-    template<class T>
-    bool write() ;
+    stream_type log() ;
 
-    /** 
+    /**
      *  @brief  True if next log message of the current level (class T ) would be written
      *  Can be used to conditionally execute code blocks that are needed before writing to
      *  the outstream.
      */
     template<class T>
-    bool would_write() ;
-
-    /**
-     *  @brief  Overloaded stream operator.
-     */
-    // logstream& operator<<( short value ) { return put(value) ; }
-    // logstream& operator<<( unsigned short value ) { return put(value) ; }
-    // logstream& operator<<( int value ) { return put(value) ; }
-    // logstream& operator<<( unsigned int value ) { return put(value) ; }
-    // logstream& operator<<( long value ) { return put(value) ; }
-    // logstream& operator<<( unsigned long value ) { return put(value) ; }
-    // logstream& operator<<( long long value ) { return put(value) ; }
-    // logstream& operator<<( unsigned long long value ) { return put(value) ; }
-    // logstream& operator<<( float value ) { return put(value) ; }
-    // logstream& operator<<( double value ) { return put(value) ; }
-    // logstream& operator<<( long double value ) { return put(value) ; }
-    // logstream& operator<<( bool value ) { return put(value) ; }
-    // logstream& operator<<( const void* value ) { return put(value) ; }
-    // logstream& operator<<( std::basic_streambuf<char_type, char_traits>* sb) { return put(sb) ; }
-    // logstream& operator<<( std::ios_base& (*func)(std::ios_base&) ) { return put(func) ; }
-    // logstream& operator<<( std::basic_ios<char_type,char_traits>& (*func)(std::basic_ios<char_type,char_traits>&) ) { return put(func) ; }
-    // logstream& operator<<( std::basic_ostream<char_type,char_traits>& (*func)(std::basic_ostream<char_type,char_traits>&) ) { return put(func) ; }
+    bool wouldWrite() const ;
 
     /** Adds a level name to the stream for setting the log level with a string through
      *  a scope class. Only names added with this method will have an effect - other log
@@ -189,7 +248,7 @@ namespace streamlog {
      */
     template <typename T>
     unsigned int setLevel() ;
-    
+
     /**
      *  @brief  Get the current log level
      */
@@ -201,94 +260,58 @@ namespace streamlog {
     const std::string &levelName() const ;
 
   protected:
-    template <typename T>
-    std::ostream &put( const T &t ) ;
-    
     /**
-     *  @brief  Used internally by write<T>
-     */
-    template<class T>
-    bool check_level() ;
-    
-    /** 
      *  @brief  Add all default levels defined in loglevels.h to this logstream
      */
     void addDefaultLevels() ;
-    
-  private:
-    class logstreambuf : public std::streambuf {
-      friend class logstream ;
-    public:
-      typedef std::streambuf             base_type ;
-      typedef base_type::int_type        int_type ;
-      typedef base_type::traits_type     traits_type ;
-      
-    public:
-      logstreambuf( logstream &stream ) ;
-
-      int_type overflow( int_type ch = traits_type::eof() ) override ;
-      
-    private:
-      logstream        &_stream ;
-      bool              _newLine {true} ;
-      logcontext        _context {} ;
-    };
-    friend class logstreambuf ;
 
   private:
     /// The logger name
     std::string         _name {"UNKNOWN"} ;
     /// The logger sinks
     logsink_list        _sinks {} ;
-    /// current log level
+    /// The current log level
     unsigned int        _level {0} ;
-    /// current log level name
+    /// The current log level name
     std::string         _levelName {"VERBOSE"} ;
-    /// string map of level names
+    /// The string map of level names
     level_map           _levelMap {} ;
-    
-    logstreambuf        _logbuffer ;
-        
-    stream_type         _logstream ;
-    
-    bool                _active {false} ;
   };
 
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
   template <typename T>
-  inline std::ostream &logstream::log() {
-    // std::cout << "Getting logger with level " << T::name() << std::endl;
-    (void)check_level<T>() ;
-    // reset the message buffer and update the next message properties
-    // _logbuffer.resetMessage() ;
-    return _logstream ;
-  }
-  
-  //--------------------------------------------------------------------------
-  
-  template<class T>
-  inline bool logstream::write() {
-    // dont' call chek_level if T::active == false
-    // return (  T::active   &&    check_level<T>()  ) ;
-    return (  check_level<T>()  ) ;
+  inline logstream::stream_type logstream::log() {
+    const bool active = ( T::active && T::level >= _level ) ;
+    if ( active ) {
+      // configure a context and create an active stream
+      logcontext ctx {} ;
+      ctx._loggerName = _name ;
+      ctx._level = T::level ;
+      ctx._levelName = T::name() ;
+      return stream_type( this, ctx ) ;
+    }
+    else {
+      // inactive stream is not configured with a context
+      return stream_type( this ) ;
+    }
   }
 
   //--------------------------------------------------------------------------
 
   template<class T>
-  inline bool logstream::would_write() {
+  inline bool logstream::wouldWrite() const {
     return (  T::active   &&  T::level >= _level ) ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   template <class T>
   inline void logstream::addLevelName() {
     _levelMap[ T::name() ] = T::level ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   template <typename T>
@@ -300,14 +323,6 @@ namespace streamlog {
       _levelName = iter->first ;
     }
     return l ;
-  }
-  
-  //--------------------------------------------------------------------------
-
-  template<class T>
-  inline bool logstream::check_level() {
-    _active = ( T::active && T::level >= _level ) ;
-    return _active ;
   }
 
 }

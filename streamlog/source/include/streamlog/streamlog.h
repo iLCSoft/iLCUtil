@@ -21,18 +21,16 @@
 #include <streamlog/logstream.h>
 #include <streamlog/loglevels.h>
 
-#define  streamlog_logger_level( LOGGER, MLEVEL ) ( (LOGGER).would_write< streamlog::MLEVEL >() )
+#define  streamlog_logger_level( LOGGER, MLEVEL ) ( (LOGGER).wouldWrite< streamlog::MLEVEL >() )
 #define  streamlog_logger_out( LOGGER, MLEVEL ) (LOGGER).log<MLEVEL>()
-//if((LOGGER).write< streamlog::MLEVEL >() ) (LOGGER)
 #define  streamlog_logger_message( LOGGER, MLEVEL , CODE_BLOCK , OUT_MESSAGE)\
-   if( (LOGGER).would_write< streamlog::MLEVEL >() ) { \
+   if( (LOGGER).wouldWrite< streamlog::MLEVEL >() ) { \
       CODE_BLOCK \
     (LOGGER).log<MLEVEL>() << OUT_MESSAGE }
 //for use in templated classes with gcc 3.2 use these macros:
 #define  streamlog_logger_out_T( LOGGER, MLEVEL ) (LOGGER).template log<MLEVEL>()
-//if((LOGGER).template write< streamlog::MLEVEL >() ) (LOGGER)
 #define  streamlog_logger_message_T( LOGGER, MLEVEL , CODE_BLOCK , OUT_MESSAGE)\
-   if( (LOGGER).template would_write< streamlog::MLEVEL >() ) { \
+   if( (LOGGER).template wouldWrite< streamlog::MLEVEL >() ) { \
       CODE_BLOCK \
     (LOGGER).log<MLEVEL>() << OUT_MESSAGE }
 

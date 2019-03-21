@@ -2,112 +2,136 @@
 #include "streamlog/loglevels.h"
 
 namespace streamlog {
-  
-  logstream::logstreambuf::logstreambuf( logstream &stream ) : 
-    _stream(stream) {
+
+  outstream::streambuf::streambuf( outstream *s ) :
+    _outstream(s) {
     /* nop */
   }
-  
-  //-------------------------------------------------------------------------- 
 
-  logstream::logstreambuf::int_type logstream::logstreambuf::overflow( int_type ch ) {
-    if ( c == traits_type::eof() ) {
-      return traits_type::eof() ;
-    }
-    bool success = true;
+  //--------------------------------------------------------------------------
 
-    // add prefix to log message
-    if ( _newLine == true ) {
-      for ( auto &sink : _stream._sinks ) {
-        sink->log( sink->prefix( _context ) ) ;
-      }
-      _newLine = false ;
-    }
-
-    if ( c == '\n' ) {
-      _newLine = true ;
-    }
-
-    if ( success )
-    success &= ( _sbuf->sputc(c) != EOF ) ;
-
-    if( success ) 
-    return 0 ;
-
-    return EOF ;
-
-    // if ( ch == '\n' ) {
-    //   writeMessage(false) ;
-    //   _msg._message.str("") ;
-    // }
-    return base_type::overflow( ch ) ;
+  outstream::streambuf::streambuf( streambuf &&rhs ) :
+    base_type(std::move(rhs)),
+    _outstream(rhs._outstream),
+    _writeOnDestruct(rhs._writeOnDestruct) {
+    /* nop */
   }
-  
-  //--------------------------------------------------------------------------
-  
-  // std::streamsize logstream::logstreambuf::xsputn( const char_type* s, std::streamsize count ) {
-  //   if ( count == 1 && *s == '\n' ) {
-  //     if ( _active ) {
-  //       // line break: flush the message 
-  //       writeMessage(true) ;
-  //       resetMessage() ;
-  //     }
-  //     return 1 ;
-  //   }
-  //   if ( _active ) {
-  //     // append message untill flush is called or new line is added
-  //     _msg._message.write( s, count ) ;
-  //     // std::cout << "Caching message : " << s << std::endl ;
-  //     _emptyMessage = false ;
-  //   }
-  //   return count ;
-  // }
 
   //--------------------------------------------------------------------------
-  
-  // int logstream::logstreambuf::sync() {
-  //   return 0 ;
-  // }
+
+  outstream::streambuf &outstream::streambuf::operator=( streambuf &&rhs ) {
+    base_type::operator=( rhs ) ;
+    _outstream = rhs._outstream ;
+    _writeOnDestruct = rhs._writeOnDestruct ;
+    return *this ;
+  }
 
   //--------------------------------------------------------------------------
-  
-  // void logstream::logstreambuf::resetMessage() {
-  //   _msg._message.str("") ;
-  //   _msg._levelName = _levelName ;
-  //   _msg._level = _level ;
-  //   _msg._loggerName = _stream._name ;
-  //   _emptyMessage = true ;
-  // }
-  // 
-  // //--------------------------------------------------------------------------
-  // 
-  // void logstream::logstreambuf::writeMessage( bool newLine ) {
-  //   if ( _emptyMessage ) {
-  //     return ;
-  //   }
-  //   if ( newLine ) {
-  //     _msg._message << std::endl ;      
-  //   }
-  //   for ( auto &sink : _stream._sinks ) {
-  //     sink->log( _msg ) ;
-  //     sink->flush() ;
-  //   }
-  // }
-  
+
+  outstream::streambuf::int_type outstream::streambuf::overflow( int_type c ) {
+    if ( not _outstream->_active ) {
+      return traits_type::not_eof( c ) ;
+    }
+    char_type ch = traits_type::to_char_type(c) ;
+    // reached end of line: write the message
+    if (ch == '\n') {
+      // insert line break to finish properly
+      _outstream->_message << std::endl ;
+      _outstream->writeMessage(false) ;
+      _writeOnDestruct = false ;
+      return traits_type::not_eof( c ) ;
+    }
+    _writeOnDestruct = true ;
+    _outstream->_message << ch ;
+    return traits_type::not_eof( c ) ;
+  }
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
-  
+
+  outstream::outstream( logstream *ls, const logcontext &ctx ) :
+    _logstream(ls),
+    _streambuf(this),
+    _context(ctx),
+    _active(true) {
+    this->init(&_streambuf) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  outstream::outstream( logstream *ls ) :
+    _logstream(ls),
+    _streambuf(this),
+    _active(false) {
+    this->init(&_streambuf) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  outstream::outstream( outstream &&rhs ) :
+    base_type(std::move(rhs)),
+    _logstream(rhs._logstream),
+    _streambuf(std::move(rhs._streambuf)),
+    _message(std::move(rhs._message)),
+    _context(rhs._context),
+    _active(rhs._active) {
+    // move assignement is not enough, need to set the
+    // internal streambuf using setter method
+    base_type::set_rdbuf( &_streambuf ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  outstream::~outstream() {
+    if ( not _active ) {
+      return ;
+    }
+    if ( _streambuf._writeOnDestruct ) {
+      writeMessage(true) ;
+    }
+  }
+
+  //--------------------------------------------------------------------------
+
+  outstream &outstream::operator=(outstream &&rhs) {
+    base_type::operator=( std::move(rhs) ) ;
+    _streambuf = std::move( rhs._streambuf ) ;
+    _logstream = rhs._logstream ;
+    _message = std::move(rhs._message) ;
+    _context = rhs._context ;
+    _active = rhs._active ;
+    return *this ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  void outstream::writeMessage( bool newLine ) {
+    if ( not _active ) {
+      return ;
+    }
+    if ( newLine ) {
+      _message << std::endl;
+    }
+    std::string message( std::move( _message.str() ) );
+    for ( auto &sink : _logstream->_sinks ) {
+      sink->log( _context, sink->prefix( _context ) + message ) ;
+    }
+    // reset the message after logging
+    _message.str("");
+  }
+
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
   logstream &logstream::global() {
     static logstream out ;
     return out ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   logstream::logstream() :
-    _name("UNKNOWN"),
-    _logbuffer( *this ),
-    _logstream( &_logbuffer ) {
+    _name("UNKNOWN") {
     // default sink is console
     _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
     addDefaultLevels() ;
@@ -116,9 +140,7 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   logstream::logstream( const std::string &name ) :
-    _name(name),
-    _logbuffer( *this ),
-    _logstream( &_logbuffer ) {
+    _name(name) {
     // default sink is console
     _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
     addDefaultLevels() ;
@@ -128,26 +150,16 @@ namespace streamlog {
 
   logstream::logstream( const std::string &name , const logsink_list &sinks ) :
     _name(name),
-    _sinks(sinks),
-    _logbuffer( *this ),
-    _logstream( &_logbuffer ) {
+    _sinks(sinks) {
     addDefaultLevels() ;
   }
 
   //--------------------------------------------------------------------------
 
   logstream::logstream( const std::string &name , const logsink_ptr &sink ) :
-    _name(name),
-    _logbuffer( *this ),
-    _logstream( &_logbuffer ) {
+    _name(name) {
     _sinks.push_back( sink ) ;
     addDefaultLevels() ;
-  }
-  
-  //--------------------------------------------------------------------------
-  
-  void logstream::flush() {
-    _logstream.flush() ;
   }
 
   //--------------------------------------------------------------------------
@@ -161,9 +173,9 @@ namespace streamlog {
   const std::string &logstream::name() const {
     return _name ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void logstream::setFormatter( formatter_ptr formatter ) {
     for ( auto& sink : _sinks ) {
       sink->setFormatter( formatter->clone() ) ;
@@ -219,9 +231,9 @@ namespace streamlog {
     addLevelName<ERROR9>() ;
     addLevelName<SILENT>() ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   unsigned int logstream::level() const {
     return _level ;
   }
