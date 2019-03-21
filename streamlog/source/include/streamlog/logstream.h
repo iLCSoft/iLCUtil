@@ -730,21 +730,21 @@ namespace streamlog {
 
   //--------------------------------------------------------------------------
 
-  template <typename mutex_type = default_logger_mutex>
+  template <typename mutex_type>
   inline logsink_ptr logstream::console() {
     return std::make_shared<console_sink<mutex_type>>() ;
   }
 
   //--------------------------------------------------------------------------
 
-  template <typename mutex_type = default_logger_mutex>
+  template <typename mutex_type>
   inline logsink_ptr logstream::coloredConsole() {
     return std::make_shared<colored_console_sink<mutex_type>>() ;
   }
 
   //--------------------------------------------------------------------------
 
-  template <typename mutex_type = default_logger_mutex>
+  template <typename mutex_type>
   inline logsink_ptr logstream::simpleFile( std::string &fname, std::ios_base::openmode mode ) {
     return std::make_shared<simple_file_sink<mutex_type>>( fname, mode ) ;
   }
