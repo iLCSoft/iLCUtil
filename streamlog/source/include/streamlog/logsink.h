@@ -12,7 +12,7 @@
 // -- streamlog headers
 #include <streamlog/definitions.h>
 #include <streamlog/formatter.h>
-#include <streamlog/logmessage.h>
+#include <streamlog/logcontext.h>
 
 namespace streamlog {
 
@@ -40,14 +40,14 @@ namespace streamlog {
      *  @param  formatter the formatter to use
      */
     virtual void setFormatter( formatter_ptr formatter ) = 0 ;
-    
+
     virtual std::string prefix( const logcontext &ctx ) = 0 ;
 
   protected:
     /// The log message formatter
     formatter_ptr          _formatter {streamlog::make_unique<standard_formatter>()} ;
   };
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
@@ -94,9 +94,9 @@ namespace streamlog {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     doLog( msg ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   template <typename mutex_type>
   inline std::string base_sink<mutex_type>::prefix( const logcontext &ctx ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
@@ -143,8 +143,8 @@ namespace streamlog {
 
   private:
     void doLog( const logcontext &ctx, const std::string &msg ) {
-      std::cout 
-        << color( ctx._level ) 
+      std::cout
+        << color( ctx._level )
         << msg
         << color::reset ;
     }
