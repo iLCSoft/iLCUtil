@@ -92,7 +92,7 @@ namespace streamlog {
   template <typename mutex_type>
   inline void base_sink<mutex_type>::log( const logcontext &ctx, const std::string &msg ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
-    doLog( msg ) ;
+    doLog( ctx, msg ) ;
   }
 
   //--------------------------------------------------------------------------
