@@ -32,12 +32,7 @@ namespace streamlog {
      *
      *  @param  msg the message to log
      */
-    virtual void log( const logmessage &msg ) = 0 ;
-
-    /**
-     *  @brief  Flush out the message
-     */
-    virtual void flush() = 0 ;
+    virtual void log( const logcontext &ctx, const std::string &msg ) = 0 ;
 
     /**
      *  @brief  Set the log message formatter to use
@@ -45,6 +40,8 @@ namespace streamlog {
      *  @param  formatter the formatter to use
      */
     virtual void setFormatter( formatter_ptr formatter ) = 0 ;
+    
+    virtual std::string prefix( const logcontext &ctx ) = 0 ;
 
   protected:
     /// The log message formatter
@@ -65,12 +62,9 @@ namespace streamlog {
      *
      *  @param  msg the message to log
      */
-    void log( const logmessage &msg ) ;
+    void log( const logcontext &ctx, const std::string &msg ) ;
 
-    /**
-     *  @brief  Flush out the message
-     */
-    void flush() ;
+    std::string prefix( const logcontext &ctx ) ;
 
     /**
      *  @brief  Set the log message formatter to use
@@ -81,16 +75,11 @@ namespace streamlog {
 
   protected:
     /**
-     *  @brief  Performa the actual logging operation
+     *  @brief  Perform the actual logging operation
      *
      *  @param  msg the message to log
      */
-    virtual void doLog( const logmessage &msg ) = 0 ;
-
-    /**
-     *  @brief   Performs the
-     */
-    virtual void doFlush() = 0 ;
+    virtual void doLog( const logcontext &ctx, const std::string &msg ) = 0 ;
 
   private:
     /// The logging mutex
@@ -101,17 +90,17 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline void base_sink<mutex_type>::log( const logmessage &msg ) {
+  inline void base_sink<mutex_type>::log( const logcontext &ctx, const std::string &msg ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     doLog( msg ) ;
   }
-
+  
   //--------------------------------------------------------------------------
-
+  
   template <typename mutex_type>
-  inline void base_sink<mutex_type>::flush() {
+  inline std::string base_sink<mutex_type>::prefix( const logcontext &ctx ) {
     std::lock_guard<mutex_type> lock( _mutex ) ;
-    doFlush() ;
+    return _formatter->prefix( ctx ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -135,14 +124,8 @@ namespace streamlog {
     console_sink() = default ;
 
   private:
-    void doLog( const logmessage &msg ) {
-      std::stringstream ss ;
-      base_sink<mutex_type>::_formatter->format( msg , ss ) ;
-      std::cout << ss.str() ;
-    }
-
-    void doFlush() {
-      std::cout.flush() ;
+    void doLog( const logcontext &/*ctx*/, const std::string &msg ) {
+      std::cout << msg ;
     }
   };
 
@@ -159,28 +142,25 @@ namespace streamlog {
     colored_console_sink() = default ;
 
   private:
-    void doLog( const logmessage &msg ) {
-      std::stringstream ss ;
-      base_sink<mutex_type>::_formatter->format( msg , ss ) ;
-      std::cout << color( msg._level ) << ss.str() << color::reset ;
-    }
-
-    void doFlush() {
-      std::cout.flush() ;
+    void doLog( const logcontext &ctx, const std::string &msg ) {
+      std::cout 
+        << color( ctx._level ) 
+        << msg
+        << color::reset ;
     }
 
     const color_helper &color( unsigned int level ) const {
-      if ( streamlog::error_base_level ) {
+      if ( level >= streamlog::error_base_level ) {
         return color::bold_red ;
       }
-      if ( streamlog::warning_base_level ) {
+      if ( level >= streamlog::warning_base_level ) {
         return color::bold_yellow ;
       }
-      if ( streamlog::message_base_level ) {
-        return color::bold_blue ;
+      if ( level >= streamlog::message_base_level ) {
+        return color::bold_green ;
       }
-      if ( streamlog::debug_base_level ) {
-        return color::normal_green ;
+      if ( level >= streamlog::debug_base_level ) {
+        return color::bold_blue ;
       }
       return color::default_color ;
     }
@@ -218,14 +198,8 @@ namespace streamlog {
     }
 
   private:
-    void doLog( const logmessage &msg ) {
-      std::stringstream ss ;
-      base_sink<mutex_type>::_formatter->format( msg , ss ) ;
-      _fstream << ss.str() ;
-    }
-
-    void doFlush() {
-      _fstream.flush() ;
+    void doLog( const logcontext &ctx, const std::string &msg ) {
+      _fstream << msg ;
     }
 
   private:
@@ -243,7 +217,7 @@ namespace streamlog {
    */
   class thread_file_sink : public base_sink<std::mutex> {
   public:
-    using thread_id = logmessage::thread_id ;
+    using thread_id = logcontext::thread_id ;
     using stream_map = std::map<thread_id, std::ofstream> ;
 
   public:
@@ -273,16 +247,8 @@ namespace streamlog {
     }
 
   private:
-    void doLog( const logmessage &msg ) {
-      std::stringstream ss ;
-      base_sink<std::mutex>::_formatter->format( msg , ss ) ;
-      stream( msg._threadId ) << ss.str() ;
-    }
-
-    void doFlush() {
-      for ( auto &s : _fstreams ) {
-        s.second.flush() ;
-      }
+    void doLog( const logcontext &ctx, const std::string &msg ) {
+      stream( ctx._threadId ) << msg ;
     }
 
     std::ofstream &stream( thread_id id ) {
