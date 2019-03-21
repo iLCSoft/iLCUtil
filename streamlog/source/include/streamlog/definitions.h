@@ -5,18 +5,46 @@
 #include <string>
 #include <ostream>
 #include <memory>
+#include <mutex>
 
 /**
- *  The variable STREAMLOG_LOGGING_TS can be tweaked before including this header:
+ *  The variable STREAMLOG_DEFAULT_LOGGER_TS can be tweaked before including this header:
  *  @code
- *  #define STREAMLOG_LOGGING_TS
+ *  #define STREAMLOG_DEFAULT_LOGGER_TS
  *  #include <streamlog/definitions.h>
  *  // do some stuff with it
  *  @endcode
- *  or while using the build system with -STREAMLOG_LOGGING_TS .
- *  This enable or disable thread safety of logging messages
+ *  or by using the build system with -STREAMLOG_DEFAULT_LOGGER_TS .
+ *  This enable or disable thread safety of the default logger
  */
 namespace streamlog {
+
+  /**
+   *  @brief  nullmutex class
+   *  Standard Mutex interface without actual lock
+   */
+  class nullmutex {
+  public:
+    nullmutex() = default ;
+    ~nullmutex() = default ;
+    nullmutex(nullmutex &&) = delete ;
+    nullmutex(const nullmutex&) = delete ;
+
+  public:
+    void lock () {}
+    void unlock() {}
+    void try_lock() {}
+  };
+
+#ifdef STREAMLOG_DEFAULT_LOGGER_TS // default logger thread safety
+  using default_logger_mutex = std::mutex ;
+#else
+  using default_logger_mutex = nullmutex ;
+#endif
+
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
 
   /**
    *  @brief  code_code class
@@ -132,10 +160,10 @@ namespace streamlog {
     out << c.str() ;
     return out ;
   }
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
-  
+
   /**
    *  @brief  Helper function for c++11/14 transition
    */
@@ -147,36 +175,6 @@ namespace streamlog {
     return std::unique_ptr<T>( new T( args... ) ) ;
 #endif
   }
-
-  //--------------------------------------------------------------------------
-  //--------------------------------------------------------------------------
-
-  /**
-   *  @brief  nullmutex class
-   *  Standard Mutex interface without actual lock
-   */
-  class nullmutex {
-  public:
-    nullmutex() = default ;
-    ~nullmutex() = default ;
-    nullmutex(nullmutex &&) = delete ;
-    nullmutex(const nullmutex&) = delete ;
-
-  public:
-    void lock () {}
-    void unlock() {}
-    void try_lock() {}
-  };
-  
-  //--------------------------------------------------------------------------
-  //--------------------------------------------------------------------------
-
-#ifdef STREAMLOG_LOGGING_TS // logging thread safety
-#include <mutex>
-  using mutex = std::mutex ;
-#else
-  using mutex = nullmutex ;
-#endif
 
 }
 
