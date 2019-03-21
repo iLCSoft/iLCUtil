@@ -8,7 +8,7 @@
 
 //  -- streamlog headers
 #include "streamlog/loglevels.h"
-#include "streamlog/logmessage.h"
+#include "streamlog/logcontext.h"
 
 namespace streamlog {
 
@@ -32,7 +32,7 @@ namespace streamlog {
      *  @param  msg the input message to format
      */
     virtual std::string prefix( const logcontext& ctx ) = 0 ;
-    
+
     /**
      *  @brief  Clone the formatter as a unique pointer
      */
