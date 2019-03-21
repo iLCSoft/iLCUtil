@@ -3,8 +3,8 @@
 
 namespace streamlog {
 
-  logstream::logger_type &logstream::global() {
-    static logger_type out ;
+  logstream::default_logger_type &logstream::global() {
+    static default_logger_type out ;
     return out ;
   }
 
