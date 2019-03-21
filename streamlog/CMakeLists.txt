@@ -27,6 +27,7 @@ ELSE()
     MESSAGE( STATUS "INSTALL_DOC set to OFF" )
 ENDIF()
 
+OPTION( STREAMLOG_DEFAULT_LOGGER_TS "Set to OFF to disable the default logger thread safety" ON )
 
 ### LIBRARY #################################################################
 
@@ -35,6 +36,9 @@ INCLUDE_DIRECTORIES( BEFORE ./source/include )
 INSTALL( DIRECTORY ./source/include DESTINATION . PATTERN ".svn" EXCLUDE )
 
 # add library
+IF( STREAMLOG_DEFAULT_LOGGER_TS )
+  ADD_DEFINITIONS( "-DSTREAMLOG_DEFAULT_LOGGER_TS=1" )
+ENDIF()
 AUX_SOURCE_DIRECTORY( ./source/src library_sources )
 ADD_SHARED_LIBRARY( ${PROJECT_NAME} ${library_sources} )
 INSTALL( TARGETS ${PROJECT_NAME} DESTINATION lib )
@@ -47,4 +51,3 @@ DISPLAY_STD_VARIABLES()
 
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( streamlogConfig.cmake streamlogConfigVersion.cmake )
-

@@ -22,6 +22,7 @@ SET( ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/cmakemodules )
 
 include( ExternalProject )
 
+OPTION( STREAMLOG_DEFAULT_LOGGER_TS "Set to OFF to disable the default logger thread safety" ON )
 
 ExternalProject_Add( cmakemodules
     SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmakemodules"
@@ -31,7 +32,7 @@ ExternalProject_Add( cmakemodules
 
 ExternalProject_Add( streamlog
     SOURCE_DIR "${PROJECT_SOURCE_DIR}/streamlog"
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmakemodules -DUSE_CXX11=${USE_CXX11}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmakemodules -DUSE_CXX11=${USE_CXX11} -DSTREAMLOG_DEFAULT_LOGGER_TS=${STREAMLOG_DEFAULT_LOGGER_TS}
     INSTALL_COMMAND ${CMAKE_BUILD_TOOL} install
 )
 
@@ -57,4 +58,3 @@ DISPLAY_STD_VARIABLES()
 
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( ILCUTILConfig.cmake ILCUTILConfigVersion.cmake )
-

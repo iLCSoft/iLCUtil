@@ -42,6 +42,9 @@ FIND_LIBRARY( streamlog_LIBRARIES
 	NO_DEFAULT_PATH
 )
 
+IF( @STREAMLOG_DEFAULT_LOGGER_TS@ )
+	ADD_DEFINITIONS( "-DSTREAMLOG_DEFAULT_LOGGER_TS=1" )
+ENDIF()
 
 
 # ---------- final checking ---------------------------------------------------
@@ -50,4 +53,3 @@ INCLUDE( FindPackageHandleStandardArgs )
 FIND_PACKAGE_HANDLE_STANDARD_ARGS( streamlog DEFAULT_MSG streamlog_ROOT streamlog_INCLUDE_DIRS streamlog_LIBRARIES )
 
 SET( streamlog_FOUND ${STREAMLOG_FOUND} )
-
