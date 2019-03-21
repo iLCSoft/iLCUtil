@@ -1,6 +1,6 @@
 // -*- mode: c++;
-#ifndef streamlog_logmessage_h
-#define streamlog_logmessage_h
+#ifndef streamlog_logcontext_h
+#define streamlog_logcontext_h
 
 // -- std headers
 #include <string>
@@ -11,12 +11,13 @@
 namespace streamlog {
 
   /**
-   *  @brief  logmessage struct
-   *  Hold a log message and related metadata to be logged
+   *  @brief  logcontext struct
+   *  Hold logger metadata - mainly used by sinks on logging operation
    */
-  struct logmessage {
-    using time_point = std::chrono::system_clock::time_point ;
-    using thread_id = std::thread::id ;
+  struct logcontext {
+    using clock = std::chrono::system_clock ;
+    using time_point = clock::time_point ;
+    using thread_id  = std::thread::id ;
 
     /// The logger name initiating the message
     std::string                 _loggerName { "UNKNOWN" } ;
@@ -27,9 +28,7 @@ namespace streamlog {
     /// The thread id in which the message was generated
     thread_id                   _threadId { std::this_thread::get_id() } ;
     /// The time at which the message was published
-    time_point                  _time { std::chrono::system_clock::now() } ;
-    /// The log message
-    std::stringstream           _message {} ;
+    time_point                  _time { clock::now() } ;
   };
 
 }
