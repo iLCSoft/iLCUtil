@@ -3,8 +3,8 @@
 #define streamlog_logstream_h
 
 // -- streamlog headers
-#include "streamlog/definitions.h"
-#include "streamlog/logsink.h"
+#include <streamlog/definitions.h>
+#include <streamlog/logsink.h>
 
 // -- std headers
 #include <iostream>
@@ -167,11 +167,6 @@ namespace streamlog {
     ~logstreamT() = default ;
 
     /**
-     *  @brief  Return the global logger instance (always defined)
-     */
-    // static logstream &global() ;
-
-    /**
      *  @brief  Constructor.
      *  The logger is initialized with a console sink (mt)
      *
@@ -302,20 +297,89 @@ namespace streamlog {
 
   /**
    *  @brief  logstream class
-   *  Defined the global logger type.
+   *  Defined the global logger type and factory methods for logger
+   *  and sink creation
    */
   class logstream {
   public:
     // Use tweakable thread safety at compile time
     // to define the default logger type.
     // See streamlog/definitions.h
-    using logger_type = logstreamT<default_logger_mutex> ;
+    using default_logger_type = logstreamT<default_logger_mutex> ;
 
   public:
     /**
      *  @brief  Get the global logger instance
      */
-    static logger_type &global() ;
+    static default_logger_type &global() ;
+
+    /**
+     *  @brief  Create a new logger instance. The thread safety can be
+     *  adjusted on creation:
+     *  @code{cpp}
+     *  // use default thread safety
+     *  auto logger_default = logstream::createLogger( "MyApplication_DEFAULT" ) ;
+     *  // use threaf safe logger
+     *  auto logger_mt = logstream::createLogger<logstream::MT>( "MyApplication_MT" ) ;
+     *  // use non thread safe logger
+     *  auto logger_st = logstream::createLogger<logstream::ST>( "MyApplication_ST" ) ;
+     *  @endcode
+     *
+     *  @param  name the logger name
+     */
+    template <typename mutex_type = default_logger_mutex>
+    static std::shared_ptr<logstreamT<mutex_type>> createLogger( const std::string &name ) ;
+
+    /**
+     *  @brief  Create a new logger instance with sink list
+     *
+     *  @param  name the logger name
+     *  @param  sinks logger sink list
+     */
+    template <typename mutex_type = default_logger_mutex>
+    static std::shared_ptr<logstreamT<mutex_type>> createLogger( const std::string &name, const logsink_list &sinks ) ;
+
+    /**
+     *  @brief  Create a new logger instance with single sink
+     *
+     *  @param  name the logger name
+     *  @param  sink single logger sink
+     */
+    template <typename mutex_type = default_logger_mutex>
+    static std::shared_ptr<logstreamT<mutex_type>> createLogger( const std::string &name, logsink_ptr sink ) ;
+
+    /**
+     *  @brief  Create a console sink
+     */
+    template <typename mutex_type = default_logger_mutex>
+    static logsink_ptr console() ;
+
+    /**
+     *  @brief  Create a colored console sink
+     */
+    template <typename mutex_type = default_logger_mutex>
+    static logsink_ptr coloredConsole() ;
+
+    /**
+     *  @brief  Create a simple file sink
+     *
+     *  @param  fname the log file name
+     *  @param  mode the file open mode
+     */
+    template <typename mutex_type = default_logger_mutex>
+    static logsink_ptr simpleFile( std::string &fname, std::ios_base::openmode mode = std::ios_base::out ) ;
+
+    /**
+     *  @brief  Create a thread file sink
+     *
+     *  @param  basename the log file base name
+     *  @param  extension the log file extension
+     *  @param  mode the file open mode
+     */
+    static logsink_ptr threadFile(
+      const std::string &basename,
+      const std::string &extension = ".log",
+      std::ios_base::openmode mode = std::ios_base::out ) ;
   };
 
   //--------------------------------------------------------------------------
@@ -640,6 +704,58 @@ namespace streamlog {
       _levelName = iter->first ;
     }
     return l ;
+  }
+
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
+  inline std::shared_ptr<logstreamT<mutex_type>> logstream::createLogger( const std::string &name ) {
+    return std::make_shared<logstreamT<mutex_type>>( name ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
+  inline std::shared_ptr<logstreamT<mutex_type>> logstream::createLogger( const std::string &name, const logsink_list &sinks ) {
+    return std::make_shared<logstreamT<mutex_type>>( name , sinks ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
+  inline std::shared_ptr<logstreamT<mutex_type>> logstream::createLogger( const std::string &name, logsink_ptr sink ) {
+    return std::make_shared<logstreamT<mutex_type>>( name , sink ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type = default_logger_mutex>
+  inline logsink_ptr logstream::console() {
+    return std::make_shared<console_sink<mutex_type>>() ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type = default_logger_mutex>
+  inline logsink_ptr logstream::coloredConsole() {
+    return std::make_shared<colored_console_sink<mutex_type>>() ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type = default_logger_mutex>
+  inline logsink_ptr logstream::simpleFile( std::string &fname, std::ios_base::openmode mode ) {
+    return std::make_shared<simple_file_sink<mutex_type>>( fname, mode ) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  inline logsink_ptr logstream::threadFile(
+    const std::string &basename,
+    const std::string &extension,
+    std::ios_base::openmode mode ) {
+    return std::make_shared<thread_file_sink>( basename, extension, mode ) ;
   }
 
 }
