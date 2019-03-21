@@ -6,6 +6,8 @@
 #include <ostream>
 #include <memory>
 #include <mutex>
+#include <thread>
+#include <vector>
 
 /**
  *  The variable STREAMLOG_DEFAULT_LOGGER_TS can be tweaked before including this header:
@@ -36,15 +38,8 @@ namespace streamlog {
     void try_lock() {}
   };
 
-#ifdef STREAMLOG_DEFAULT_LOGGER_TS // default logger thread safety
-  using default_logger_mutex = std::mutex ;
-#else
-  using default_logger_mutex = nullmutex ;
-#endif
-
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
-
 
   /**
    *  @brief  code_code class
@@ -175,6 +170,26 @@ namespace streamlog {
     return std::unique_ptr<T>( new T( args... ) ) ;
 #endif
   }
+
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
+  class logsink ;
+  class formatter ;
+
+  using logsink_ptr = std::shared_ptr<logsink> ;
+  using logsink_list = std::vector<logsink_ptr> ;
+  using formatter_ptr = std::unique_ptr<formatter> ;
+  using clock = std::chrono::system_clock ;
+  using time_point = clock::time_point ;
+  using thread_id  = std::thread::id ;
+  using mt = std::mutex ;
+  using st = nullmutex ;
+#ifdef STREAMLOG_DEFAULT_LOGGER_TS // default logger thread safety
+  using default_logger_mutex = mt ;
+#else
+  using default_logger_mutex = st ;
+#endif
 
 }
 
