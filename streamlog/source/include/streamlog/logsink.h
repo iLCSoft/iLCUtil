@@ -214,7 +214,7 @@ namespace streamlog {
     }
 
   private:
-    void doLog( const logcontext &ctx, const std::string &msg ) {
+    void doLog( const logcontext &/*ctx*/, const std::string &msg ) {
       _fstream << msg ;
     }
 
@@ -282,7 +282,7 @@ namespace streamlog {
       if ( not fs.is_open() ) {
         throw std::runtime_error( "thread_file_sink: couldn't open log file '" + ss.str() + "'!" ) ;
       }
-      return std::move( fs ) ;
+      return fs ;
     }
 
   private:
