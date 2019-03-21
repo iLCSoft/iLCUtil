@@ -6,12 +6,12 @@ namespace streamlog {
     setOption( print_option::logger , true ) ;
     setOption( print_option::level , true ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   standard_formatter::standard_formatter( const std::bitset<noptions> &bs ) :
     _options(bs) {
-    
+
   }
 
   //--------------------------------------------------------------------------
@@ -63,11 +63,11 @@ namespace streamlog {
     if ( optionSet( print_option::threadid ) ) {
       prefixstr << "[thread " << ctx._threadId << "] " ;
     }
-    return std::move( prefixstr.str() ) ;
+    return prefixstr.str() ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   std::unique_ptr<formatter> standard_formatter::clone() const {
     return std::unique_ptr<formatter>( new standard_formatter( _options ) ) ;
   }
