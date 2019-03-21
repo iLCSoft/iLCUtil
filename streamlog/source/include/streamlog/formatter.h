@@ -27,12 +27,11 @@ namespace streamlog {
 
   public:
     /**
-     *  @brief  Format the log message in the stringstream output object
+     *  @brief  Generate a prefix string for the log message
      *
      *  @param  msg the input message to format
-     *  @param  out the output stringstream to receive
      */
-    virtual void format( const logmessage& msg, std::stringstream &out ) = 0 ;
+    virtual std::string prefix( const logcontext& ctx ) = 0 ;
     
     /**
      *  @brief  Clone the formatter as a unique pointer
@@ -80,7 +79,7 @@ namespace streamlog {
 
   private:
     standard_formatter( const std::bitset<noptions> &bs ) ;
-    void format( const logmessage& msg, std::stringstream &out ) ;
+    std::string prefix( const logcontext& ctx ) ;
     std::unique_ptr<formatter> clone() const ;
 
   private:

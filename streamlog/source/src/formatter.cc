@@ -28,13 +28,14 @@ namespace streamlog {
 
   //--------------------------------------------------------------------------
 
-  void standard_formatter::format( const logmessage& msg, std::stringstream &out ) {
+  std::string standard_formatter::prefix( const logcontext& ctx ) {
+    std::stringstream prefixstr ;
     const bool printLogger = optionSet( print_option::logger ) ;
     const bool printLevel = optionSet( print_option::level ) ;
     const bool printLoggerOrLevel = ( printLogger || printLevel ) ;
     // date and time
     if ( optionSet( print_option::time ) ) {
-      auto tt = std::chrono::system_clock::to_time_t( msg._time ) ;
+      auto tt = std::chrono::system_clock::to_time_t( ctx._time ) ;
       std::tm tm {} ;
       // deal with thread safety details here
   #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
@@ -44,25 +45,25 @@ namespace streamlog {
   #endif
       char buffer[1024] ;
       std::strftime( buffer, 1024, "%c", &tm ) ;
-      out << "[" << std::string(buffer) << "] " ;
+      prefixstr << "[" << std::string(buffer) << "] " ;
     }
     if ( printLoggerOrLevel ) {
-      out << "[" ;
+      prefixstr << "[" ;
       // log level
       if ( printLevel ) {
-        out << " " << msg._levelName ;
+        prefixstr << " " << ctx._levelName << " ";
       }
       // logger name
       if ( printLogger ) {
-        out << "\"" << msg._loggerName << "\"" ;
+        prefixstr << "\"" << ctx._loggerName << "\"" ;
       }
-      out << "] " ;
+      prefixstr << "] " ;
     }
     // thread id
     if ( optionSet( print_option::threadid ) ) {
-      out << "[thread " << msg._threadId << "] " ;
+      prefixstr << "[thread " << ctx._threadId << "] " ;
     }
-    out << msg._message.str() ;
+    return std::move( prefixstr.str() ) ;
   }
   
   //--------------------------------------------------------------------------
