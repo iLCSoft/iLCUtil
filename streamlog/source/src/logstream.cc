@@ -3,6 +3,98 @@
 
 namespace streamlog {
   
+  logstream::logstreambuf::logstreambuf( logstream &stream ) : 
+    _stream(stream) {
+    /* nop */
+  }
+  
+  //-------------------------------------------------------------------------- 
+
+  logstream::logstreambuf::int_type logstream::logstreambuf::overflow( int_type ch ) {
+    if ( c == traits_type::eof() ) {
+      return traits_type::eof() ;
+    }
+    bool success = true;
+
+    // add prefix to log message
+    if ( _newLine == true ) {
+      for ( auto &sink : _stream._sinks ) {
+        sink->log( sink->prefix( _context ) ) ;
+      }
+      _newLine = false ;
+    }
+
+    if ( c == '\n' ) {
+      _newLine = true ;
+    }
+
+    if ( success )
+    success &= ( _sbuf->sputc(c) != EOF ) ;
+
+    if( success ) 
+    return 0 ;
+
+    return EOF ;
+
+    // if ( ch == '\n' ) {
+    //   writeMessage(false) ;
+    //   _msg._message.str("") ;
+    // }
+    return base_type::overflow( ch ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  // std::streamsize logstream::logstreambuf::xsputn( const char_type* s, std::streamsize count ) {
+  //   if ( count == 1 && *s == '\n' ) {
+  //     if ( _active ) {
+  //       // line break: flush the message 
+  //       writeMessage(true) ;
+  //       resetMessage() ;
+  //     }
+  //     return 1 ;
+  //   }
+  //   if ( _active ) {
+  //     // append message untill flush is called or new line is added
+  //     _msg._message.write( s, count ) ;
+  //     // std::cout << "Caching message : " << s << std::endl ;
+  //     _emptyMessage = false ;
+  //   }
+  //   return count ;
+  // }
+
+  //--------------------------------------------------------------------------
+  
+  // int logstream::logstreambuf::sync() {
+  //   return 0 ;
+  // }
+
+  //--------------------------------------------------------------------------
+  
+  // void logstream::logstreambuf::resetMessage() {
+  //   _msg._message.str("") ;
+  //   _msg._levelName = _levelName ;
+  //   _msg._level = _level ;
+  //   _msg._loggerName = _stream._name ;
+  //   _emptyMessage = true ;
+  // }
+  // 
+  // //--------------------------------------------------------------------------
+  // 
+  // void logstream::logstreambuf::writeMessage( bool newLine ) {
+  //   if ( _emptyMessage ) {
+  //     return ;
+  //   }
+  //   if ( newLine ) {
+  //     _msg._message << std::endl ;      
+  //   }
+  //   for ( auto &sink : _stream._sinks ) {
+  //     sink->log( _msg ) ;
+  //     sink->flush() ;
+  //   }
+  // }
+  
+  //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
   
   logstream &logstream::global() {
@@ -13,7 +105,9 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   logstream::logstream() :
-    _name("UNKNOWN") {
+    _name("UNKNOWN"),
+    _logbuffer( *this ),
+    _logstream( &_logbuffer ) {
     // default sink is console
     _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
     addDefaultLevels() ;
@@ -22,7 +116,9 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   logstream::logstream( const std::string &name ) :
-    _name(name) {
+    _name(name),
+    _logbuffer( *this ),
+    _logstream( &_logbuffer ) {
     // default sink is console
     _sinks.push_back( std::make_shared<console_sink_mt>() ) ;
     addDefaultLevels() ;
@@ -32,16 +128,26 @@ namespace streamlog {
 
   logstream::logstream( const std::string &name , const logsink_list &sinks ) :
     _name(name),
-    _sinks(sinks) {
+    _sinks(sinks),
+    _logbuffer( *this ),
+    _logstream( &_logbuffer ) {
     addDefaultLevels() ;
   }
 
   //--------------------------------------------------------------------------
 
   logstream::logstream( const std::string &name , const logsink_ptr &sink ) :
-    _name(name) {
+    _name(name),
+    _logbuffer( *this ),
+    _logstream( &_logbuffer ) {
     _sinks.push_back( sink ) ;
     addDefaultLevels() ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void logstream::flush() {
+    _logstream.flush() ;
   }
 
   //--------------------------------------------------------------------------
