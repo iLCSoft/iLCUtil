@@ -16,13 +16,13 @@
 
 namespace streamlog {
 
-  class logsink ;
-  typedef std::shared_ptr<logsink> logsink_ptr ;
-
+  /**
+   *  @brief  logsink class
+   *  Base class for sinks. Sinks receive log message from
+   *  logger objects and perform the IO operation (cout, file, ...)
+   */
   class logsink {
   public:
-    typedef std::unique_ptr<formatter> formatter_ptr ;
-
     logsink() = default ;
     virtual ~logsink() = default ;
 
@@ -41,6 +41,11 @@ namespace streamlog {
      */
     virtual void setFormatter( formatter_ptr formatter ) = 0 ;
 
+    /**
+     *  @brief  Generate the log message prefix
+     *
+     *  @param  ctx the log message context
+     */
     virtual std::string prefix( const logcontext &ctx ) = 0 ;
 
   protected:
@@ -51,6 +56,12 @@ namespace streamlog {
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
+  /**
+   *  @brief  base_sink class
+   *  Base sub-class for sink. Provide templating for different
+   *  mutex type and thus allow to switch on/off thread safety
+   *  by using either a nullmutex (no lock) or a standard std::mutex
+   */
   template <typename mutex_type>
   class base_sink : public logsink {
   public:
@@ -64,6 +75,11 @@ namespace streamlog {
      */
     void log( const logcontext &ctx, const std::string &msg ) ;
 
+    /**
+     *  @brief  Generate the log message prefix
+     *
+     *  @param  ctx the log message context
+     */
     std::string prefix( const logcontext &ctx ) ;
 
     /**
@@ -217,7 +233,6 @@ namespace streamlog {
    */
   class thread_file_sink : public base_sink<std::mutex> {
   public:
-    using thread_id = logcontext::thread_id ;
     using stream_map = std::map<thread_id, std::ofstream> ;
 
   public:
