@@ -8,6 +8,9 @@
 #include <chrono>
 #include <sstream>
 
+// -- streamlog headers
+#include <streamlog/definitions.h>
+
 namespace streamlog {
 
   /**
@@ -15,10 +18,6 @@ namespace streamlog {
    *  Hold logger metadata - mainly used by sinks on logging operation
    */
   struct logcontext {
-    using clock = std::chrono::system_clock ;
-    using time_point = clock::time_point ;
-    using thread_id  = std::thread::id ;
-
     /// The logger name initiating the message
     std::string                 _loggerName { "UNKNOWN" } ;
     /// The log level publishing the message
