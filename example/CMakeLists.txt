@@ -20,4 +20,9 @@ INCLUDE( MacroAddILCTest )
 
 
 ADD_ILCTEST( hello_world ./hello_world.cc )
+ADD_DEFINITIONS( -DSTREAMLOG_LEVEL=0 )
+ADD_EXECUTABLE( streamlog_example streamlog_example.cc  )
+INCLUDE_DIRECTORIES( BEFORE ${streamlog_INCLUDE_DIRS} )
+TARGET_LINK_LIBRARIES( streamlog_example ${streamlog_LIBRARIES} )
+
 
