@@ -7,8 +7,9 @@
 #include <bitset>
 
 //  -- streamlog headers
-#include "streamlog/loglevels.h"
-#include "streamlog/logcontext.h"
+#include <streamlog/definitions.h>
+#include <streamlog/loglevels.h>
+#include <streamlog/logcontext.h>
 
 namespace streamlog {
 
@@ -36,7 +37,7 @@ namespace streamlog {
     /**
      *  @brief  Clone the formatter as a unique pointer
      */
-    virtual std::unique_ptr<formatter> clone() const = 0 ;
+    virtual formatter_ptr clone() const = 0 ;
   };
 
   //--------------------------------------------------------------------------
@@ -80,7 +81,7 @@ namespace streamlog {
   private:
     standard_formatter( const std::bitset<noptions> &bs ) ;
     std::string prefix( const logcontext& ctx ) ;
-    std::unique_ptr<formatter> clone() const ;
+    formatter_ptr clone() const ;
 
   private:
     /// The printing options
