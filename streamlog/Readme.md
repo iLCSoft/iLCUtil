@@ -57,7 +57,7 @@ auto pfaLogger = logstream::createLogger( "ParticleFlow", sinks ) ;
 ```
 
 By default, the logger thread safety is enable/disable at compile time.
-If you work in a single threaded environment, you might want want to switch off the internal lock providing thread safety to gain a bit a speed.
+If you work in a single threaded environment, you might want to switch off the internal lock providing thread safety to gain a bit of speed.
 
 To get a thread safe logger (streamlog::mt):
 
@@ -155,7 +155,7 @@ auto sink = logstream::simpleFile( "filename.log", std::ios_base::out ) ;
 
 ### Thread log file:
 
-Log message in a file dedicated to the caller thread, meaning that each thread in the program has its own log file but uses the same sink and logger. The purpose of this sink is to help for debugging multi-threaded programs by looking at the log of each thread separately.
+Log messages in a file dedicated to the caller thread, meaning that each thread in the program has its own log file but uses the same sink and logger. The purpose of this sink is to help for debugging multi-threaded programs by looking at the log of each thread separately.
 
 ```cpp
 #include <streamlog/streamlog.h>
@@ -163,5 +163,5 @@ Log message in a file dedicated to the caller thread, meaning that each thread i
 // open two log files called filename_1.log and filename_2.log
 // and each thread logging in this sink will write its message
 // in its own file
-auto sink = logstream::simpleFile( "filename", ".log", std::ios_base::out ) ;
+auto sink = logstream::threadFile( "filename", ".log", std::ios_base::out ) ;
 ```
