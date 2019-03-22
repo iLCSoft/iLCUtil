@@ -13,6 +13,7 @@ INCLUDE( ilcsoft_default_settings )
 
 FIND_PACKAGE( ILCTEST REQUIRED )
 FIND_PACKAGE( streamlog REQUIRED )
+FIND_PACKAGE( Threads REQUIRED )
 
 
 INCLUDE( ilcsoft_default_enable_ctest )
@@ -20,9 +21,14 @@ INCLUDE( MacroAddILCTest )
 
 
 ADD_ILCTEST( hello_world ./hello_world.cc )
+
 ADD_DEFINITIONS( -DSTREAMLOG_LEVEL=0 )
-ADD_EXECUTABLE( streamlog_example streamlog_example.cc  )
 INCLUDE_DIRECTORIES( BEFORE ${streamlog_INCLUDE_DIRS} )
+
+ADD_EXECUTABLE( streamlog_example streamlog_example.cc  )
 TARGET_LINK_LIBRARIES( streamlog_example ${streamlog_LIBRARIES} )
+
+ADD_EXECUTABLE( streamlog_mt_example streamlog_mt_example.cc  )
+TARGET_LINK_LIBRARIES( streamlog_mt_example ${streamlog_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
 
 
