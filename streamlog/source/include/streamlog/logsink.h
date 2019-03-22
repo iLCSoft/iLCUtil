@@ -141,7 +141,7 @@ namespace streamlog {
 
   private:
     void doLog( const logcontext &/*ctx*/, const std::string &msg ) {
-      std::cout << msg ;
+      COUT_LOG( msg )
     }
   };
 
@@ -159,10 +159,7 @@ namespace streamlog {
 
   private:
     void doLog( const logcontext &ctx, const std::string &msg ) {
-      std::cout
-        << color( ctx._level )
-        << msg
-        << color::reset ;
+      COUT_LOG( color( ctx._level ) << msg << color::reset )
     }
 
     const color_helper &color( unsigned int level ) const {

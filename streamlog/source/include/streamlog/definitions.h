@@ -190,6 +190,15 @@ namespace streamlog {
 #else
   using default_logger_mutex = st ;
 #endif
+#ifdef STREAMLOG_COUT_TS // cout thread safety
+extern streamlog::mt cout_mutex ;
+#define COUT_LOG( message ) { std::lock_guard<streamlog::mt> lock(cout_mutex) ; std::cout << message ; }
+#else
+#define COUT_LOG( message ) { std::cout << message ; }
+#endif
+
+
+
 
 }
 

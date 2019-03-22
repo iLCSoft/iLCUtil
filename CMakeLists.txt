@@ -22,7 +22,8 @@ SET( ILCSOFT_CMAKE_MODULES_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/cmakemodules )
 
 include( ExternalProject )
 
-OPTION( STREAMLOG_DEFAULT_LOGGER_TS "Set to OFF to disable the default logger thread safety" ON )
+OPTION( STREAMLOG_DEFAULT_LOGGER_TS    "Set to OFF to disable the default logger thread safety" ON )
+OPTION( STREAMLOG_COUT_TS              "Set to OFF to disable thread safety on cout" ON )
 
 ExternalProject_Add( cmakemodules
     SOURCE_DIR "${PROJECT_SOURCE_DIR}/cmakemodules"
