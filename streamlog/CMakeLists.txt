@@ -27,7 +27,8 @@ ELSE()
     MESSAGE( STATUS "INSTALL_DOC set to OFF" )
 ENDIF()
 
-OPTION( STREAMLOG_DEFAULT_LOGGER_TS "Set to OFF to disable the default logger thread safety" ON )
+OPTION( STREAMLOG_DEFAULT_LOGGER_TS    "Set to OFF to disable the default logger thread safety" ON )
+OPTION( STREAMLOG_COUT_TS              "Set to OFF to disable thread safety on cout" ON )
 
 ### LIBRARY #################################################################
 
@@ -38,6 +39,9 @@ INSTALL( DIRECTORY ./source/include DESTINATION . PATTERN ".svn" EXCLUDE )
 # add library
 IF( STREAMLOG_DEFAULT_LOGGER_TS )
   ADD_DEFINITIONS( "-DSTREAMLOG_DEFAULT_LOGGER_TS=1" )
+ENDIF()
+IF( STREAMLOG_COUT_TS )
+  ADD_DEFINITIONS( "-DSTREAMLOG_COUT_TS=1" )
 ENDIF()
 AUX_SOURCE_DIRECTORY( ./source/src library_sources )
 ADD_SHARED_LIBRARY( ${PROJECT_NAME} ${library_sources} )

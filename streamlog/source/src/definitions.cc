@@ -20,5 +20,9 @@ namespace streamlog {
   const color_helper color::bold_magenta    {color_code::fg_magenta, true} ;
   const color_helper color::bold_cyan       {color_code::fg_cyan, true} ;
   const color_helper color::bold_white      {color_code::fg_white, true} ;
+  
+#ifdef STREAMLOG_COUT_TS // cout thread safety
+  streamlog::mt cout_mutex ;
+#endif
 
 }

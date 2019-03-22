@@ -46,6 +46,9 @@ IF( @STREAMLOG_DEFAULT_LOGGER_TS@ )
 	ADD_DEFINITIONS( "-DSTREAMLOG_DEFAULT_LOGGER_TS=1" )
 ENDIF()
 
+IF( @STREAMLOG_COUT_TS@ )
+  ADD_DEFINITIONS( "-DSTREAMLOG_COUT_TS=1" )
+ENDIF()
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
