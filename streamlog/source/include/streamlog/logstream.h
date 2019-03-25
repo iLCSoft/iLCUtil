@@ -249,6 +249,13 @@ namespace streamlog {
      */
     template <typename T>
     unsigned int setLevel() ;
+    
+    /**
+     *  @brief  Set the current level using a string
+     * 
+     *  @param  lname the verbosity level
+     */
+    unsigned int setLevel( const std::string &lname ) ;
 
     /**
      *  @brief  Get the current log level
@@ -699,6 +706,20 @@ namespace streamlog {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     unsigned int l = _level ;
     auto iter = _levelMap.find( T::name() ) ;
+    if( iter != _levelMap.end() ) {
+      _level = iter->second ;
+      _levelName = iter->first ;
+    }
+    return l ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
+  inline unsigned int logstreamT<mutex_type>::setLevel( const std::string &lname ) {
+    std::lock_guard<mutex_type> lock( _mutex ) ;
+    unsigned int l = _level ;
+    auto iter = _levelMap.find( lname ) ;
     if( iter != _levelMap.end() ) {
       _level = iter->second ;
       _levelName = iter->first ;
