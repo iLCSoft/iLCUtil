@@ -31,4 +31,7 @@ TARGET_LINK_LIBRARIES( streamlog_example ${streamlog_LIBRARIES} )
 ADD_EXECUTABLE( streamlog_mt_example streamlog_mt_example.cc  )
 TARGET_LINK_LIBRARIES( streamlog_mt_example ${streamlog_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
 
+ADD_EXECUTABLE( streamlog_mt_file_example streamlog_mt_file_example.cc  )
+TARGET_LINK_LIBRARIES( streamlog_mt_file_example ${streamlog_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
+
 
