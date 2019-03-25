@@ -279,6 +279,7 @@ namespace streamlog {
       if ( not fs.is_open() ) {
         throw std::runtime_error( "thread_file_sink: couldn't open log file '" + ss.str() + "'!" ) ;
       }
+      fs << "Opened new log file '" << ss.str() << "' for thread id " << id << std::endl ;
       return fs ;
     }
 
