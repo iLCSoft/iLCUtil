@@ -146,6 +146,7 @@ namespace streamlog {
    */
   template <typename mutex_type>
   class logstreamT {
+  public:
     friend class outstream<mutex_type> ;
     friend class logstream ;   // for global logger creation
     // typedefs
@@ -249,10 +250,10 @@ namespace streamlog {
      */
     template <typename T>
     unsigned int setLevel() ;
-    
+
     /**
      *  @brief  Set the current level using a string
-     * 
+     *
      *  @param  lname the verbosity level
      */
     unsigned int setLevel( const std::string &lname ) ;
@@ -712,7 +713,7 @@ namespace streamlog {
     }
     return l ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
