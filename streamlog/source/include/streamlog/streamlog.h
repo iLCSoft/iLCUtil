@@ -35,11 +35,11 @@
     (LOGGER).log<MLEVEL>() << OUT_MESSAGE }
 
 // alias to global logger
-#define  streamlog_level( MLEVEL ) streamlog_logger_level(logstream::global(), MLEVEL)
-#define  streamlog_out( MLEVEL ) streamlog_logger_out(logstream::global(), MLEVEL)
-#define  streamlog_message( MLEVEL , CODE_BLOCK , OUT_MESSAGE) streamlog_logger_message(logstream::global(), MLEVEL, CODE_BLOCK, OUT_MESSAGE)
-#define  streamlog_out_T( MLEVEL ) streamlog_logger_out_T(logstream::global(), MLEVEL)
-#define  streamlog_message_T( MLEVEL , CODE_BLOCK , OUT_MESSAGE) streamlog_logger_message_T(logstream::global(), MLEVEL, CODE_BLOCK, OUT_MESSAGE)
+#define  streamlog_level( MLEVEL ) streamlog_logger_level(streamlog::logstream::global(), MLEVEL)
+#define  streamlog_out( MLEVEL ) streamlog_logger_out(streamlog::logstream::global(), MLEVEL)
+#define  streamlog_message( MLEVEL , CODE_BLOCK , OUT_MESSAGE) streamlog_logger_message(streamlog::logstream::global(), MLEVEL, CODE_BLOCK, OUT_MESSAGE)
+#define  streamlog_out_T( MLEVEL ) streamlog_logger_out_T(streamlog::logstream::global(), MLEVEL)
+#define  streamlog_message_T( MLEVEL , CODE_BLOCK , OUT_MESSAGE) streamlog_logger_message_T(streamlog::logstream::global(), MLEVEL, CODE_BLOCK, OUT_MESSAGE)
 
 #else
 
