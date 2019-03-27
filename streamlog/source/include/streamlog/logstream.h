@@ -66,12 +66,12 @@ namespace streamlog {
     /**
      *  @brief  Constructor for active stream with logcontext
      */
-    outstream( logstreamT<mutex_type> *ls, const logcontext &ctx ) ;
+    outstream( const logstreamT<mutex_type> &ls, const logcontext &ctx ) ;
 
     /**
      *  @brief  Constructor for inactive stream
      */
-    outstream( logstreamT<mutex_type> *ls ) ;
+    outstream( const logstreamT<mutex_type> &ls ) ;
 
     /**
      *  @brief  Move contructor
@@ -95,8 +95,8 @@ namespace streamlog {
     void writeMessage( bool newLine ) ;
 
   private:
-    /// The logger instance
-    logstreamT<mutex_type>* _logstream {nullptr} ;
+    /// The logger sinks
+    logsink_list             _sinks {} ;
     /// The internal stream buffer mediator
     streambuf               _streambuf ;
     /// The log message buffer
@@ -225,7 +225,7 @@ namespace streamlog {
      *  @endcode
      */
     template <typename T>
-    stream_type log() ;
+    stream_type log() const ;
 
     /**
      *  @brief  True if next log message of the current level (class T ) would be written
@@ -268,19 +268,23 @@ namespace streamlog {
      */
     const std::string &levelName() const ;
 
+    /**
+     *  @brief  Get the logger sinks
+     */
+    logsink_list sinks() const ;
+
+    /**
+     *  @brief  Set the logger sinks
+     *
+     *  @param s the logger sink to adopt
+     */
+    void setSinks( const logsink_list &s ) ;
+
   private:
     /**
      *  @brief  Add all default levels defined in loglevels.h to this logstream
      */
     void addDefaultLevels() ;
-
-    /**
-     *  @brief  Write the message to the sinks
-     *
-     *  @param  ctx the message context
-     *  @param  message the message string
-     */
-    void writeMessage( const logcontext &ctx, const std::string &message ) ;
 
   private:
     /// The logger name
@@ -444,8 +448,8 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline outstream<mutex_type>::outstream( logstreamT<mutex_type> *ls, const logcontext &ctx ) :
-    _logstream(ls),
+  inline outstream<mutex_type>::outstream( const logstreamT<mutex_type> &ls, const logcontext &ctx ) :
+    _sinks(ls.sinks()),
     _streambuf(this),
     _context(ctx),
     _active(true) {
@@ -455,8 +459,8 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline outstream<mutex_type>::outstream( logstreamT<mutex_type> *ls ) :
-    _logstream(ls),
+  inline outstream<mutex_type>::outstream( const logstreamT<mutex_type> &ls ) :
+    _sinks(ls.sinks()),
     _streambuf(this),
     _active(false) {
     this->init(&_streambuf) ;
@@ -467,7 +471,7 @@ namespace streamlog {
   template <typename mutex_type>
   inline outstream<mutex_type>::outstream( outstream &&rhs ) :
     base_type(std::move(rhs)),
-    _logstream(rhs._logstream),
+    _sinks(rhs._sinks),
     _streambuf(std::move(rhs._streambuf)),
     _message(std::move(rhs._message)),
     _context(rhs._context),
@@ -495,7 +499,7 @@ namespace streamlog {
   inline outstream<mutex_type> &outstream<mutex_type>::operator=(outstream &&rhs) {
     base_type::operator=( std::move(rhs) ) ;
     _streambuf = std::move( rhs._streambuf ) ;
-    _logstream = rhs._logstream ;
+    _sinks = rhs._sinks ;
     _message = std::move(rhs._message) ;
     _context = rhs._context ;
     _active = rhs._active ;
@@ -512,8 +516,9 @@ namespace streamlog {
     if ( newLine ) {
       _message << std::endl;
     }
-    std::string message( std::move( _message.str() ) );
-    _logstream->writeMessage( _context, message ) ;
+    for ( auto sink : _sinks ) {
+      sink->log( _context, sink->prefix( _context ) + _message.str() ) ;
+    }
     // reset the message after logging
     _message.str("");
   }
@@ -637,16 +642,6 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
-  inline void logstreamT<mutex_type>::writeMessage( const logcontext &ctx, const std::string &message ) {
-    std::lock_guard<mutex_type> lock( _mutex ) ;
-    for ( auto &sink : _sinks ) {
-      sink->log( ctx, sink->prefix( ctx ) + message ) ;
-    }
-  }
-
-  //--------------------------------------------------------------------------
-
-  template <typename mutex_type>
   inline unsigned int logstreamT<mutex_type>::level() const {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     return _level ;
@@ -663,8 +658,24 @@ namespace streamlog {
   //--------------------------------------------------------------------------
 
   template <typename mutex_type>
+  inline logsink_list logstreamT<mutex_type>::sinks() const {
+    std::lock_guard<mutex_type> lock( _mutex ) ;
+    return _sinks ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
+  inline void logstreamT<mutex_type>::setSinks( const logsink_list &s ) {
+    std::lock_guard<mutex_type> lock( _mutex ) ;
+    _sinks = s ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
   template <typename T>
-  inline typename logstreamT<mutex_type>::stream_type logstreamT<mutex_type>::log() {
+  inline typename logstreamT<mutex_type>::stream_type logstreamT<mutex_type>::log() const {
     std::lock_guard<mutex_type> lock( _mutex ) ;
     const bool active = ( T::active && T::level >= _level ) ;
     if ( active ) {
@@ -673,11 +684,11 @@ namespace streamlog {
       ctx._loggerName = _name ;
       ctx._level = T::level ;
       ctx._levelName = T::name() ;
-      return stream_type( this, ctx ) ;
+      return stream_type( *this, ctx ) ;
     }
     else {
       // inactive stream is not configured with a context
-      return stream_type( this ) ;
+      return stream_type( *this ) ;
     }
   }
 
