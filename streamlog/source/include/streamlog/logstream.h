@@ -471,7 +471,7 @@ namespace streamlog {
   template <typename mutex_type>
   inline outstream<mutex_type>::outstream( outstream &&rhs ) :
     base_type(std::move(rhs)),
-    _sinks(rhs._sinks),
+    _sinks(std::move(rhs._sinks)),
     _streambuf(std::move(rhs._streambuf)),
     _message(std::move(rhs._message)),
     _context(rhs._context),
@@ -499,7 +499,7 @@ namespace streamlog {
   inline outstream<mutex_type> &outstream<mutex_type>::operator=(outstream &&rhs) {
     base_type::operator=( std::move(rhs) ) ;
     _streambuf = std::move( rhs._streambuf ) ;
-    _sinks = rhs._sinks ;
+    _sinks = std::move(rhs._sinks) ;
     _message = std::move(rhs._message) ;
     _context = rhs._context ;
     _active = rhs._active ;
