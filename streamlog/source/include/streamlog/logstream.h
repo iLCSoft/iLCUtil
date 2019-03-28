@@ -449,7 +449,7 @@ namespace streamlog {
 
   template <typename mutex_type>
   inline outstream<mutex_type>::outstream( const logstreamT<mutex_type> &ls, const logcontext &ctx ) :
-    _sinks(ls.sinks()),
+    _sinks(ls._sinks),
     _streambuf(this),
     _context(ctx),
     _active(true) {
@@ -460,7 +460,7 @@ namespace streamlog {
 
   template <typename mutex_type>
   inline outstream<mutex_type>::outstream( const logstreamT<mutex_type> &ls ) :
-    _sinks(ls.sinks()),
+    _sinks(ls._sinks),
     _streambuf(this),
     _active(false) {
     this->init(&_streambuf) ;
