@@ -94,6 +94,11 @@ namespace streamlog {
      */
     void writeMessage( bool newLine ) ;
 
+    /**
+     *  @brief  Return this as std::ostream
+     */
+    std::ostream &asOstream() ;
+
   private:
     /// The logger sinks
     logsink_list             _sinks {} ;
@@ -521,6 +526,13 @@ namespace streamlog {
     }
     // reset the message after logging
     _message.str("");
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <typename mutex_type>
+  inline std::ostream &outstream<mutex_type>::asOstream() {
+    return *this ;
   }
 
   //--------------------------------------------------------------------------
