@@ -1,3 +1,11 @@
+# v01-06
+
+* 2019-08-23 Andre Sailer ([PR#13](https://github.com/iLCSoft/iLCUtil/pull/13))
+  - Pass CMAKE_CXX_STANDARD to externalproject_add to allow building packages with standards other than the compiler default or c++11
+
+* 2018-05-08 Andre Sailer ([PR#11](https://github.com/iLCSoft/iLCUtil/pull/11))
+  - MacroRootDict: fix constant re-creation of dictionary. ROOT_CINT is no longer creating *.h file but *_rdict.pcm, changing the expected output file will only recreate the dictionary when necessary
+
 # v01-05
 
 * 2017-08-30 Andre Sailer ([PR#6](https://github.com/iLCSoft/ilcutil/pull/6))
