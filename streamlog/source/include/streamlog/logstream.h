@@ -33,7 +33,10 @@ namespace streamlog{
     }
     /// on deletion we actually write to the output
     ~printthread(){
-        std::lock_guard<std::mutex> guard(_mutexPrint);
+
+      //FIXME: here we need to prepend the prefix to every newline before dumping to ostream
+
+      std::lock_guard<std::mutex> guard(_mutexPrint);
         *_o << _pref << this->str() ;
       }
   private:
