@@ -10,11 +10,38 @@
 namespace streamlog{
 
   class prefix_base ;
-  class logbuffer ;
+//  class logbuffer ;
   class logscope ;
 
 
-  /** Class defining a log stream that is used to print log messages depending 
+/** Thread safe helper class that collects streamed data 
+ *  and sends it to the actual ostream on deletion.
+ */
+  class printthread: public std::ostringstream {
+  protected:
+    std::ostringstream _oss{} ;
+    std::string _pref{};
+    std::ostream* _o = nullptr ;
+  public:
+    /// returns an invalid stream
+    printthread() : printthread::basic_ios( 0 ) {} ;
+    /// initialize w/ prefix and final ostream
+    printthread(std::string prefix,std::ostream* o):_pref(prefix),_o(o){};
+    /// copy c'tor copies stringbugf from local stringstream
+    printthread( printthread&& rhs ){
+      printthread::basic_ostream<char>( rhs.rdbuf() ) ;
+    }
+    /// on deletion we actually write to the output
+    ~printthread(){
+        std::lock_guard<std::mutex> guard(_mutexPrint);
+        *_o << _pref << this->str() ;
+      }
+  private:
+    static std::mutex _mutexPrint;
+  };
+
+
+/** Class defining a log stream that is used to print log messages depending
    *  on current log level. Can be initialized with any std::ostream, typically either 
    *  std::cout or an std::ofstream file handler.
    *  There is one global instance of this class defined in the library: logstream::out  <br>
@@ -52,9 +79,6 @@ namespace streamlog{
   class logstream {
 
     friend class logscope ;
-    friend class logbuffer ;
-
-
     typedef std::map< std::string,  unsigned > LevelMap ;
 
   public :
@@ -96,7 +120,7 @@ namespace streamlog{
    /** Return the actual std::ostream where the message should be writen to - will return
      *  a nullstream unless prepended by a successfull call to write<MESSAGELEVEL>()
      */
-    std::ostream& operator()() ;
+    printthread operator()() ;
 
     /** Adds a level name to the stream for setting the log level with a string through 
      *  a scope class. Only names added with this method will have an effect - other log 
@@ -112,8 +136,7 @@ namespace streamlog{
       _map[ T::name() ] = T::level ;
     }
 
-
-    // interface for friend classes: scope and logbuffer
+    // interface for friend classes: scope
 
   protected:
 
@@ -127,7 +150,7 @@ namespace streamlog{
      */
     unsigned setLevel( const std::string& levelName )  ; 
 
-    /** Returns the prefix for the logbuffer object */
+    /** Returns the prefix */
     prefix_base* prefix() { return _prefix ; }
 
     /** used internally by write<T> */
@@ -144,18 +167,9 @@ namespace streamlog{
 
   private:
 
-    /** Private helper class returned if message log level not reached */ 
-    class nullstream :  public std::ostream {
-    public:
-      nullstream() : std::ios( 0 ), std::ostream( 0 ) {} ;
-    } ;
-  
-
-    nullstream* _ns = nullptr ;    // the nullstream
     std::ostream* _os = nullptr ; // wrapper for actual ostream
     unsigned _level {};   // current log level 
     bool _active {};      // boolean helper 
-    logbuffer* _lb = nullptr ;        // log buffer adds prefix to everu log message
     prefix_base* _prefix= nullptr ;  // prefix formatter
     LevelMap _map {};         // string map of level names
     
