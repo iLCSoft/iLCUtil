@@ -10,9 +10,7 @@
 namespace streamlog{
 
   class prefix_base ;
-//  class logbuffer ;
   class logscope ;
-
 
 /** Thread safe helper class that collects streamed data 
  *  and sends it to the actual ostream on deletion.
@@ -170,7 +168,7 @@ namespace streamlog{
 
   private:
 
-    std::ostream* _os = nullptr ; // wrapper for actual ostream
+    std::ostream* _os = &std::cout ; // wrapper for actual ostream
     unsigned _level {};   // current log level 
     bool _active {};      // boolean helper 
     prefix_base* _prefix= nullptr ;  // prefix formatter
