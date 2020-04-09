@@ -91,5 +91,5 @@ namespace streamlog{
   }
 
   /** global instance of logstream */
-  logstream out ;
+  thread_local logstream out ;
 }
