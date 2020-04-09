@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <map>
+#include <mutex>
 
 namespace streamlog{
 
