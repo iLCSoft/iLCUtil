@@ -16,7 +16,7 @@ namespace streamlog{
   
   void logstream::init( std::ostream& os , const std::string name ) {
     
-    static bool first=true ;
+    static thread_local bool first=true ;
     
     if( first && os ) {
 
