@@ -161,7 +161,7 @@ namespace streamlog{
     
   } ;
 
-  extern logstream out ;
+  extern thread_local logstream out ;
 
 }
 #endif
