@@ -7,7 +7,7 @@
 #INCLUDE_DIRECTORIES( ../source/include )
 
 # list of test binaries
-SET( test_bins test_log)
+SET( test_bins test_log test_log_mt)
 
 # create library with example classes 
 ADD_SHARED_LIBRARY( streamlog_test EXCLUDE_FROM_ALL fibonacci.cc  )
