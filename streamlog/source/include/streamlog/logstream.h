@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <mutex>
+#include <sstream>
 
 namespace streamlog{
 
@@ -15,10 +16,12 @@ namespace streamlog{
 
 /** Thread safe helper class that collects streamed data 
  *  and sends it to the actual ostream on deletion.
+ *  Idea taken from https://stackoverflow.com/questions/14718124
+ *  @author F,Gaede, DESY
+ *  @date Apr 2020
  */
-  class printthread: public std::ostringstream {
+  class printthread: public std::stringstream {
   protected:
-    std::ostringstream _oss{} ;
     std::string _pref{};
     std::ostream* _o = nullptr ;
   public:
@@ -32,11 +35,13 @@ namespace streamlog{
     }
     /// on deletion we actually write to the output
     ~printthread(){
-
-      //FIXME: here we need to prepend the prefix to every newline before dumping to ostream
-
+      // prepend the prefix to every newline before dumping to ostream
+      std::ostringstream oss;
+      for (std::string line; std::getline(*this, line, '\n');)
+	oss << _pref << line << '\n';
       std::lock_guard<std::mutex> guard(_mutexPrint);
-        *_o << _pref << this->str() ;
+      *_o << oss.str() ;
+
       }
   private:
     static std::mutex _mutexPrint;

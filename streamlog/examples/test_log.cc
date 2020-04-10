@@ -64,8 +64,9 @@ int main(int argc, char** argv) {
       streamlog::out() << "    This message should never appear !!!! " << std::endl ;
 
     if( streamlog::out.write<streamlog::MESSAGE4>() )
-      streamlog::out() << "    message in subroutine " << std::endl
-		       << "      ---- with another newline  .... " << std::endl ;
+      streamlog::out() << "    message in subroutine  " << std::endl
+		       << "      ---- with a 2nd line " << std::endl
+		       << "      ---- with a 3rd line " << std::endl ;
  
 
   }
