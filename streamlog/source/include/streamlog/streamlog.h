@@ -34,14 +34,6 @@
       CODE_BLOCK \
     streamlog::out() << OUT_MESSAGE }
 
-//for use in templated classes with gcc 3.2 use these macros:
-#define  streamlog_out_T( MLEVEL ) if(streamlog::out.template write< streamlog::MLEVEL >() ) streamlog::out() 
-
-#define  streamlog_message_T( MLEVEL , CODE_BLOCK , OUT_MESSAGE)\
-   if( streamlog::out.template write< streamlog::MLEVEL >() ) { \
-      CODE_BLOCK \
-    streamlog::out() << OUT_MESSAGE }
-
 #else
 
 #define  streamlog_out( MLEVEL ) std::cout

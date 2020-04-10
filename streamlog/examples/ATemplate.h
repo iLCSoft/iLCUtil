@@ -14,14 +14,14 @@ namespace streamlog_test{
   
   void doIt() { 
 
-    streamlog_out_T( DEBUG0 ) << " Hello World from a templated class with templated type: [" 
-			      << typeid( T ).name()  << "] " 
-			      << std::endl; 
-    
-    streamlog_message_T( DEBUG0 ,
-			 float pi = 3.0 + .141592 ; ,
-			 " message from templated class with code - computed pi: " << pi << std::endl ;
-			 )
+    streamlog_out( DEBUG0 ) << " Hello World from a templated class with templated type: ["
+			    << typeid( T ).name()  << "] "
+			    << std::endl;
+
+    streamlog_message( DEBUG0 ,
+		       float pi = 3.0 + .141592 ; ,
+		       " message from templated class with code - computed pi: " << pi << std::endl ;
+      )
       
       }
     
