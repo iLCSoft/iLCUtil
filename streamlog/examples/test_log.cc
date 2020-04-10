@@ -49,16 +49,16 @@ int main(int argc, char** argv) {
 		     streamlog_test::fibonacci fibo(20) ;  , 
 		     " sum of first 20 fibonacci numbers: " << fibo.sum() << std::endl ;
 		     )
-  
-
-
 
   {
     streamlog::logscope scope(streamlog::out) ;
   
     scope.setName( "Subroutine") ;
-    //scope.setLevel<streamlog::MESSAGE3>() ;
-    scope.setLevel( "MESSAGE3" )  ;
+    scope.setLevel<streamlog::MESSAGE3>() ;
+
+    // loglevel can be set via string if name previously registered, e.g.
+    // streamlog::out.addLevelName<streamlog::MESSAGE3>() ;
+    // scope.setLevel( "MESSAGE3" )  ;
 
     if( streamlog::out.write<streamlog::DEBUG>() )
       streamlog::out() << "    This message should never appear !!!! " << std::endl ;
