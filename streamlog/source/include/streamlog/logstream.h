@@ -1,18 +1,17 @@
-// -*- mode: c++;
-#ifndef logstream_h
-#define logstream_h
+#pragma once
 
-#include "streamlog/prefix.h"
+#include <streamlog/prefix.h>
+#include <streamlog/loglevels.h>
 
 #include <iostream>
 #include <map>
 #include <mutex>
 #include <sstream>
 
-namespace streamlog{
+namespace streamlog {
 
-  class prefix_base ;
   class logscope ;
+  class logconfig ;
 
 /** Thread safe helper class that collects streamed data 
  *  and sends it to the actual ostream on deletion.
@@ -25,6 +24,8 @@ namespace streamlog{
     std::string _pref{};
     std::ostream* _o = nullptr ;
   public:
+    printthread(const printthread &) = delete ;
+    printthread &operator=(const printthread &) = delete ;
     /// returns an invalid stream
     printthread() : printthread::basic_ios( 0 ) {} ;
     /// initialize w/ prefix and final ostream
@@ -35,13 +36,16 @@ namespace streamlog{
     }
     /// on deletion we actually write to the output
     ~printthread(){
+      if( nullptr == _o ) {
+        return ;
+      }
       // prepend the prefix to every newline before dumping to ostream
       std::ostringstream oss;
-      for (std::string line; std::getline(*this, line, '\n');)
-	oss << _pref << line << '\n';
+      for (std::string line; std::getline(*this, line, '\n');) {
+	       oss << _pref << line << '\n';
+      }
       std::lock_guard<std::mutex> guard(_mutexPrint);
       *_o << oss.str() ;
-
       }
   private:
     static std::mutex _mutexPrint;
@@ -84,31 +88,58 @@ namespace streamlog{
    *  @version $Id: logstream.h,v 1.3 2007-08-08 13:08:34 gaede Exp $
    */
   class logstream {
-
     friend class logscope ;
+    friend class logconfig ;
     typedef std::map< std::string,  unsigned > LevelMap ;
 
   public :
-
     logstream() ; 
     logstream(const logstream&) = delete ;
     logstream& operator=(const logstream&) = delete ;
-    ~logstream() ;
+    ~logstream() = default ;
+    
+    /** A special constructor taking the global config (static global variable)
+     */
+    logstream( logconfig *cfg ) ;
+    
+    /** Initialize the global configuration.
+     *  This sets the global logger settings (stream, name, current level, levels map) 
+     *  that are shared by all thread local instances. On new thread creation, the global 
+     *  thread local logger instance receives the global configuration in its constructor.
+     */
+    static void global_init( std::ostream *os, const std::string &name, const std::string &levelName, const LevelMap &lm = builtin_levels() ) ;
+    
+    /** Get the map of builtin log levels
+     */
+    static LevelMap builtin_levels() ;
+    
+    /** Set the stream for this logger
+     */
+    void set_stream( std::ostream *os ) {
+      if( nullptr != os ) {
+        _os = os ;
+      }
+    }
+    
+    /** Set the logger name
+     */
+    void set_name( const std::string &n ) {
+      _name = n ;
+      update_prefix() ;
+    }
 
     /** Initialize the logstream with an std::ostream, e.g. std::cout and 
      *  the main scope name, e.g. argv[0].
      *  Only first call to this method has an effect, subsequent calls are ignored.
      * 
      */
-    void init( std::ostream& os , const std::string name ) ;
+    void init( std::ostream& os , const std::string &name ) ;
 
-   /** True if next log message of the current level (class T ) will be written, i.e.
+    /** True if next log message of the current level (class T ) will be written, i.e.
      *  the next call to std::ostream& operator()() will return a valid outstream.
-     * 
      */
     template<class T>
     inline bool write() {
-      
       // dont' call chek_level if T::active == false
       return (  T::active   &&    check_level<T>()  ) ;
     }
@@ -116,15 +147,13 @@ namespace streamlog{
     /** True if next log message of the current level (class T ) would be written
      *  - can be used to conditionally execute code blocks that are needed before writing to
      * the outstream.
-     * 
      */
     template<class T>
     inline bool would_write() {
-      
       return (  T::active   &&  T::level >= _level ) ;
     }
 
-   /** Return the actual std::ostream where the message should be writen to - will return
+    /** Return the actual std::ostream where the message should be writen to - will return
      *  a nullstream unless prepended by a successfull call to write<MESSAGELEVEL>()
      */
     printthread operator()() ;
@@ -139,50 +168,81 @@ namespace streamlog{
      */
     template <class T>
     void addLevelName() {
-
       _map[ T::name() ] = T::level ;
     }
-
-    // interface for friend classes: scope
+    
+    /** Get the logger name  
+     */
+    const std::string &name() const {
+      return _name ;
+    }
+    
+    /** Get the logger level
+     */
+    unsigned int level() const {
+      return _level ;
+    }
+    
+    /** Get the logger level name
+     */
+    const std::string &levelName() const {
+      return _levelName ;
+    }
 
   protected:
-
-    /** Set the current level - user need to use a streamlog::logscope object 
-     *  to do this.
-     */
-    void setLevel( unsigned level ) { _level = level ; } 
-
     /** Set the current level through its name - only level previously made known to
      *  the stream through addLevelName will have an effect.
      */
-    unsigned setLevel( const std::string& levelName )  ; 
+    unsigned set_level( const std::string& ln )  ;
+    
+    /** Set the current level - only level previously made known to
+     *  the stream through addLevelName will have an effect.
+     */
+    template <class T>
+    inline void set_level() {
+      set_level( T::name() ) ;
+    }
 
-    /** Returns the prefix */
-    prefix_base* prefix() { return _prefix ; }
+    /** Returns the log prefix formatter
+     */
+    logprefix &prefix() { 
+      return _prefix ; 
+    }
 
-    /** used internally by write<T> */
+    /** Used internally by write<T> 
+     */
     template<class T>
     bool check_level() {
-      
       if( T::level >= _level ){
-	_active = true ;
-	_prefix->_levelName = T::name() ;
+      	_active = true ;
+        _levelName = T::name() ;
+        update_prefix() ;
       }
       return _active ;
     }
-
+    
+    /** Update the log prefix
+     */
+    void update_prefix() {
+      _prefix = std_prefix( _name, _levelName ) ;
+    }
 
   private:
-
-    std::ostream* _os = &std::cout ; // wrapper for actual ostream
-    unsigned _level {};   // current log level 
-    bool _active {};      // boolean helper 
-    prefix_base* _prefix= nullptr ;  // prefix formatter
-    LevelMap _map {};         // string map of level names
-    
+    /// Wrapper for actual ostream
+    std::ostream      *_os {&std::cout} ;
+    /// The logger name
+    std::string        _name {"Main"} ;
+    /// The current log level name
+    std::string        _levelName {MESSAGE::name()} ;
+    /// The current log level
+    unsigned           _level {MESSAGE::level} ;
+    /// Boolean helper 
+    bool               _active {false} ;
+    /// The log prefix formatter
+    logprefix          _prefix {} ;
+    /// String map of level names
+    LevelMap           _map {} ;         
   } ;
 
   extern thread_local logstream out ;
-
 }
-#endif
