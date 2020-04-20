@@ -13,11 +13,19 @@ INCLUDE( ilcsoft_default_settings )
 
 FIND_PACKAGE( ILCTEST REQUIRED )
 FIND_PACKAGE( streamlog REQUIRED )
-
+FIND_PACKAGE( Threads REQUIRED )
 
 INCLUDE( ilcsoft_default_enable_ctest )
 INCLUDE( MacroAddILCTest )
 
 
 ADD_ILCTEST( hello_world ./hello_world.cc )
+
+ADD_EXECUTABLE( streamlog_example ./streamlog.cc )
+TARGET_INCLUDE_DIRECTORIES( streamlog_example PUBLIC ${streamlog_INCLUDE_DIRS} )
+TARGET_LINK_LIBRARIES( streamlog_example PUBLIC ${streamlog_LIBRARIES} )
+
+ADD_EXECUTABLE( streamlog_mt_example ./streamlog_mt.cc )
+TARGET_INCLUDE_DIRECTORIES( streamlog_mt_example PUBLIC ${streamlog_INCLUDE_DIRS} )
+TARGET_LINK_LIBRARIES( streamlog_mt_example PUBLIC ${streamlog_LIBRARIES} Threads::Threads )
 
