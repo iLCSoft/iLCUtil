@@ -107,7 +107,7 @@ namespace streamlog {
      *  that are shared by all thread local instances. On new thread creation, the global 
      *  thread local logger instance receives the global configuration in its constructor.
      */
-    static void global_init( std::ostream *os, const std::string &name, const std::string &levelName, const LevelMap &lm = builtin_levels() ) ;
+    static void global_init( std::ostream *os, const std::string &name, const std::string &levelName, const LevelMap &lm = streamlog::log_levels_map() ) ;
     
     /** Get the map of builtin log levels
      */
