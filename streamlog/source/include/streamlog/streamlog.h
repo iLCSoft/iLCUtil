@@ -17,9 +17,9 @@
 
 #ifdef  USE_STREAMLOG
 
-#include "logstream.h"
-#include "logscope.h"
-#include "loglevels.h"
+#include <streamlog/logstream.h">
+#include <streamlog/logscope.h>
+#include <streamlog/loglevels.h>
 
 
 #define  streamlog_level( MLEVEL ) ( streamlog::out.would_write< streamlog::MLEVEL >() )
