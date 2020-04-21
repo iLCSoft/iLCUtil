@@ -1,6 +1,5 @@
 // -*- mode: c++;
-#ifndef streamlog_h
-#define streamlog_h
+#pragma once
 
   /**
    *  Main header file for the streamlog library. 
@@ -45,5 +44,3 @@
 
 #endif
 
-
-#endif
