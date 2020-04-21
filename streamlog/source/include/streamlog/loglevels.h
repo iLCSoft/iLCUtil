@@ -26,15 +26,17 @@
  *  @version $Id: loglevels.h,v 1.3 2007-08-08 13:58:33 gaede Exp $
  */
 
-#ifndef loglevels_h
-#define loglevels_h
+#pragma once
 
-#include "streamlog/baselevels.h"
+#include <streamlog/baselevels.h>
 
-namespace streamlog{
+#include <string>
+#include <vector>
+#include <map>
 
+namespace streamlog {
 
-  enum log_level_enum{
+  enum log_level_enum {
     debug_base_level=0,
     message_base_level=100,
     warning_base_level=200,
@@ -95,8 +97,64 @@ namespace streamlog{
     // use this to turn of all logging messages
   DEFINE_STREAMLOG_LEVEL( SILENT, "SILENT" ,  STREAMLOG_MAX_LEVEL    , false ) 
 
+  std::vector<std::string> log_levels() {
+    return { 
+      "DEBUG", "DEBUG0", "DEBUG1", "DEBUG2", "DEBUG3", "DEBUG4", "DEBUG5", "DEBUG6", "DEBUG7", "DEBUG8", "DEBUG9",
+      "MESSAGE", "MESSAGE0", "MESSAGE1", "MESSAGE2", "MESSAGE3", "MESSAGE4", "MESSAGE5", "MESSAGE6", "MESSAGE7", "MESSAGE8", "MESSAGE9",
+      "WARNING", "WARNING0", "WARNING1", "WARNING2", "WARNING3", "WARNING4", "WARNING5", "WARNING6", "WARNING7", "WARNING8", "WARNING9",
+      "ERROR", "ERROR0", "ERROR1", "ERROR2", "ERROR3", "ERROR4", "ERROR5", "ERROR6", "ERROR7", "ERROR8", "ERROR9",
+      "SILENT"
+    };
+  }
+  
+  std::map<std::string, unsigned> log_levels_map() {
+    return {
+      {DEBUG::name(), DEBUG::level},
+      {DEBUG0::name(), DEBUG0::level},
+      {DEBUG1::name(), DEBUG1::level},
+      {DEBUG2::name(), DEBUG2::level},
+      {DEBUG3::name(), DEBUG3::level},
+      {DEBUG4::name(), DEBUG4::level},
+      {DEBUG5::name(), DEBUG5::level},
+      {DEBUG6::name(), DEBUG6::level},
+      {DEBUG7::name(), DEBUG7::level},
+      {DEBUG8::name(), DEBUG8::level},
+      {DEBUG9::name(), DEBUG9::level},
+      {MESSAGE::name(), MESSAGE::level},
+      {MESSAGE0::name(), MESSAGE0::level},
+      {MESSAGE1::name(), MESSAGE1::level},
+      {MESSAGE2::name(), MESSAGE2::level},
+      {MESSAGE3::name(), MESSAGE3::level},
+      {MESSAGE4::name(), MESSAGE4::level},
+      {MESSAGE5::name(), MESSAGE5::level},
+      {MESSAGE6::name(), MESSAGE6::level},
+      {MESSAGE7::name(), MESSAGE7::level},
+      {MESSAGE8::name(), MESSAGE8::level},
+      {MESSAGE9::name(), MESSAGE9::level},
+      {WARNING::name(), WARNING::level},
+      {WARNING0::name(), WARNING0::level},
+      {WARNING1::name(), WARNING1::level},
+      {WARNING2::name(), WARNING2::level},
+      {WARNING3::name(), WARNING3::level},
+      {WARNING4::name(), WARNING4::level},
+      {WARNING5::name(), WARNING5::level},
+      {WARNING6::name(), WARNING6::level},
+      {WARNING7::name(), WARNING7::level},
+      {WARNING8::name(), WARNING8::level},
+      {WARNING9::name(), WARNING9::level},
+      {ERROR::name(), ERROR::level},
+      {ERROR0::name(), ERROR0::level},
+      {ERROR1::name(), ERROR1::level},
+      {ERROR2::name(), ERROR2::level},
+      {ERROR3::name(), ERROR3::level},
+      {ERROR4::name(), ERROR4::level},
+      {ERROR5::name(), ERROR5::level},
+      {ERROR6::name(), ERROR6::level},
+      {ERROR7::name(), ERROR7::level},
+      {ERROR8::name(), ERROR8::level},
+      {ERROR9::name(), ERROR9::level},
+      {SILENT::name(), SILENT::level}
+    };
+  }
+  
 }
-
-#endif
-
-
