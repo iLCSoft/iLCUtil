@@ -82,6 +82,7 @@ FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS
     ${MySQL_DIR}/lib64/mysql
     ${MySQL_DIR}/lib64/mysql5/mysql
     ${MySQL_DIR}/lib
+    ${MySQL_DIR}/lib/x86_64-linux-gnu
     ${MySQL_DIR}/lib/mysql
     ${MySQL_DIR}/lib/mysql5/mysql
     NO_DEFAULT_PATH
