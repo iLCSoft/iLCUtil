@@ -110,7 +110,7 @@ namespace streamlog{
      *  Only first call to this method has an effect, subsequent calls are ignored.
      * 
      */
-    void init( std::ostream& os , const std::string name ) ;
+    void init( std::ostream& os , const std::string &name ) ;
 
    /** True if next log message of the current level (class T ) will be written, i.e.
      *  the next call to std::ostream& operator()() will return a valid outstream.

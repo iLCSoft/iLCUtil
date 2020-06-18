@@ -38,7 +38,7 @@ namespace streamlog{
     }
   }
   
-  void logstream::init( std::ostream& os , const std::string name ) {
+  void logstream::init( std::ostream& os , const std::string &name ) {
     
     static bool first=true ;
     
