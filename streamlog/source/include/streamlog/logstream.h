@@ -6,12 +6,54 @@
 
 #include <iostream>
 #include <map>
+#include <mutex>
+#include <sstream>
 
 namespace streamlog{
 
   class prefix_base ;
   class logbuffer ;
   class logscope ;
+  
+  class logconfig ;
+
+  /** Thread safe helper class that collects streamed data 
+   *  and sends it to the actual ostream on deletion.
+   *  Idea taken from https://stackoverflow.com/questions/14718124
+   *  @author F,Gaede, DESY
+   *  @date Apr 2020
+   */
+  class printthread: public std::stringstream {
+  protected:
+    std::string _pref{};
+    std::ostream* _o = nullptr ;
+  public:
+    printthread(const printthread &) = delete ;
+    printthread &operator=(const printthread &) = delete ;
+    /// returns an invalid stream
+    printthread() : printthread::basic_ios( 0 ) {} ;
+    /// initialize w/ prefix and final ostream
+    printthread(std::string prefix,std::ostream* o):_pref(prefix),_o(o){};
+    /// copy c'tor copies stringbugf from local stringstream
+    printthread( printthread&& rhs ){
+      printthread::basic_ostream<char>( rhs.rdbuf() ) ;
+    }
+    /// on deletion we actually write to the output
+    ~printthread(){
+      if( nullptr == _o ) {
+        return ;
+      }
+      // prepend the prefix to every newline before dumping to ostream
+      std::ostringstream oss;
+      for (std::string line; std::getline(*this, line, '\n');) {
+	       oss << _pref << line << '\n';
+      }
+      std::lock_guard<std::mutex> guard(_mutexPrint);
+      *_o << oss.str() ;
+    }
+  private:
+    static std::mutex _mutexPrint;
+  };
 
 
   /** Class defining a log stream that is used to print log messages depending 
@@ -52,8 +94,7 @@ namespace streamlog{
   class logstream {
 
     friend class logscope ;
-    friend class logbuffer ;
-
+    friend class logconfig ;
 
     typedef std::map< std::string,  unsigned > LevelMap ;
 
