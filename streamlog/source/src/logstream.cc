@@ -77,16 +77,16 @@ namespace streamlog{
   } 
 
 
-  std::ostream& logstream::operator()() { 
+  printthread logstream::operator()() { 
     
     if( _active && _os ) {
       
       _active = false ;
       
-      return *_os ;
+      return printthread{(_prefix)(),_os} ;
     }
     else
-      return *_ns ;
+      return printthread{} ;
     
   }
 

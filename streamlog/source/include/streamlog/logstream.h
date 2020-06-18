@@ -137,7 +137,7 @@ namespace streamlog{
    /** Return the actual std::ostream where the message should be writen to - will return
      *  a nullstream unless prepended by a successfull call to write<MESSAGELEVEL>()
      */
-    std::ostream& operator()() ;
+    printthread operator()() ;
 
     /** Adds a level name to the stream for setting the log level with a string through 
      *  a scope class. Only names added with this method will have an effect - other log 
