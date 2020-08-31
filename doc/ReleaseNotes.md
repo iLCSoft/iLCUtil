@@ -1,3 +1,9 @@
+# v01-06-01
+
+* 2020-05-13 Frank Gaede ([PR#17](https://github.com/iLCSoft/iLCUtil/pull/17))
+  - fix FindMySQL.cmake
+          - add correct search path for Ubuntu (>=18.04)
+
 # v01-06
 
 * 2019-08-23 Andre Sailer ([PR#13](https://github.com/iLCSoft/iLCUtil/pull/13))
