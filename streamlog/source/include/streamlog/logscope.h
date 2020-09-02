@@ -29,19 +29,17 @@ namespace streamlog{
 
     /** Instantiate a scope object for the given logstream.
      */
-    logscope(logstream& ls) : _ls(&ls) , _name("") , _level(-1) { }
+    logscope(logstream& ls) : _ls(&ls) , _name("") , _level(-1) { /* nop */ }
     
     /** Reset old name and level if set through this object.
      */
-    ~logscope(){
-
+    ~logscope() {
       if( _name.size() > 0 ) {
-	_ls->prefix()->_name=_name ;
-	//std::cerr << "  ~logscope()  reset name to " << _name << std::endl ;
-	
+	       _ls->prefix()->_name=_name ;
+	        //std::cerr << "  ~logscope()  reset name to " << _name << std::endl ;
       }
       if(  _level > -1 )
- 	_ls->setLevel( _level ) ; 
+ 	    _ls->setLevel( _level ) ; 
     }
     
     /** Change current log scope name for the lifetime of this object */
@@ -70,7 +68,6 @@ namespace streamlog{
     logstream* _ls = nullptr ;
     std::string _name{} ;
     long _level{};
-    
   };
   
 }
