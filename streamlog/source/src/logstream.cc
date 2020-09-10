@@ -5,6 +5,40 @@
 
 namespace streamlog{
   
+  class logconfig {
+    using LevelMap = logstream::LevelMap ;
+  public:
+    logconfig() = default ;
+    ~logconfig() = default ;
+    logconfig &operator=( const logconfig & ) = delete ;
+    logconfig( const logconfig & ) = delete ;
+    
+    void init( std::ostream *os, const std::string &name, const std::string &levelName, const LevelMap &levels ) {
+      std::lock_guard <std::mutex> lock( _mutex ) ;
+      _stream = os ;
+      _name = name ;
+      _levelName = levelName ;
+      _levelMap = levels ;
+    }
+    
+    void apply( logstream *ls ) {
+      std::lock_guard <std::mutex> lock( _mutex ) ;
+      ls->set_stream( _stream ) ;
+      ls->set_name( _name ) ;
+      ls->set_level( _levelName ) ;
+      if( not _levelMap.empty() ) {
+        ls->_map = _levelMap ;
+      }
+    }
+    
+  private:
+    std::mutex     _mutex {} ;
+    std::ostream  *_stream {&std::cout} ;
+    std::string    _name {"Main"} ;
+    std::string    _levelName {MESSAGE::name()} ;
+    LevelMap       _levelMap {} ;
+  };
+  
   logstream::logstream() : 
     _ns( new nullstream ) , 
     _os(0) , 
