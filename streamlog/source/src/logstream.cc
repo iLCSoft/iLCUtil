@@ -1,10 +1,15 @@
 #include "streamlog/logstream.h"
-
-#include "streamlog/logbuffer.h"
 #include "streamlog/prefix.h"
 
 namespace streamlog{
   
+  /**
+   *  @brief  logconfig class.
+   *  Private class managing the global logger configuration.
+   *  Each time a thread is created, a thread local instance of a 
+   *  logstream is created and takes it's configuration from this 
+   *  global config. A mutex is used to ensure the thread safety. 
+   */
   class logconfig {
     using LevelMap = logstream::LevelMap ;
   public:
@@ -13,6 +18,8 @@ namespace streamlog{
     logconfig &operator=( const logconfig & ) = delete ;
     logconfig( const logconfig & ) = delete ;
     
+    /** Initialize the logconfig object
+     */
     void init( std::ostream *os, const std::string &name, const std::string &levelName, const LevelMap &levels ) {
       std::lock_guard <std::mutex> lock( _mutex ) ;
       _stream = os ;
@@ -21,6 +28,8 @@ namespace streamlog{
       _levelMap = levels ;
     }
     
+    /** Apply the logconfig data to the logstream object 
+     */
     void apply( logstream *ls ) {
       std::lock_guard <std::mutex> lock( _mutex ) ;
       ls->set_stream( _stream ) ;
@@ -32,98 +41,67 @@ namespace streamlog{
     }
     
   private:
+    /// Synchronisation mutex
     std::mutex     _mutex {} ;
+    /// The global shared ostream
     std::ostream  *_stream {&std::cout} ;
+    /// The global logger name
     std::string    _name {"Main"} ;
+    /// The global log level name
     std::string    _levelName {MESSAGE::name()} ;
+    /// The global map of possible log levels
     LevelMap       _levelMap {} ;
   };
   
-  logstream::logstream() : 
-    _ns( new nullstream ) , 
-    _os(0) , 
-    _level(0) ,
-    _active(false) , 
-    _lb(0),
-    _prefix( new streamlog::prefix) {
-    
-  } 
-
-  logstream::~logstream() {
-    
-    if( _ns ){ 
-        delete _ns ;
-        _ns = NULL ;
-    }
-    
-    if( _os ){ 
-      delete _os ;
-      _os = NULL ;
-    }
-    
-    if( _lb ){
-      delete _lb ;
-      _lb = NULL ;
-    }
-    
-    if( _prefix ){
-      delete _prefix ;
-      _prefix = NULL ; 
-    }
+  logstream::logstream() {
+    update_prefix() ;
   }
   
-  void logstream::init( std::ostream& os , const std::string &name ) {
-    
-    static bool first=true ;
-    
-    if( first && os ) {
-      
-      //      _name = name ;      
-      
-      // create a new log buffer and attach this to a wrapper to the given ostream  
-
-      _lb = new logbuffer( os.rdbuf() , this ) ;
-      
-      _os = new std::ostream( _lb ) ;
-      
-      //attach also the original stream to the logger...
-      //os.rdbuf( _lb ) ; // this needs some work 
-      // FIXME : this needs to go to the c'tor !!!!
-     
-      _prefix->_name = name ;
-
-      first = false ;
-    }
-    
-    else if( !os) {
-      std::cerr << "ERROR: logstream::init() invalid ostream given " << std::endl ;      
-    }
+  logstream::logstream( logconfig *lcfg ) {
+    update_prefix() ;
+    lcfg->apply( this ) ;
+  }
+  
+  void logstream::init( std::ostream& os , const std::string &nam ) {
+    set_stream( &os ) ;
+    set_name( nam ) ;
   }
 
-  unsigned logstream::setLevel( const std::string& levelName ) {
-
+  unsigned logstream::set_level( const std::string& levelName ) {
     unsigned l = _level ;
     LevelMap::iterator it = _map.find( levelName ) ;
     if( it != _map.end() ) {
       _level = it->second ;
+      _levelName = levelName ;
+      update_prefix() ;
     }
     return l ;
   } 
 
 
   printthread logstream::operator()() { 
-    
     if( _active && _os ) {
-      
       _active = false ;
-      
-      return printthread{(_prefix)(),_os} ;
+      return printthread {(_prefix)(),_os} ;
     }
-    else
-      return printthread{} ;
-    
+    else {
+      return printthread {} ;
+    }
   }
 
-  /** global instance of logstream */
-  logstream out ;
+  // static global logger config, protected by mutex
+  // shared by thread local global logger instances
+  static logconfig __logconfig__ ;
+
+  /** thread global instance of logstream */
+  thread_local logstream out( &__logconfig__ ) ;
+    
+  /// global mutex for actual io
+  std::mutex printthread::_mutexPrint{};
+
+  void logstream::global_init( std::ostream *os, const std::string &name, const std::string &levelName, const LevelMap &lm ) {
+   __logconfig__.init( os, name, levelName, lm ) ;
+   __logconfig__.apply( &out ) ;
+ }
+ 
 }
