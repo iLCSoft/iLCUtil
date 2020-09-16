@@ -18,6 +18,8 @@
 
 #ifdef  USE_STREAMLOG
 
+#define STREAMLOG_NEW_TS_IMPL 1
+
 #include "streamlog/logstream.h"
 #include "streamlog/logscope.h"
 #include "streamlog/loglevels.h"
