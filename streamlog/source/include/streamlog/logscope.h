@@ -35,25 +35,24 @@ namespace streamlog{
      */
     ~logscope() {
       if( _name.size() > 0 ) {
-	       _ls->prefix()->_name=_name ;
-	        //std::cerr << "  ~logscope()  reset name to " << _name << std::endl ;
+        _ls->set_name( _name ) ;
       }
       if(  _level > -1 )
- 	    _ls->setLevel( _level ) ; 
+ 	    _ls->set_level( _level ) ; 
     }
     
     /** Change current log scope name for the lifetime of this object */
-    void setName(const std::string name) {
-      _name =  _ls->prefix()->_name ;
-      _ls->prefix()->_name = name ;
+    void setName(const std::string &name) {
+      _name =  _ls->name() ;
+      _ls->set_name( name ) ;
     }
   
 
     /** Change current log level for the lifetime of this object */
     template <class T>
     void setLevel(){
-      _level =  _ls->_level ;
-      _ls->setLevel( T::level )  ;
+      _level =  _ls->level() ;
+      _ls->set_level( T::level )  ;
     }
 
     /** Change current log level for the lifetime of this object 
@@ -61,13 +60,13 @@ namespace streamlog{
      *  via logstream::addLevelName - otherwise the call will have no effect.
      */
     void setLevel(const std::string& level){
-      _level =  _ls->setLevel( level )  ;
+      _level =  _ls->set_level( level )  ;
     }
    
   protected: 
-    logstream* _ls = nullptr ;
-    std::string _name{} ;
-    long _level{};
+    logstream      *_ls = nullptr ;
+    std::string     _name {} ;
+    int             _level {-1} ;
   };
   
 }
