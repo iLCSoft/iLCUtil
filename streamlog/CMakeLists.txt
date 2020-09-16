@@ -16,6 +16,7 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 INCLUDE( ilcsoft_default_settings )
 
+FIND_PACKAGE( Threads REQUIRED )
 
 ### DOCUMENTATION ###########################################################
 
@@ -38,7 +39,7 @@ INSTALL( DIRECTORY ./source/include DESTINATION . PATTERN ".svn" EXCLUDE )
 AUX_SOURCE_DIRECTORY( ./source/src library_sources )
 ADD_SHARED_LIBRARY( ${PROJECT_NAME} ${library_sources} )
 INSTALL( TARGETS ${PROJECT_NAME} DESTINATION lib )
-
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} PUBLIC Threads::Threads )
 
 ADD_SUBDIRECTORY( ./examples )
 
