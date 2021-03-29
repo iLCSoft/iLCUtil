@@ -1,7 +1,7 @@
 ########################################################
 # cmake file for building ILCUTIL Package
 # @author Jan Engels, Desy IT
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.14 FATAL_ERROR)
 ########################################################
 
 
@@ -14,6 +14,7 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 1 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 6 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 1 )
 
+OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
 LIST( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmakemodules" )
 INCLUDE( ilcsoft_default_settings )
@@ -50,7 +51,7 @@ ExternalProject_Add( ilctest
 ExternalProject_Add( example
     DEPENDS ilctest streamlog
     SOURCE_DIR "${PROJECT_SOURCE_DIR}/example"
-    CMAKE_ARGS -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmakemodules -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -DUSE_CXX11=${USE_CXX11}
+    CMAKE_ARGS -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmakemodules -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -DUSE_CXX11=${USE_CXX11} -DINSTALL_DOC=${INSTALL_DOC}
     INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "no install step needed"
     TEST_COMMAND ${CMAKE_BUILD_TOOL} test
 )
