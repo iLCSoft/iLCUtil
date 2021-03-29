@@ -15,6 +15,8 @@ IF( DOXYGEN_FOUND )
     # directories to search for documentation
     SET( DOX_INPUT ../source )
 
+    FILE(GLOB STREAMLOG_HEADERS ../source/include/streamlog/*)
+    FILE(GLOB STREAMLOG_SOURCES ../source/src/*)
 
     # custom command to build documentation
     ADD_CUSTOM_COMMAND(
@@ -26,7 +28,7 @@ IF( DOXYGEN_FOUND )
                 "${DOXYGEN_EXECUTABLE}"
         WORKING_DIRECTORY "${DOC_SRC_DIR}"
         COMMENT "Building API Documentation..."
-        DEPENDS Doxyfile CMakeLists.txt ../source/include/streamlog/* ../source/src/*
+        DEPENDS Doxyfile CMakeLists.txt ${STREAMLOG_HEADERS} ${STREAMLOG_SOURCES}
     )
 
     # add doc target
