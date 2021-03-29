@@ -1,7 +1,7 @@
 ########################################################
 # cmake file for installing ILCSOFT_CMAKE_MODULES
 # @author Jan Engels, Desy IT
-CMAKE_MINIMUM_REQUIRED( VERSION 2.6 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.14 )
 ########################################################
 
 
