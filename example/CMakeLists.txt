@@ -1,6 +1,6 @@
 # small example to demonstrate inter-package dependencies
 # within the ILCUTIL package
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8.2 FATAL_ERROR )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.14 FATAL_ERROR )
 
 # this CMakeLists.txt just demonstrates how it is possible
 # to use other packages of ILCUTIL in ILCUTIL itself. if
