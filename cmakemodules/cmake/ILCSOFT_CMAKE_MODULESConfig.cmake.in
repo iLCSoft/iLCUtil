@@ -18,6 +18,13 @@ LIST( APPEND CMAKE_MODULE_PATH ${ILCSOFT_CMAKE_MODULES_ROOT} )
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
+# cmake 3.17 introduced the NAME_MISMATCHED argument, which should be used to
+# suppress the warning that the current package name does not match the one that
+# has been used to call the find_package. In this case this module is often
+# called within another find_package call, so that there is usually a mismatch.
+# To keep a < 3.17 compatible version we use the FPHSA_NAME_MISMATCHED variable
+# that allows us to "restore" the old behavior
+SET(FPHSA_NAME_MISMATCHED ON)
+
 # set ILCSOFT_CMAKE_MODULES_FOUND to TRUE if all listed variables are TRUE and not empty
 FIND_PACKAGE_HANDLE_STANDARD_ARGS( ILCSOFT_CMAKE_MODULES DEFAULT_MSG ILCSOFT_CMAKE_MODULES_ROOT )
-
