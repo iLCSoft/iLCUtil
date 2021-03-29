@@ -2,6 +2,8 @@
 # within the ILCUTIL package
 CMAKE_MINIMUM_REQUIRED( VERSION 3.14 FATAL_ERROR )
 
+PROJECT(ILCUTIL_EXAMPLE)
+
 # this CMakeLists.txt just demonstrates how it is possible
 # to use other packages of ILCUTIL in ILCUTIL itself. if
 # this example were to be moved outside ILCUTIL the following
