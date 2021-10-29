@@ -1,6 +1,6 @@
 # iLCUtil
 
-[![linux](https://github.com/iLCSoft/iLCUtil/actions/workflows/test.yml/badge.svg)](https://github.com/iLCSoft/iLCUtil/actions/workflows/test.yml)
+[![linux](https://github.com/iLCSoft/iLCUtil/actions/workflows/linux.yml/badge.svg)](https://github.com/iLCSoft/iLCUtil/actions/workflows/linux.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/12370/badge.svg)](https://scan.coverity.com/projects/ilcsoft-ilcutil)
 
 ILCUTIL is a utility package for the iLCSoft software framework. It is intended to be a "meta-package" which packages together a set of independent utility packages living in separate sub-directories.
