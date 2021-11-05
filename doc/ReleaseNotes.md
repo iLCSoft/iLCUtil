@@ -1,3 +1,18 @@
+# v01-06-02
+
+* 2021-11-03 Thomas Madlener ([PR#22](https://github.com/iLCSoft/iLCUtil/pull/22))
+  - Switch to the latest available nightlies in the CI workflows.
+  - Remove travis-ci config
+
+* 2021-08-16 Thomas Madlener ([PR#21](https://github.com/iLCSoft/iLCUtil/pull/21))
+  - Add a working github actions based CI workflow.
+  - Make it possible to use newer cmake versions for installing
+    - Fix globbing for dependencies in streamlog doxygen generation, which broke with 3.17
+    - Fix name mismatch warning in find_package calls for cmake > 3.17
+    - Fix missing project warning in example
+  - Bump the minimum required cmake version to 3.14
+  - Make the INSTALL_DOC option from streamlog available from the top-level to make it possible to steer this from the outside
+
 # v01-06-01
 
 * 2020-05-13 Frank Gaede ([PR#17](https://github.com/iLCSoft/iLCUtil/pull/17))
