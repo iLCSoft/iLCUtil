@@ -1,3 +1,11 @@
+# v01-07
+
+* 2022-12-02 Thomas Madlener ([PR#26](https://github.com/iLCSoft/ILCUTIL/pull/26))
+  - Remove obsolete gcc8 based workflow and update github actions versions
+
+* 2022-12-02 Thomas Madlener ([PR#25](https://github.com/iLCSoft/ILCUTIL/pull/25))
+  - Disable `USE_CXX11` by default since we switched to c++17 quite some time ago and this option needs to be manually disabled in order to make that work via `CMAKE_CXX_STANDARD`.
+
 # v01-06-02
 
 * 2021-11-03 Thomas Madlener ([PR#22](https://github.com/iLCSoft/iLCUtil/pull/22))
