@@ -2,6 +2,7 @@
 //#include <cstring>
 #include <sstream>
 #include <stdio.h>
+#include <cstring>
 #include <stdlib.h>
 
 class ILCTest{
@@ -46,6 +47,15 @@ public:
     }
 
 
+    bool isEqual (const char* v1, const char* v2)
+    {
+      return strcmp (v1, v2) == 0;
+    }
+    template <class V1, class V2 >
+    bool isEqual (const V1& v1, const V2& v2)
+    {
+      return (v1 == v2);
+    }
 
     // FIXME should this rather be called equals ? add another method not_equals ?
     template <class V1, class V2 >
@@ -54,7 +64,7 @@ public:
 
             std::stringstream sstr ;
 
-            if ( ! (v1 == v2)  ) {
+            if ( ! isEqual(v1, v2)  ) {
                 sstr << "  " << name<< " : [" << v1 << "] != [" << v2 << "]" ;
                 error( sstr.str() ) ;
             } 
