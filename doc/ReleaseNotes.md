@@ -1,3 +1,8 @@
+# v01-07-01
+
+* 2023-06-08 scott snyder ([PR#28](https://github.com/ilCSoft/iLCUtil/pull/28))
+  - Fix a compilation warning in ILCTest.h.
+
 # v01-07
 
 * 2022-12-02 Thomas Madlener ([PR#26](https://github.com/iLCSoft/ILCUTIL/pull/26))
