@@ -13,7 +13,9 @@ SET( test_bins test_log)
 ADD_SHARED_LIBRARY( streamlog_test EXCLUDE_FROM_ALL fibonacci.cc  )
 
 # create symbolic bin target
-ADD_CUSTOM_TARGET( tests )
+if (NOT TARGET tests)
+  ADD_CUSTOM_TARGET( tests )
+endif()
 
 # loop through list of test binaries
 FOREACH( bin ${test_bins} )
