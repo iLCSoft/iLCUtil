@@ -1,3 +1,15 @@
+# v01-07-02
+
+* 2024-01-15 tmadlener ([PR#31](https://github.com/iLCSoft/iLCUtil/pull/31))
+  - Move to LCG_104 based nightlies for clicdp workflow.
+  - Add Key4hep based workflows
+
+* 2024-01-15 jmcarcell ([PR#30](https://github.com/iLCSoft/iLCUtil/pull/30))
+  - Check if the tests target exists before creating it
+
+* 2023-07-17 jmcarcell ([PR#29](https://github.com/iLCSoft/iLCUtil/pull/29))
+  - Don't make the uninstall target if it already exists
+
 # v01-07-01
 
 * 2023-06-08 scott snyder ([PR#28](https://github.com/ilCSoft/iLCUtil/pull/28))
