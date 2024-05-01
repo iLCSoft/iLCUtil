@@ -15,6 +15,6 @@ if(APPLE)
     set(CMAKE_INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR}")
   endif("${isSystemDir}" STREQUAL "-1")
 else()
-  set(CMAKE_SKIP_INSTALL_RPATH TRUE)           # skip the full RPATH for the install tree
+  set(CMAKE_SKIP_INSTALL_RPATH FALSE)           # skip the full RPATH for the install tree
 endif()
 
