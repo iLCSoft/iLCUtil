@@ -1,3 +1,23 @@
+# v01-07-03
+
+* 2024-05-28 Andre Sailer ([PR#35](https://github.com/iLCSoft/iLCUtil/pull/35))
+  - RPATH: set rpath to `$ORIGIN/../${CMAKE_INSTALL_LIBDIR}`
+
+* 2024-05-02 jmcarcell ([PR#34](https://github.com/iLCSoft/iLCUtil/pull/34))
+  - Write rpaths when installing. Fixes an issue introduced in https://github.com/iLCSoft/iLCUtil/pull/32 where rpaths are not being written.
+
+* 2024-05-02 tmadlener ([PR#33](https://github.com/iLCSoft/iLCUtil/pull/33))
+  - Bump the default c++ version to 17 as that is what we have been using for at least a few years now.
+
+* 2024-04-29 Frank Gaede ([PR#32](https://github.com/iLCSoft/iLCUtil/pull/32))
+  - replace `ilcsoft_default_rpath_settings.cmake` with the one from LCIO
+      -  see https://github.com/iLCSoft/LCIO/pull/121 
+  - this fixes the rpath settings for all iLCSoft tools using this script to work on MacOS
+  - (needed to install the key4hep stack on darwin)
+
+* 2024-04-29 Tao Lin ([PR#20](https://github.com/iLCSoft/iLCUtil/pull/20))
+  - Fix the problem: the system GSL may be picked. See details in https://github.com/key4hep/k4-spack/issues/77
+
 # v01-07-02
 
 * 2024-01-15 tmadlener ([PR#31](https://github.com/iLCSoft/iLCUtil/pull/31))
