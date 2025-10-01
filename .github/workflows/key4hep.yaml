@@ -6,11 +6,11 @@ name: key4hep
 on:
   push:
     branches:
-    - main
+    - master
   pull_request:
   workflow_dispatch:
   schedule:
-        - cron: '16 5 * * *'
+    - cron: 16 4 * * 1
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,14 +18,17 @@ concurrency:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         build_type: ["release", "nightly"]
-        image: ["alma9", "ubuntu22"]
-      fail-fast: false
-    runs-on: ubuntu-latest
+        image: ["alma9"]
+        include:
+          - build_type: "nightly"
+            image: ubuntu24
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: key4hep/key4hep-actions/key4hep-build@main
       with:
         build_type: ${{ matrix.build_type }}
