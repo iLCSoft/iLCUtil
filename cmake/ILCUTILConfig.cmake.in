@@ -40,7 +40,7 @@ SET( ILCUTIL_REQUIRED_COMPONENT_VARIABLES )
 
 FOREACH( _component ${ILCUTIL_FIND_COMPONENTS} )
 
-    SET( _component_cfg_file "${ILCUTIL_ROOT}/${_component}Config.cmake" )
+    SET( _component_cfg_file "${ILCUTIL_ROOT}/lib/cmake/${_component}/${_component}Config.cmake" )
 
     IF( EXISTS "${_component_cfg_file}" )
         INCLUDE( "${_component_cfg_file}" )
