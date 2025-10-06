@@ -1,3 +1,14 @@
+# v01-08
+
+* 2025-10-01 Thomas Madlener ([PR#39](https://github.com/iLCSoft/iLCUtil/pull/39))
+  - Update the Key4hep CI workflow
+
+* 2025-10-01 Thomas Madlener ([PR#38](https://github.com/iLCSoft/iLCUtil/pull/38))
+  - Remove the FindGSL module since its provided by CMake (with better features)
+
+* 2025-02-05 Thomas Madlener ([PR#37](https://github.com/iLCSoft/iLCUtil/pull/37))
+  - Use the central Key4hep build action for CI against Key4hep builds
+
 # v01-07-03
 
 * 2024-05-28 Andre Sailer ([PR#35](https://github.com/iLCSoft/iLCUtil/pull/35))
