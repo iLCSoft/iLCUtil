@@ -9,7 +9,7 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
                 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/${arg}.in"
                                 "${PROJECT_BINARY_DIR}/${arg}" @ONLY
                 )
-                INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/${PROJECT_NAME} )
+                INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION lib/cmake/${PROJECT_NAME} )
                 #IF( EXISTS "${_current_dir}/MacroCheckPackageLibs.cmake" )
                 #    INSTALL( FILES "${_current_dir}/MacroCheckPackageLibs.cmake" DESTINATION cmake )
                 #ENDIF()
@@ -26,7 +26,7 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
                 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/${arg}.in"
                                 "${PROJECT_BINARY_DIR}/${arg}" @ONLY
                 )
-                INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/${PROJECT_NAME} )
+                INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION lib/cmake/${PROJECT_NAME} )
                 #IF( EXISTS "${_current_dir}/MacroCheckPackageVersion.cmake" )
                 #    INSTALL( FILES "${_current_dir}/MacroCheckPackageVersion.cmake" DESTINATION cmake )
                 #ENDIF()
@@ -35,7 +35,7 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
 
         IF( ${arg} MATCHES "LibDeps.cmake" )
             EXPORT_LIBRARY_DEPENDENCIES( "${arg}" )
-            INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake )
+            INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION lib/cmake )
         ENDIF()
 
     ENDFOREACH()
