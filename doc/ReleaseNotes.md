@@ -1,3 +1,15 @@
+# v01-09
+
+* 2026-01-23 Juan Miguel Carceller ([PR#41](https://github.com/ilcsoft/ilcutil/pull/41))
+  - Use a relative path for DESTINATION when installing files, as recommended by
+    the docs (https://cmake.org/cmake/help/latest/command/install.html)
+
+* 2026-01-20 jmcarcell ([PR#36](https://github.com/ilcsoft/ilcutil/pull/36))
+  - Install the cmake files to lib/cmake/<PACKAGE_NAME>
+
+* 2026-01-19 Thomas Madlener ([PR#40](https://github.com/ilcsoft/ilcutil/pull/40))
+  - Remove unused (and partially deprecated) cmake modules
+
 # v01-08
 
 * 2025-10-01 Thomas Madlener ([PR#39](https://github.com/iLCSoft/iLCUtil/pull/39))
